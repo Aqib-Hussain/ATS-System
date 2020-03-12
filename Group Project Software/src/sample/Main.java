@@ -90,7 +90,7 @@ public class Main extends Application
         //*****        Office Manager GUI     ******//
         //******************************************//
 
-        //----------------------------1.0 Main menu-----------------------------\\
+        //----------------------------Office Manager Main menu-----------------------------\\
         // Labels
         Label userTypeLabel = new Label("Hello " + officeManager.getUserType());
         // TextBoxes
@@ -241,7 +241,7 @@ public class Main extends Application
 
         // Start-up
         window.setScene(login);
-        window.setTitle("Hello");
+        window.setTitle("ATS System");
         window.show();
     }
 
