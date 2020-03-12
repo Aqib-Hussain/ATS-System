@@ -10,8 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import sample.OM_GUI.CustomerList;
-import sample.OM_GUI.ReportType;
+import sample.OM_GUI.*;
 
 public class Main extends Application
 {
@@ -22,7 +21,7 @@ public class Main extends Application
     Scene login;
     // Office Manager Scenes
     Scene OM_mainMenu, OM_reportType, OM_customerList, OM_editDiscount, OM_editStatus, OM_blankStock,
-          OM_assignBlank, OM_reAssignBlank, OM_setCommissionRates, OM_refundLog;
+            OM_assignBlank, OM_reAssignBlank, OM_setCommissionRates, OM_refundLog;
     // System Admin Scenes
     Scene SA_mainMenu;
     // Travel Advisor Scenes
@@ -87,9 +86,9 @@ public class Main extends Application
         // Create the Scene
         login = new Scene(login_layout, 850, 600);
 
-                                    //******************************************//
-                                    //*****        Office Manager GUI     ******//
-                                    //******************************************//
+        //******************************************//
+        //*****        Office Manager GUI     ******//
+        //******************************************//
 
         //----------------------------1.0 Main menu-----------------------------\\
         // Labels
@@ -98,7 +97,8 @@ public class Main extends Application
         // Buttons
         Button generateReport = new Button("Generate a Global Report");
         generateReport.setMaxWidth(250);
-        generateReport.setOnAction(new EventHandler<ActionEvent>() {
+        generateReport.setOnAction(new EventHandler<ActionEvent>()
+        {
             @Override
             public void handle(ActionEvent actionEvent)
             {
@@ -117,10 +117,34 @@ public class Main extends Application
         });
         Button viewBlankStock = new Button("Blank Stock");
         viewBlankStock.setMaxWidth(250);
+        viewBlankStock.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent actionEvent)
+            {
+                ViewBlankStock.display("Blank Stock");
+            }
+        });
         Button setCommissionRates = new Button("Commission Rates");
         setCommissionRates.setMaxWidth(250);
+        setCommissionRates.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent actionEvent)
+            {
+                CommissionRates.display("Commission Rate");
+            }
+        });
         Button viewRefundLog = new Button("Refund Log");
         viewRefundLog.setMaxWidth(250);
+        viewRefundLog.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent actionEvent)
+            {
+                RefundLog.display("Refund Log");
+            }
+        });
         Button logOutButton = new Button("Log-Out!");
         logOutButton.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -148,7 +172,7 @@ public class Main extends Application
                 setCommissionRates, viewRefundLog);
         // Create Scene
         OM_mainMenu = new Scene(OM_rootLayout, 850, 600);
-        
+
         // 1.2 Customer List
         // Labels
         // TextBoxes
@@ -204,15 +228,15 @@ public class Main extends Application
         // Buttons
         // Add Elements
         // Create Scene
-                                    //******************************************//
-                                    //*****   System Administrator GUI    ******//
-                                    //******************************************//
+        //******************************************//
+        //*****   System Administrator GUI    ******//
+        //******************************************//
 
 
 
-                                    //******************************************//
-                                    //*****    Travel Advisor GUI GUI     ******//
-                                    //******************************************//
+        //******************************************//
+        //*****    Travel Advisor GUI GUI     ******//
+        //******************************************//
 
 
         // Start-up
