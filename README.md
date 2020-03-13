@@ -14,3 +14,7 @@ Softair's Air Ticket System
    You may then have to right click javafx-swt in global libraries and click Add to Module.
    If you need extra help contacg me on WhatsApp
    
+   Also, when you star the program you are promted for a log-in.
+   Office Manager: Email/Username = 1, Password = 1
+   System Admin: Email/Username = 2, password = 2
+   Travel Advisor: Email/Username = 3, Password = 3
