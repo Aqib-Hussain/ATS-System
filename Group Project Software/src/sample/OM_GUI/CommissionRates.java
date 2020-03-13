@@ -28,6 +28,7 @@ public class CommissionRates
         window.setMinHeight(250);
         window.setResizable(false);
         // Labels
+        Label label_task = new Label("Please enter a value");
         // Text
         TextField text_commissionRate = new TextField();
         text_commissionRate.setMinSize(50,25);
@@ -53,10 +54,15 @@ public class CommissionRates
         bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
         bottom_layout.getChildren().add(cancel);
 
+        HBox top_layout = new HBox(50);
+        top_layout.setAlignment(Pos.CENTER);
+        top_layout.getChildren().add(label_task);
+
         BorderPane root_layout = new BorderPane();
         root_layout.setPadding(new Insets(10,10,10,10));
         root_layout.setCenter(button_layout);
         root_layout.setBottom(bottom_layout);
+        root_layout.setTop(top_layout);
 
         Scene scene = new Scene(root_layout);
         window.setScene(scene);

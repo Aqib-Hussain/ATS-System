@@ -48,6 +48,7 @@ public class ReportType {
         button_layout.setAlignment(Pos.CENTER);
         button_layout.setSpacing(10);
         button_layout.getChildren().addAll(interlineReportButton, domesticReportButton);
+
         BorderPane root_layout = new BorderPane();
         root_layout.setPadding(new Insets(11,11,11,11));
         root_layout.setCenter(button_layout);

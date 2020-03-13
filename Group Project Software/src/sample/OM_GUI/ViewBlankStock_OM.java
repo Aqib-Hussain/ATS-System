@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class ViewBlankStock
+public class ViewBlankStock_OM
 {
     public static void display(String title)
     {

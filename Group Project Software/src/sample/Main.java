@@ -7,10 +7,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sample.OM_GUI.*;
+import sample.Users.OfficeManager;
+import sample.Users.SystemAdmin;
+import sample.Users.TravelAdvisor;
+import sample.Users.User;
 
 public class Main extends Application
 {
@@ -20,8 +26,7 @@ public class Main extends Application
     // Log-in Scenes
     Scene login;
     // Office Manager Scenes
-    Scene OM_mainMenu, OM_reportType, OM_customerList, OM_editDiscount, OM_editStatus, OM_blankStock,
-            OM_assignBlank, OM_reAssignBlank, OM_setCommissionRates, OM_refundLog;
+    Scene OM_mainMenu;
     // System Admin Scenes
     Scene SA_mainMenu;
     // Travel Advisor Scenes
@@ -29,7 +34,9 @@ public class Main extends Application
 
     //------------------------------------User-------------------------------\\
     User user = new User();
-    OfficeManager officeManager = new OfficeManager("Office Manager");
+    OfficeManager officeManager = new OfficeManager();
+    SystemAdmin systemAdmin = new SystemAdmin();
+    TravelAdvisor travelAdvisor = new TravelAdvisor();
 
     public static void main(String[] args)
     {
@@ -43,23 +50,20 @@ public class Main extends Application
         primaryStage.setResizable(false);
 
         //--------------------------Log-in Menu------------------------------\\
-        // Layout
-        VBox login_layout = new VBox(20);
-        login_layout.setAlignment(Pos.CENTER);
         // Labels
         Label emailLabel = new Label("Email");
+        emailLabel.setPadding(new Insets(0,0,-5,0));
+
         Label passwordLabel = new Label("Password");
+        passwordLabel.setPadding(new Insets(0,0,-5,0));
         // TextBoxes
         TextField emailText = new TextField();
         emailText.setPromptText("Username");
         emailText.setMaxWidth(200);
-        emailText.setMaxHeight(25);
-        emailText.setMinHeight(25);
+
         PasswordField passwordText = new PasswordField();
         passwordText.setPromptText("Password");
         passwordText.setMaxWidth(200);
-        passwordText.setMaxHeight(25);
-        passwordText.setMinHeight(25);
         // Buttons
         Button loginButton = new Button("Log-In");
         loginButton.setOnAction(new EventHandler<ActionEvent>()
@@ -67,9 +71,21 @@ public class Main extends Application
             @Override
             public void handle(ActionEvent event)
             {
-                if(emailText.getText().equals(user.getEmail()) && passwordText.getText().equals(user.getPassword()))
+                if(emailText.getText().equals(officeManager.getEmail()) && passwordText.getText().equals(officeManager.getPassword()))
                 {
                     window.setScene(OM_mainMenu);
+                    emailText.clear();
+                    passwordText.clear();
+                }
+                else if (emailText.getText().equals(systemAdmin.getEmail()) && passwordText.getText().equals(systemAdmin.getPassword()))
+                {
+                    window.setScene(SA_mainMenu);
+                    emailText.clear();
+                    passwordText.clear();
+                }
+                else if (emailText.getText().equals(travelAdvisor.getEmail()) && passwordText.getText().equals(travelAdvisor.getPassword()))
+                {
+                    window.setScene(TA_mainMenu);
                     emailText.clear();
                     passwordText.clear();
                 }
@@ -81,22 +97,24 @@ public class Main extends Application
                 }
             }
         });
-        // Add Elements
+        // Layout
+        VBox login_layout = new VBox(15);
+        login_layout.setAlignment(Pos.CENTER);
+
         login_layout.getChildren().addAll(emailLabel, emailText, passwordLabel, passwordText, loginButton);
         // Create the Scene
         login = new Scene(login_layout, 850, 600);
 
-        //******************************************//
-        //*****        Office Manager GUI     ******//
-        //******************************************//
+                                    //******************************************//
+                                    //*****        Office Manager GUI     ******//
+                                    //******************************************//
 
         //----------------------------Office Manager Main menu-----------------------------\\
         // Labels
-        Label userTypeLabel = new Label("Hello " + officeManager.getUserType());
-        // TextBoxes
+        Label welcome_message_OM = new Label("Hello " + officeManager.getUserType());
         // Buttons
         Button generateReport = new Button("Generate a Global Report");
-        generateReport.setMaxWidth(250);
+        generateReport.setMinWidth(250);
         generateReport.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -106,7 +124,7 @@ public class Main extends Application
             }
         });
         Button viewCustomers = new Button("View Customers");
-        viewCustomers.setMaxWidth(250);
+        viewCustomers.setMinWidth(250);
         viewCustomers.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -115,18 +133,18 @@ public class Main extends Application
                 CustomerList.display("Customer List");
             }
         });
-        Button viewBlankStock = new Button("Blank Stock");
-        viewBlankStock.setMaxWidth(250);
-        viewBlankStock.setOnAction(new EventHandler<ActionEvent>()
+        Button viewBlankStock_OM = new Button("Blank Stock");
+        viewBlankStock_OM.setMinWidth(250);
+        viewBlankStock_OM.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent actionEvent)
             {
-                ViewBlankStock.display("Blank Stock");
+                ViewBlankStock_OM.display("Blank Stock");
             }
         });
         Button setCommissionRates = new Button("Commission Rates");
-        setCommissionRates.setMaxWidth(250);
+        setCommissionRates.setMinWidth(250);
         setCommissionRates.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -136,7 +154,7 @@ public class Main extends Application
             }
         });
         Button viewRefundLog = new Button("Refund Log");
-        viewRefundLog.setMaxWidth(250);
+        viewRefundLog.setMinWidth(250);
         viewRefundLog.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -145,8 +163,8 @@ public class Main extends Application
                 RefundLog.display("Refund Log");
             }
         });
-        Button logOutButton = new Button("Log-Out!");
-        logOutButton.setOnAction(new EventHandler<ActionEvent>()
+        Button logOutButton_OM = new Button("Log-Out");
+        logOutButton_OM.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent actionEvent)
@@ -158,85 +176,141 @@ public class Main extends Application
                 }
             }
         });
-        // Layout
+        //---Layout---\\
         // Button Layout
-        VBox OM_MainMenu = new VBox(10);
-        OM_MainMenu.setAlignment(Pos.CENTER);
+        VBox button_layout_OM = new VBox(10);
+        button_layout_OM.setAlignment(Pos.CENTER);
+        button_layout_OM.getChildren().addAll(generateReport,viewCustomers, viewBlankStock_OM, setCommissionRates, viewRefundLog);
+
+        HBox bottom_layout_OM = new HBox();
+        bottom_layout_OM.getChildren().add(logOutButton_OM);
+        bottom_layout_OM.setAlignment(Pos.BASELINE_RIGHT);
+
+        VBox top_layout_OM = new VBox();
+        top_layout_OM.getChildren().add(welcome_message_OM);
+        top_layout_OM.setAlignment(Pos.CENTER);
         // Root Layout
         BorderPane OM_rootLayout = new BorderPane();
         OM_rootLayout.setPadding(new Insets(10,10,10,10));
-        OM_rootLayout.setCenter(OM_MainMenu);
-        OM_rootLayout.setBottom(logOutButton);
-        // Add Elements
-        OM_MainMenu.getChildren().addAll(userTypeLabel,generateReport,viewCustomers, viewBlankStock,
-                setCommissionRates, viewRefundLog);
+        OM_rootLayout.setTop(top_layout_OM);
+        OM_rootLayout.setCenter(button_layout_OM);
+        OM_rootLayout.setBottom(bottom_layout_OM);
+
         // Create Scene
         OM_mainMenu = new Scene(OM_rootLayout, 850, 600);
 
-        // 1.2 Customer List
-        // Labels
-        // TextBoxes
+                                    //******************************************//
+                                    //*****   System Administrator GUI    ******//
+                                    //******************************************//
+        //----------------------------System Admin Main menu-----------------------------\\
+        // Label
+        Label welcome_message_SA = new Label("Hello" + systemAdmin.getUserType());
         // Buttons
-        // Add Elements
-        // Create Scene
+        Button generateStockReport = new Button("Generate Stock Over Report");
+        generateStockReport.setMinWidth(250);
 
-        // 1.2.1 Edit Discount
-        // Labels
-        // TextBoxes
+        Button backUp = new Button("Back-Up System");
+        backUp.setMinWidth(250);
+
+        Button restore = new Button("Restore System");
+        restore.setMinWidth(250);
+
+        Button viewTravelAdvisors = new Button("View Travel Advisors");
+        viewTravelAdvisors.setMinWidth(250);
+
+        Button viewTicketTypes = new Button("View Ticket Types");
+        viewTicketTypes.setMinWidth(250);
+
+        Button viewBlankStock_SA = new Button("View Blank Stock");
+        viewBlankStock_SA.setMinWidth(250);
+
+        Button logOutButton_SA = new Button("Log-Out");
+        logOutButton_SA.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent)
+            {
+                ConfirmLogOut.display();
+                if(ConfirmLogOut.isIsLoogedOut())
+                {
+                    window.setScene(login);
+                }
+            }
+        });
+        //---Layout---\\
+        // Button Layout
+        VBox button_layout_SA = new VBox(10);
+        button_layout_SA.getChildren().addAll(generateStockReport, backUp, restore, viewTicketTypes, viewBlankStock_SA, viewTravelAdvisors);
+        button_layout_SA.setAlignment(Pos.CENTER);
+
+        HBox bottom_layout_SA = new HBox();
+        bottom_layout_SA.getChildren().add(logOutButton_SA);
+        bottom_layout_SA.setAlignment(Pos.BASELINE_RIGHT);
+
+        VBox top_layout_SA = new VBox();
+        top_layout_SA.getChildren().add(welcome_message_SA);
+        top_layout_SA.setAlignment(Pos.CENTER);
+        // Root Layout
+        BorderPane SA_rootLayout = new BorderPane();
+        SA_rootLayout.setPadding(new Insets(10,10,10,10));
+        SA_rootLayout.setTop(top_layout_SA);
+        SA_rootLayout.setCenter(button_layout_SA);
+        SA_rootLayout.setBottom(bottom_layout_SA);
+        // Create Scene
+        SA_mainMenu = new Scene(SA_rootLayout, 850, 600);
+
+                                    //******************************************//
+                                    //*****    Travel Advisor GUI GUI     ******//
+                                    //******************************************//
+        //----------------------------System Admin Main menu-----------------------------\\
+        // Label
+        Label welcome_message_TA = new Label("Hello " + travelAdvisor.getUserType());
         // Buttons
-        // Add Elements
+        Button generateIndividualReport = new Button("Generate Individual Report");
+        generateIndividualReport.setMinWidth(250);
+
+        Button sellTicket = new Button("Sell Ticket");
+        sellTicket.setMinWidth(250);
+
+        Button viewReports = new Button("View Reports");
+        viewReports.setMinWidth(250);
+
+        Button setCurrExchangeRate = new Button("Set Currency Exchange Rate");
+        setCurrExchangeRate.setMinWidth(250);
+
+        Button logOutButton_TA = new Button("Log-Out");
+        logOutButton_TA.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent)
+            {
+                ConfirmLogOut.display();
+                if(ConfirmLogOut.isIsLoogedOut())
+                {
+                    window.setScene(login);
+                }
+            }
+        });
+        //---Layout---\\
+        // Button Layout
+        VBox button_layout_TA = new VBox(10);
+        button_layout_TA.getChildren().addAll(generateIndividualReport, sellTicket, viewReports, setCurrExchangeRate);
+        button_layout_TA.setAlignment(Pos.CENTER);
+
+        HBox bottom_layout_TA = new HBox();
+        bottom_layout_TA.getChildren().add(logOutButton_TA);
+        bottom_layout_TA.setAlignment(Pos.BASELINE_RIGHT);
+
+        VBox top_layout_TA = new VBox();
+        top_layout_TA.getChildren().add(welcome_message_TA);
+        top_layout_TA.setAlignment(Pos.CENTER);
+        // Root Layout
+        BorderPane TA_rootLayout = new BorderPane();
+        TA_rootLayout.setPadding(new Insets(10,10,10,10));
+        TA_rootLayout.setTop(top_layout_TA);
+        TA_rootLayout.setCenter(button_layout_TA);
+        TA_rootLayout.setBottom(bottom_layout_TA);
         // Create Scene
+        TA_mainMenu = new Scene(TA_rootLayout, 850, 600);
 
-        // 1.2.2 Edit Status
-        // Labels
-        // TextBoxes
-        // Buttons
-        // Add Elements
-        // Create Scene
-
-        // 1.3 Blank Stock List
-        // Labels
-        // TextBoxes
-        // Buttons
-        // Add Elements
-        // Create Scene
-
-        // 1.3.1 Re-assign Blanks
-        // Labels
-        // TextBoxes
-        // Buttons
-        // Add Elements
-        // Create Scene
-
-        // 1.3.2 Assign Blanks
-        // Labels
-        // TextBoxes
-        // Buttons
-        // Add Elements
-        // Create Scene
-
-        // 1.4 Set Commission Rates Menu
-        // Labels
-        // TextBoxes
-        // Buttons
-        // Add Elements
-        // Create Scene
-
-        // 1.5 Refund Log
-        // Labels
-        // TextBoxes
-        // Buttons
-        // Add Elements
-        // Create Scene
-        //******************************************//
-        //*****   System Administrator GUI    ******//
-        //******************************************//
-
-
-
-        //******************************************//
-        //*****    Travel Advisor GUI GUI     ******//
-        //******************************************//
 
 
         // Start-up
