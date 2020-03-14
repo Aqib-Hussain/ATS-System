@@ -7,12 +7,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sample.OM_GUI.*;
+import sample.TA_GUI.CurrencyExchange;
+import sample.TA_GUI.IndReportType;
+import sample.TA_GUI.SellTicket;
+import sample.TA_GUI.ViewReports;
 import sample.Users.OfficeManager;
 import sample.Users.SystemAdmin;
 import sample.Users.TravelAdvisor;
@@ -120,7 +123,7 @@ public class Main extends Application
             @Override
             public void handle(ActionEvent actionEvent)
             {
-                ReportType.display("Report Type", "Please select a Report Type");
+                IndReportType.display("Report Type");
             }
         });
         Button viewCustomers = new Button("View Customers");
@@ -267,15 +270,47 @@ public class Main extends Application
         // Buttons
         Button generateIndividualReport = new Button("Generate Individual Report");
         generateIndividualReport.setMinWidth(250);
+        generateIndividualReport.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                GloReportType.display("Report Type");
+            }
+        });
 
         Button sellTicket = new Button("Sell Ticket");
         sellTicket.setMinWidth(250);
+        sellTicket.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                SellTicket.display("Ticket Selling");
+            }
+        });
 
         Button viewReports = new Button("View Reports");
         viewReports.setMinWidth(250);
+        viewReports.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                ViewReports.display("Recorded Reports");
+            }
+        });
 
         Button setCurrExchangeRate = new Button("Set Currency Exchange Rate");
         setCurrExchangeRate.setMinWidth(250);
+        setCurrExchangeRate.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                CurrencyExchange.display("Currency Exchange Rates");
+            }
+        });
 
         Button logOutButton_TA = new Button("Log-Out");
         logOutButton_TA.setOnAction(new EventHandler<ActionEvent>() {

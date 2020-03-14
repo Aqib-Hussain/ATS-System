@@ -14,8 +14,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
-public class ReportType {
-    public static void display(String title, String msg)
+public class GloReportType
+{
+    public static void display(String title)
     {
         // Creating a new window
         Stage window = new Stage();
