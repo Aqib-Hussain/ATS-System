@@ -35,6 +35,7 @@ public class IndReportType
         domesticReportButton.setMaxWidth(175);
 
         Button close = new Button("Close");
+        close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override

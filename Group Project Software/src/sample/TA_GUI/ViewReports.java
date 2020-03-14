@@ -30,6 +30,7 @@ public class ViewReports
         ListView reportsList = new ListView();
         // Buttons
         Button close = new Button("Cancel");
+        close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -44,7 +45,7 @@ public class ViewReports
         centre_layout.setAlignment(Pos.CENTER);
 
         HBox bottom_layout = new HBox(10);
-        bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
+        bottom_layout.setAlignment(Pos.BOTTOM_RIGHT);
         bottom_layout.getChildren().add(close);
 
         BorderPane root_layout = new BorderPane();

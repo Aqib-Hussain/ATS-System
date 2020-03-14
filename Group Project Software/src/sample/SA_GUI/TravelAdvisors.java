@@ -43,6 +43,7 @@ public class TravelAdvisors
         editTA.setMinSize(100,25);
 
         Button close = new Button("Close");
+        close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {

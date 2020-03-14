@@ -123,7 +123,7 @@ public class Main extends Application
             @Override
             public void handle(ActionEvent actionEvent)
             {
-                IndReportType.display("Report Type");
+                GloReportType.display("Report Type");
             }
         });
         Button viewCustomers = new Button("View Customers");

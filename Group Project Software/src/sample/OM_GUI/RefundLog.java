@@ -33,6 +33,7 @@ public class RefundLog
         ListView refundList = new ListView();
         // Buttons
         Button close = new Button("Cancel");
+        close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override

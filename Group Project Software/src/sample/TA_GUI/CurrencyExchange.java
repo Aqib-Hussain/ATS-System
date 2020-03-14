@@ -36,6 +36,7 @@ public class CurrencyExchange
         button_setRates.setMinSize(50,25);
 
         Button cancel = new Button("Cancel");
+        cancel.setMinSize(75,25);
         cancel.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override

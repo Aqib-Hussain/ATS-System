@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -37,6 +38,7 @@ public class GloReportType
         domesticReportButton.setMaxWidth(175);
 
         Button close = new Button("Close");
+        close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -45,15 +47,19 @@ public class GloReportType
             }
         });
         // Layout
-        VBox button_layout = new VBox(10);
-        button_layout.setAlignment(Pos.CENTER);
-        button_layout.setSpacing(10);
-        button_layout.getChildren().addAll(interlineReportButton, domesticReportButton);
+        VBox center_layout = new VBox(10);
+        center_layout.setAlignment(Pos.CENTER);
+        center_layout.setSpacing(10);
+        center_layout.getChildren().addAll(interlineReportButton, domesticReportButton);
+
+        HBox bottom_layout = new HBox();
+        bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
+        bottom_layout.getChildren().add(close);
 
         BorderPane root_layout = new BorderPane();
         root_layout.setPadding(new Insets(11,11,11,11));
-        root_layout.setCenter(button_layout);
-        root_layout.setBottom(close);
+        root_layout.setCenter(center_layout);
+        root_layout.setBottom(bottom_layout);
         root_layout.setTop(selectAReport);
 
         Scene scene = new Scene(root_layout);
