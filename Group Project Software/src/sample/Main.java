@@ -12,6 +12,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sample.OM_GUI.*;
+import sample.SA_GUI.TicketTypes;
+import sample.SA_GUI.TravelAdvisors;
+import sample.SA_GUI.ViewBlankStock_SA;
 import sample.TA_GUI.CurrencyExchange;
 import sample.TA_GUI.IndReportType;
 import sample.TA_GUI.SellTicket;
@@ -220,12 +223,36 @@ public class Main extends Application
 
         Button viewTravelAdvisors = new Button("View Travel Advisors");
         viewTravelAdvisors.setMinWidth(250);
+        viewTravelAdvisors.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                TravelAdvisors.display("Travel Advisors");
+            }
+        });
 
         Button viewTicketTypes = new Button("View Ticket Types");
         viewTicketTypes.setMinWidth(250);
+        viewTicketTypes.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                TicketTypes.display("Ticket Types");
+            }
+        });
 
         Button viewBlankStock_SA = new Button("View Blank Stock");
         viewBlankStock_SA.setMinWidth(250);
+        viewBlankStock_SA.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                ViewBlankStock_SA.display("Blank Stock");
+            }
+        });
 
         Button logOutButton_SA = new Button("Log-Out");
         logOutButton_SA.setOnAction(new EventHandler<ActionEvent>() {
