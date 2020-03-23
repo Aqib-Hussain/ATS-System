@@ -11,18 +11,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import sample.OM_GUI.*;
-import sample.SA_GUI.TicketTypes;
-import sample.SA_GUI.TravelAdvisors;
-import sample.SA_GUI.ViewBlankStock_SA;
-import sample.TA_GUI.CurrencyExchange;
-import sample.TA_GUI.IndReportType;
-import sample.TA_GUI.SellTicket;
-import sample.TA_GUI.ViewReports;
-import sample.Users.OfficeManager;
-import sample.Users.SystemAdmin;
-import sample.Users.TravelAdvisor;
-import sample.Users.User;
+import OM_GUI.*;
+import SA_GUI.TicketTypes;
+import SA_GUI.TravelAdvisors;
+import SA_GUI.ViewBlankStock_SA;
+import TA_GUI.CurrencyExchange;
+import TA_GUI.SellTicket;
+import TA_GUI.ViewReports;
+import Staff.OfficeManager;
+import Staff.SystemAdmin;
+import Staff.TravelAdvisor;
+import Staff.StaffAccount;
 
 public class Main extends Application
 {
@@ -39,7 +38,7 @@ public class Main extends Application
     Scene TA_mainMenu;
 
     //------------------------------------User-------------------------------\\
-    User user = new User();
+    StaffAccount staffAccount = new StaffAccount();
     OfficeManager officeManager = new OfficeManager();
     SystemAdmin systemAdmin = new SystemAdmin();
     TravelAdvisor travelAdvisor = new TravelAdvisor();
