@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import OM_GUI.*;
 import SA_GUI.TicketTypes;
@@ -56,11 +57,15 @@ public class Main extends Application
 
         //--------------------------Log-in Menu------------------------------\\
         // Labels
+        Label title = new Label("ATS-System Login");
+        title.setFont(Font.font(27));
+
         Label emailLabel = new Label("Email");
         emailLabel.setPadding(new Insets(0,0,-5,0));
 
         Label passwordLabel = new Label("Password");
         passwordLabel.setPadding(new Insets(0,0,-5,0));
+
         // TextBoxes
         TextField emailText = new TextField();
         emailText.setPromptText("Username");
@@ -69,6 +74,7 @@ public class Main extends Application
         PasswordField passwordText = new PasswordField();
         passwordText.setPromptText("Password");
         passwordText.setMaxWidth(200);
+
         // Buttons
         Button loginButton = new Button("Log-In");
         loginButton.setOnAction(new EventHandler<ActionEvent>()
@@ -96,19 +102,30 @@ public class Main extends Application
                 }
                 else
                 {
-                    AlertBox.display("ALERT!", "Please provide correct details");
+                    AlertBox.display("Wrong Log-in Info", "Please provide correct details");
                     emailText.clear();
                     passwordText.clear();
                 }
             }
         });
-        // Layout
-        VBox login_layout = new VBox(15);
-        login_layout.setAlignment(Pos.CENTER);
 
-        login_layout.getChildren().addAll(emailLabel, emailText, passwordLabel, passwordText, loginButton);
+        // Layout
+        VBox top_layout_login = new VBox();
+        top_layout_login.setAlignment(Pos.CENTER);
+        top_layout_login.setPadding(new Insets(0,0,10,0));
+        top_layout_login.getChildren().add(title);
+
+        VBox center_layout_login = new VBox(15);
+        center_layout_login.setAlignment(Pos.CENTER);
+        center_layout_login.getChildren().addAll(emailLabel, emailText, passwordLabel, passwordText, loginButton);
+
+        BorderPane root_layout_login = new BorderPane();
+        root_layout_login.setPadding(new Insets(10,10,10,10));
+        root_layout_login.setTop(top_layout_login);
+        root_layout_login.setCenter(center_layout_login);
+
         // Create the Scene
-        login = new Scene(login_layout, 850, 600);
+        login = new Scene(root_layout_login, 850, 600);
 
                                     //******************************************//
                                     //*****        Office Manager GUI     ******//
@@ -117,6 +134,8 @@ public class Main extends Application
         //----------------------------Office Manager Main menu-----------------------------\\
         // Labels
         Label welcome_message_OM = new Label("Hello " + officeManager.getUserType());
+        welcome_message_OM.setFont(Font.font(20));
+
         // Buttons
         Button generateReport = new Button("Generate a Global Report");
         generateReport.setMinWidth(250);
@@ -181,11 +200,12 @@ public class Main extends Application
                 }
             }
         });
+
         //---Layout---\\
         // Button Layout
-        VBox button_layout_OM = new VBox(10);
-        button_layout_OM.setAlignment(Pos.CENTER);
-        button_layout_OM.getChildren().addAll(generateReport,viewCustomers, viewBlankStock_OM, setCommissionRates, viewRefundLog);
+        VBox center_layout_OM = new VBox(10);
+        center_layout_OM.setAlignment(Pos.CENTER);
+        center_layout_OM.getChildren().addAll(generateReport,viewCustomers, viewBlankStock_OM, setCommissionRates, viewRefundLog);
 
         HBox bottom_layout_OM = new HBox();
         bottom_layout_OM.getChildren().add(logOutButton_OM);
@@ -194,11 +214,12 @@ public class Main extends Application
         VBox top_layout_OM = new VBox();
         top_layout_OM.getChildren().add(welcome_message_OM);
         top_layout_OM.setAlignment(Pos.CENTER);
+
         // Root Layout
         BorderPane OM_rootLayout = new BorderPane();
         OM_rootLayout.setPadding(new Insets(10,10,10,10));
         OM_rootLayout.setTop(top_layout_OM);
-        OM_rootLayout.setCenter(button_layout_OM);
+        OM_rootLayout.setCenter(center_layout_OM);
         OM_rootLayout.setBottom(bottom_layout_OM);
 
         // Create Scene
@@ -209,7 +230,9 @@ public class Main extends Application
                                     //******************************************//
         //----------------------------System Admin Main menu-----------------------------\\
         // Label
-        Label welcome_message_SA = new Label("Hello" + systemAdmin.getUserType());
+        Label welcome_message_SA = new Label("Hello " + systemAdmin.getUserType());
+        welcome_message_SA.setFont(Font.font(20));
+
         // Buttons
         Button generateStockReport = new Button("Generate Stock Over Report");
         generateStockReport.setMinWidth(250);
@@ -265,11 +288,12 @@ public class Main extends Application
                 }
             }
         });
+
         //---Layout---\\
         // Button Layout
-        VBox button_layout_SA = new VBox(10);
-        button_layout_SA.getChildren().addAll(generateStockReport, backUp, restore, viewTicketTypes, viewBlankStock_SA, viewTravelAdvisors);
-        button_layout_SA.setAlignment(Pos.CENTER);
+        VBox center_layout_SA = new VBox(10);
+        center_layout_SA.getChildren().addAll(generateStockReport, backUp, restore, viewTicketTypes, viewBlankStock_SA, viewTravelAdvisors);
+        center_layout_SA.setAlignment(Pos.CENTER);
 
         HBox bottom_layout_SA = new HBox();
         bottom_layout_SA.getChildren().add(logOutButton_SA);
@@ -278,12 +302,14 @@ public class Main extends Application
         VBox top_layout_SA = new VBox();
         top_layout_SA.getChildren().add(welcome_message_SA);
         top_layout_SA.setAlignment(Pos.CENTER);
+
         // Root Layout
         BorderPane SA_rootLayout = new BorderPane();
         SA_rootLayout.setPadding(new Insets(10,10,10,10));
         SA_rootLayout.setTop(top_layout_SA);
-        SA_rootLayout.setCenter(button_layout_SA);
+        SA_rootLayout.setCenter(center_layout_SA);
         SA_rootLayout.setBottom(bottom_layout_SA);
+
         // Create Scene
         SA_mainMenu = new Scene(SA_rootLayout, 850, 600);
 
@@ -293,6 +319,8 @@ public class Main extends Application
         //----------------------------System Admin Main menu-----------------------------\\
         // Label
         Label welcome_message_TA = new Label("Hello " + travelAdvisor.getUserType());
+        welcome_message_TA.setFont(Font.font(20));
+
         // Buttons
         Button generateIndividualReport = new Button("Generate Individual Report");
         generateIndividualReport.setMinWidth(250);
@@ -350,11 +378,12 @@ public class Main extends Application
                 }
             }
         });
+
         //---Layout---\\
         // Button Layout
-        VBox button_layout_TA = new VBox(10);
-        button_layout_TA.getChildren().addAll(generateIndividualReport, sellTicket, viewReports, setCurrExchangeRate);
-        button_layout_TA.setAlignment(Pos.CENTER);
+        VBox center_layout_TA = new VBox(10);
+        center_layout_TA.getChildren().addAll(generateIndividualReport, sellTicket, viewReports, setCurrExchangeRate);
+        center_layout_TA.setAlignment(Pos.CENTER);
 
         HBox bottom_layout_TA = new HBox();
         bottom_layout_TA.getChildren().add(logOutButton_TA);
@@ -363,16 +392,16 @@ public class Main extends Application
         VBox top_layout_TA = new VBox();
         top_layout_TA.getChildren().add(welcome_message_TA);
         top_layout_TA.setAlignment(Pos.CENTER);
+
         // Root Layout
         BorderPane TA_rootLayout = new BorderPane();
         TA_rootLayout.setPadding(new Insets(10,10,10,10));
         TA_rootLayout.setTop(top_layout_TA);
-        TA_rootLayout.setCenter(button_layout_TA);
+        TA_rootLayout.setCenter(center_layout_TA);
         TA_rootLayout.setBottom(bottom_layout_TA);
+
         // Create Scene
         TA_mainMenu = new Scene(TA_rootLayout, 850, 600);
-
-
 
         // Start-up
         window.setScene(login);

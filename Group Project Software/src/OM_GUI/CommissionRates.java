@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -20,17 +21,22 @@ public class CommissionRates
     {
         // Creating a new window
         Stage window = new Stage();
+
         // Window takes priority until taken care of
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setMinWidth(200);
         window.setMinHeight(250);
         window.setResizable(false);
+
         // Labels
         Label label_task = new Label("Please enter a value");
+        label_task.setFont(Font.font(14));
+
         // Text
         TextField text_commissionRate = new TextField();
         text_commissionRate.setMinSize(50,25);
+
         // Buttons
         Button button_setRates = new Button("Set");
         button_setRates.setMinSize(50,25);
@@ -45,27 +51,31 @@ public class CommissionRates
                 window.close();
             }
         });
-        // Layout
-        VBox button_layout = new VBox(10);
-        button_layout.getChildren().addAll(text_commissionRate, button_setRates);
-        button_layout.setAlignment(Pos.CENTER);
 
-        HBox bottom_layout = new HBox(50);
+        // Layout
+        VBox center_layout = new VBox(10);
+        center_layout.setAlignment(Pos.CENTER);
+        center_layout.getChildren().addAll(text_commissionRate, button_setRates);
+
+        HBox bottom_layout = new HBox();
         bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
         bottom_layout.getChildren().add(cancel);
 
-        HBox top_layout = new HBox(50);
+        HBox top_layout = new HBox();
         top_layout.setAlignment(Pos.CENTER);
         top_layout.getChildren().add(label_task);
 
         BorderPane root_layout = new BorderPane();
         root_layout.setPadding(new Insets(10,10,10,10));
-        root_layout.setCenter(button_layout);
+        root_layout.setCenter(center_layout);
         root_layout.setBottom(bottom_layout);
         root_layout.setTop(top_layout);
 
+        // Scene
         Scene scene = new Scene(root_layout);
         window.setScene(scene);
+
+        // Start window
         window.showAndWait();
     }
 

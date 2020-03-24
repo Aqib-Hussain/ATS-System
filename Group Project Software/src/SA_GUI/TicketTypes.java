@@ -52,6 +52,7 @@ public class TicketTypes
                 window.close();
             }
         });
+
         // Layout
         VBox top_layout = new VBox();
         top_layout.setAlignment(Pos.CENTER);
@@ -82,8 +83,11 @@ public class TicketTypes
         root_layout.setCenter(center_layout);
         root_layout.setBottom(bottom_layout);
 
+        // Scene
         Scene scene = new Scene(root_layout);
         window.setScene(scene);
+
+        // Start window
         window.showAndWait();
     }
 }

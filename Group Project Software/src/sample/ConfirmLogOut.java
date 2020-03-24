@@ -29,16 +29,17 @@ public class ConfirmLogOut
     {
         // Creating a new window
         Stage window = new Stage();
+
         // Window takes priority until taken care of
         window.initModality(Modality.APPLICATION_MODAL);
         window.setResizable(false);
-
         window.setTitle("Confirm Log-out");
         window.setMinWidth(250);
         window.setMinHeight(150);
 
         // Labels
         Label label = new Label("Are you sure you want to Log-Out?");
+
         // Buttons
         Button yes = new Button("Yes");
         yes.setMinWidth(75);
@@ -69,8 +70,11 @@ public class ConfirmLogOut
         layout.getChildren().addAll(label, yes, no);
         layout.setAlignment(Pos.CENTER);
 
+        // Scene
         Scene scene = new Scene(layout);
         window.setScene(scene);
+
+        // Start window
         window.showAndWait();
     }
 }

@@ -28,6 +28,7 @@ public class TravelAdvisors
     public static void display(String title) {
         // Creating a new window
         Stage window = new Stage();
+
         // Window takes priority until taken care of
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
@@ -76,6 +77,7 @@ public class TravelAdvisors
                 window.close();
             }
         });
+
         // Layout
         VBox top_layout = new VBox();
         top_layout.setAlignment(Pos.CENTER);
@@ -112,7 +114,6 @@ public class TravelAdvisors
         // Label
         Label addTA_pageInfo = new Label("Enter details for a new Travel Advisor");
         addTA_pageInfo.setFont(Font.font(20));
-
 
         Label addTA_firstName = new Label("Firstname:");
         Label addTA_surname = new Label("Surname:");
@@ -243,6 +244,7 @@ public class TravelAdvisors
         editTA_Root_Layout.setBottom(editTA_bottom_layout);
         editTA_Root_Layout.setLeft(editTA_left_layout);
 
+        // Start window
         window.showAndWait();
     }
 }
