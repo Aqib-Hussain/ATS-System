@@ -65,6 +65,8 @@ public class Main extends Application {
         Label emailLabel = new Label("Email");
         emailLabel.setPadding(new Insets(0, 0, -5, 0));
 
+        Label OM_login_info = new Label();
+
         Label passwordLabel = new Label("Password");
         passwordLabel.setPadding(new Insets(0, 0, -5, 0));
         // TextBoxes

@@ -1,5 +1,6 @@
 package OM_GUI;
 
+import Database.DBConnectivity;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,6 +15,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class CommissionRates
 {
@@ -40,6 +46,27 @@ public class CommissionRates
         // Buttons
         Button button_setRates = new Button("Set");
         button_setRates.setMinSize(50,25);
+        button_setRates.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                try {
+                    // Connect to the Database
+                    DBConnectivity dbConnectivity = new DBConnectivity();
+                    Connection connection = dbConnectivity.getConnection();
+                    Statement statement = connection.createStatement();
+
+                    // SQL query to find matching email and password
+                    String query = "INSERT INTO commissionrate VALUES ('e', 'x', '" + Float.parseFloat(text_commissionRate.getText()) + "')";
+                    statement.executeUpdate(query);
+                    System.out.println("Working 2");
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         Button cancel = new Button("Cancel");
         cancel.setMinSize(75,25);
