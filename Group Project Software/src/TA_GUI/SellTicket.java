@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -35,9 +36,11 @@ public class SellTicket
         window.setWidth(400);
         window.setHeight(450);
         window.setResizable(false);
+
         // Labels
         Label selectCust = new Label("Please Select a customer");
         selectCust.setPadding(new Insets(0,0,13,8));
+
         // Buttons
         Button existingCust = new Button("Select from existing customers");
         existingCust.setMaxWidth(200);
@@ -70,29 +73,35 @@ public class SellTicket
                 window.close();
             }
         });
+
         // Layout
-        VBox button_layout = new VBox(10);
-        button_layout.setAlignment(Pos.CENTER);
-        button_layout.setSpacing(10);
-        button_layout.getChildren().addAll(existingCust, createCust);
+        VBox top_layout = new VBox();
+        top_layout.setAlignment(Pos.CENTER);
+        top_layout.setPadding(new Insets(0,0,10,0));
+        top_layout.getChildren().add(selectCust);
+
+        VBox center_layout = new VBox(10);
+        center_layout.setAlignment(Pos.CENTER);
+        center_layout.setSpacing(10);
+        center_layout.getChildren().addAll(existingCust, createCust);
 
         HBox bottom_layout = new HBox();
         bottom_layout.getChildren().add(close);
         bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
 
-
         root_layout.setPadding(new Insets(11,11,11,11));
-        root_layout.setCenter(button_layout);
+        root_layout.setCenter(center_layout);
         root_layout.setBottom(bottom_layout);
-        root_layout.setTop(selectCust);
+        root_layout.setTop(top_layout);
 
-
+        // Scene
         window.setScene(scene);
 
 
         // *************Create Customer Window************ \\
         // Label
         Label createCust_Label = new Label("Enter new customer details");
+        createCust_Label.setFont(Font.font(16));
 
         Label firstName = new Label("Firstname:");
         Label surname = new Label("Surname:");
@@ -159,6 +168,7 @@ public class SellTicket
         // *****************Existing Customer Window****************** \\
         // Label
         Label EC_details_label = new Label("Enter Customer Details");
+        EC_details_label.setFont(Font.font(16));
 
         Label EC_firstName = new Label("Firstname:");
         Label EC_surname = new Label("Surname:");
@@ -216,6 +226,7 @@ public class SellTicket
         EC_root_Layout.setBottom(EC_bottom_layout);
         EC_root_Layout.setLeft(EC_left_layout);
 
+        // Start window
         window.showAndWait();
     }
 }

@@ -21,6 +21,7 @@ public class ViewBlankStock_SA
     {
         // Creating a new window
         Stage window = new Stage();
+
         // Window takes priority until taken care of
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
@@ -52,6 +53,7 @@ public class ViewBlankStock_SA
                 window.close();
             }
         });
+
         // Layout
         VBox top_layout = new VBox();
         top_layout.setAlignment(Pos.CENTER);
@@ -86,10 +88,7 @@ public class ViewBlankStock_SA
         Scene scene = new Scene(root_layout);
         window.setScene(scene);
 
-
-
-
-
+        // Start window
         window.showAndWait();
     }
 }
