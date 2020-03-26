@@ -1,5 +1,6 @@
 package TA_GUI;
 
+import Database.DBConnectivity;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,8 +16,17 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class SellTicket
 {
+    // Database
+    static DBConnectivity dbConnectivity = new DBConnectivity();
+    static Connection connection = dbConnectivity.getConnection();
+
     // Layouts
     static BorderPane root_layout = new BorderPane();
     static BorderPane CC_root_layout = new BorderPane();
@@ -26,6 +36,9 @@ public class SellTicket
     static Scene scene = new Scene(root_layout);
     static Scene CC_scene = new Scene(CC_root_layout);
     static Scene EC_scene = new Scene(EC_root_Layout);
+
+    // Customer id
+    static int cust_id;
 
     public static void display(String title)
     {
@@ -108,21 +121,6 @@ public class SellTicket
         Label address = new Label("Address:");
         Label phoneNumber = new Label("Phone No:");
 
-        // Buttons
-        Button create = new Button("Create customer");
-        create.setMinSize(125,25);
-
-        Button cancel = new Button("Cancel");
-        cancel.setMinSize(75,25);
-        cancel.setOnAction(new EventHandler<ActionEvent>()
-        {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                window.setScene(scene);
-            }
-        });
-
         //TextFields
         TextField custFirstname = new TextField();
         custFirstname.setPromptText("Firstname");
@@ -139,6 +137,44 @@ public class SellTicket
         TextField custPhoneNum = new TextField();
         custPhoneNum.setPromptText("Phone Number");
         custPhoneNum.setMaxWidth(200);
+
+        // Buttons
+        Button create = new Button("Create customer");
+        create.setMinSize(125,25);
+        create.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                try {
+                    // Connect to the Database
+                    Statement statement = connection.createStatement();
+//                    String idQuery = "SELECT 'ID' FROM customer";
+//                    ResultSet resultSet = statement.executeQuery(idQuery);
+//                    cust_id = resultSet.getInt(1);
+//                    cust_id++;
+
+                    // SQL query to find matching email and password
+                    String query = "INSERT INTO customer VALUES ('00003', '"+custFirstname.getText()+"', '" + custSurname.getText() + "', '" + custAddress.getText() + "', '" + custPhoneNum.getText() +"')";
+                    statement.executeUpdate(query);
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        Button cancel = new Button("Cancel");
+        cancel.setMinSize(75,25);
+        cancel.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                window.setScene(scene);
+            }
+        });
 
         //---Layout---\\
         // Button Layout
