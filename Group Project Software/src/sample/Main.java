@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import OM_GUI.*;
 import SA_GUI.TicketTypes;
@@ -62,13 +63,26 @@ public class Main extends Application {
 
         //--------------------------Log-in Menu------------------------------\\
         // Labels
+        Label login_label = new Label("ATS-System Login");
+        login_label.setFont(Font.font(25));
+
         Label emailLabel = new Label("Email");
+        emailLabel.setFont(Font.font(15));
         emailLabel.setPadding(new Insets(0, 0, -5, 0));
 
-        Label OM_login_info = new Label();
-
         Label passwordLabel = new Label("Password");
+        passwordLabel.setFont(Font.font(15));
         passwordLabel.setPadding(new Insets(0, 0, -5, 0));
+
+        Label OM_login = new Label("Email: OFFICE@MANAGER \nPassword: 1");
+        OM_login.setFont(Font.font(16));
+
+        Label SA_login = new Label("Email: SYSTEM@ADMIN \nPassword: 2");
+        SA_login.setFont(Font.font(16));
+
+        Label TA_login = new Label("Email: TRAVEL@ADVISOR \nPassword: 3");
+        TA_login.setFont(Font.font(16));
+
         // TextBoxes
         TextField emailText = new TextField();
         emailText.setPromptText("Username");
@@ -77,13 +91,16 @@ public class Main extends Application {
         PasswordField passwordText = new PasswordField();
         passwordText.setPromptText("Password");
         passwordText.setMaxWidth(200);
+
         // Buttons
         Button loginButton = new Button("Log-In");
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 boolean loggedIn = false;
-
+                String officeManagerType = "om";
+                String systemAdminType = "sa";
+                String travelAdviorType = "ta";
 
                 try {
                     // Connect to the Database
@@ -92,59 +109,68 @@ public class Main extends Application {
                     String query = "SELECT EMAIL, PASSWORD, STAFFTYPE FROM STAFF WHERE EMAIL ='" + emailText.getText() + "'";
                     ResultSet resultSet = statement.executeQuery(query);
                     // System.out.println(resultSet.getString("email"));
-                    while (resultSet.next()) {
-                        if (emailText.getText().equals(resultSet.getString("email")) && passwordText.getText().equals(resultSet.getString("password"))) {
-                            System.out.println("working");
-                            //       if (resultSet.getString("om").) {
-                            window.setScene(OM_mainMenu);
-                            loggedIn = true;
+                    while (resultSet.next())
+                    {
+                        if (emailText.getText().equals(resultSet.getString("email")) &&
+                                passwordText.getText().equals(resultSet.getString("password")) &&
+                                officeManagerType.equals(resultSet.getString("StaffType")));
+                        {
+                            if (officeManagerType.equals(resultSet.getString("StaffType")))
+                            {
+                                window.setScene(OM_mainMenu);
+                                loggedIn = true;
+                            }
+                            else if(systemAdminType.equals(resultSet.getString("StaffType")))
+                            {
+                                window.setScene(SA_mainMenu);
+                                loggedIn = true;
+                            }
+                            else if(travelAdviorType.equals(resultSet.getString("StaffType")))
+                            {
+                                window.setScene(TA_mainMenu);
+                                loggedIn = true;
+                            }
                         }
-                        //   }
                         emailText.clear();
                         passwordText.clear();
                     }
 
-                } catch (SQLException e) {
+                }
+                catch (SQLException e)
+                {
                     e.printStackTrace();
                 }
-                if (!loggedIn) {
+                if (!loggedIn)
+                {
                     AlertBox.display("ALERT!", "Please provide correct details");
                     emailText.clear();
                     passwordText.clear();
                 }
-
-
-//                if(emailText.getText().equals(officeManager.getEmail()) && passwordText.getText().equals(officeManager.getPassword()))
-//                {
-//                    window.setScene(OM_mainMenu);
-//                    emailText.clear();
-//                    passwordText.clear();
-//                }
-//                else if (emailText.getText().equals(systemAdmin.getEmail()) && passwordText.getText().equals(systemAdmin.getPassword()))
-//                {
-//                    window.setScene(SA_mainMenu);
-//                    emailText.clear();
-//                    passwordText.clear();
-//                }
-//                else if (emailText.getText().equals(travelAdvisor.getEmail()) && passwordText.getText().equals(travelAdvisor.getPassword()))
-//                {
-//                    window.setScene(TA_mainMenu);
-//                    emailText.clear();
-//                    passwordText.clear();
-//                }
-
-
             }
         });
 
-
         // Layout
-        VBox login_layout = new VBox(15);
-        login_layout.setAlignment(Pos.CENTER);
+        VBox top_layout = new VBox();
+        top_layout.setPadding(new Insets(10,0,0,0));
+        top_layout.setAlignment(Pos.CENTER);
+        top_layout.getChildren().add(login_label);
 
-        login_layout.getChildren().addAll(emailLabel, emailText, passwordLabel, passwordText, loginButton);
+        HBox bottom_layout = new HBox(20);
+        bottom_layout.setAlignment(Pos.CENTER);
+        bottom_layout.getChildren().addAll(OM_login, SA_login, TA_login);
+
+        VBox center_layout = new VBox(15);
+        center_layout.setAlignment(Pos.CENTER);
+        center_layout.getChildren().addAll(emailLabel, emailText, passwordLabel, passwordText, loginButton);
+
+        BorderPane root_layout = new BorderPane();
+        root_layout.setPadding(new Insets(10,10,10,10));
+        root_layout.setTop(top_layout);
+        root_layout.setBottom(bottom_layout);
+        root_layout.setCenter(center_layout);
+
         // Create the Scene
-        login = new Scene(login_layout, 850, 600);
+        login = new Scene(root_layout, 850, 600);
 
         //******************************************//
         //*****        Office Manager GUI     ******//
@@ -153,6 +179,8 @@ public class Main extends Application {
         //----------------------------Office Manager Main menu-----------------------------\\
         // Labels
         Label welcome_message_OM = new Label("Hello " + officeManager.getUserType());
+        welcome_message_OM.setFont(Font.font(20));
+
         // Buttons
         Button generateReport = new Button("Generate a Global Report");
         generateReport.setMinWidth(250);
@@ -232,7 +260,9 @@ public class Main extends Application {
         //******************************************//
         //----------------------------System Admin Main menu-----------------------------\\
         // Label
-        Label welcome_message_SA = new Label("Hello" + systemAdmin.getUserType());
+        Label welcome_message_SA = new Label("Hello " + systemAdmin.getUserType());
+        welcome_message_SA.setFont(Font.font(20));
+
         // Buttons
         Button generateStockReport = new Button("Generate Stock Over Report");
         generateStockReport.setMinWidth(250);
@@ -280,6 +310,7 @@ public class Main extends Application {
                 }
             }
         });
+
         //---Layout---\\
         // Button Layout
         VBox button_layout_SA = new VBox(10);
@@ -293,6 +324,7 @@ public class Main extends Application {
         VBox top_layout_SA = new VBox();
         top_layout_SA.getChildren().add(welcome_message_SA);
         top_layout_SA.setAlignment(Pos.CENTER);
+
         // Root Layout
         BorderPane SA_rootLayout = new BorderPane();
         SA_rootLayout.setPadding(new Insets(10, 10, 10, 10));
@@ -308,6 +340,8 @@ public class Main extends Application {
         //----------------------------System Admin Main menu-----------------------------\\
         // Label
         Label welcome_message_TA = new Label("Hello " + travelAdvisor.getUserType());
+        welcome_message_TA.setFont(Font.font(20));
+
         // Buttons
         Button generateIndividualReport = new Button("Generate Individual Report");
         generateIndividualReport.setMinWidth(250);
@@ -355,6 +389,7 @@ public class Main extends Application {
                 }
             }
         });
+
         //---Layout---\\
         // Button Layout
         VBox button_layout_TA = new VBox(10);
@@ -377,15 +412,12 @@ public class Main extends Application {
         // Create Scene
         TA_mainMenu = new Scene(TA_rootLayout, 850, 600);
 
-
         // Start-up
         window.setScene(login);
         window.setTitle("ATS System");
         window.show();
     }
 
-    public void goToLogin() {
-        window.setScene(login);
-    }
-
 }
+
+
