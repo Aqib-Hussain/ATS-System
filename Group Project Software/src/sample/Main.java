@@ -20,6 +20,7 @@ import SA_GUI.ViewBlankStock_SA;
 import TA_GUI.CurrencyExchange;
 import TA_GUI.SellTicket;
 import TA_GUI.ViewReports;
+import sample.Staff.SystemAdmin;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -43,6 +44,8 @@ public class Main extends Application {
     Scene SA_mainMenu;
     // Travel Advisor Scenes
     Scene TA_mainMenu;
+
+    SystemAdmin systemAdmin = new SystemAdmin();
 
     public static void main(String[] args) {
         launch(args);
@@ -105,7 +108,7 @@ public class Main extends Application {
                     // Connect to the Database
                     Statement statement = connection.createStatement();
                     // SQL query to find matching email and password
-                    String query = "SELECT EMAIL, PASSWORD, STAFFTYPE FROM STAFF WHERE EMAIL ='" + emailText.getText() + "'";
+                    String query = "SELECT EMAIL, PASSWORD, STAFFTYPE FROM STAFF WHERE EMAIL ='" + nameText.getText() + "'";
                     ResultSet resultSet = statement.executeQuery(query);
 
                     while (resultSet.next())
@@ -279,7 +282,7 @@ public class Main extends Application {
         backUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                SystemAdmin.SystemBackUp();
+                systemAdmin.SystemBackUp();
             }
         });
 
@@ -288,7 +291,7 @@ public class Main extends Application {
         backUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                SystemAdmin.SystemRestore();
+                systemAdmin.SystemRestore();
             }
         });
 

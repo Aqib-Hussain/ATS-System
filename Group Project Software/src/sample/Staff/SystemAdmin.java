@@ -63,7 +63,7 @@ public class SystemAdmin extends StaffAccount {
             /*NOTE: Creating Database Constraints*/
             String dbName = "ats";
             String dbUser = "root";
-            String dbPass = "AB+J#bveL3Sm35j9KXmg_@mE^xny7e";
+            String dbPass = "Edward220600!!";
 
             // Used to create a cmd command
             String[] executeCmd = new String[]{"mysql", dbName, "-u" + dbUser, "-p" + dbPass, "-e", " source " + restorePath};
