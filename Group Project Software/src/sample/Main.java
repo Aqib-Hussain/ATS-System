@@ -21,13 +21,13 @@ import TA_GUI.CurrencyExchange;
 import TA_GUI.SellTicket;
 import TA_GUI.ViewReports;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Main extends Application
-{
+public class Main extends Application {
     // Database
     DBConnectivity dbConnectivity = new DBConnectivity();
     Connection connection = dbConnectivity.getConnection();
@@ -105,7 +105,7 @@ public class Main extends Application
                     // Connect to the Database
                     Statement statement = connection.createStatement();
                     // SQL query to find matching email and password
-                    String query = "SELECT name, StaffType, password FROM STAFF WHERE name ='" + nameText.getText() + "'";
+                    String query = "SELECT EMAIL, PASSWORD, STAFFTYPE FROM STAFF WHERE EMAIL ='" + emailText.getText() + "'";
                     ResultSet resultSet = statement.executeQuery(query);
 
                     while (resultSet.next())
@@ -163,7 +163,7 @@ public class Main extends Application
         center_layout.getChildren().addAll(emailLabel, nameText, passwordLabel, passwordText, loginButton);
 
         BorderPane root_layout = new BorderPane();
-        root_layout.setPadding(new Insets(10,10,10,10));
+        root_layout.setPadding(new Insets(10, 10, 10, 10));
         root_layout.setTop(top_layout);
         root_layout.setBottom(bottom_layout);
         root_layout.setCenter(center_layout);
@@ -196,7 +196,7 @@ public class Main extends Application
         viewCustomers.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CustomerList.display("sample.Customer List");
+                CustomerList.display("Customer List");
             }
         });
         Button viewBlankStock_OM = new Button("Blank Stock");
@@ -276,9 +276,21 @@ public class Main extends Application
 
         Button backUp = new Button("Back-Up System");
         backUp.setMinWidth(250);
+        backUp.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                SystemAdmin.SystemBackUp();
+            }
+        });
 
         Button restore = new Button("Restore System");
         restore.setMinWidth(250);
+        backUp.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                SystemAdmin.SystemRestore();
+            }
+        });
 
         Button viewTravelAdvisors = new Button("View Travel Advisors");
         viewTravelAdvisors.setMinWidth(250);
