@@ -1,22 +1,36 @@
 package OM_GUI;
 
+import Database.DBConnectivity;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sample.Customer;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class CustomerList
 {
+    // Database
+    static DBConnectivity dbConnectivity = new DBConnectivity();
+    static Connection connection = dbConnectivity.getConnection();
+
+    // Table View
+    static TableView<Customer> table;
+
     public static void display(String title)
     {
         // Creating a new window
@@ -31,19 +45,38 @@ public class CustomerList
 
         // Labels
         Label page_info = new Label("Customers");
-        page_info.setFont(Font.font(20));
+        page_info.getStyleClass().add("label-title");
 
-        // List
-        ListView customerList = new ListView();
+        // Table
+        TableColumn<Customer, String> firstNameColumn = new TableColumn<>("Firstname");
+        firstNameColumn.setMinWidth(100);
+        firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+
+        TableColumn<Customer, String> surnameColumn = new TableColumn<>("Surname");
+        surnameColumn.setMinWidth(100);
+        surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surName"));
+
+        TableColumn<Customer, String> typeColumn = new TableColumn<>("Type");
+        typeColumn.setMinWidth(100);
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        TableColumn<Customer, Double> discount = new TableColumn<>("Discount");
+        discount.setMinWidth(100);
+        discount.setCellValueFactory(new PropertyValueFactory<>("discount"));
+
+        table = new TableView<>();
+        table.setItems(getCustomers());
+        table.getColumns().addAll(firstNameColumn, surnameColumn, typeColumn, discount);
 
         // Buttons
         Button editStatus = new Button("Edit Status");
-        editStatus.setMinSize(100,25);
+        editStatus.setMinSize(140,25);
 
         Button editDiscount = new Button("Edit Discount");
-        editDiscount.setMinSize(100,25);
+        editDiscount.setMinSize(140,25);
 
         Button close = new Button("Close");
+        close.getStyleClass().add("button-exit");
         close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -56,38 +89,67 @@ public class CustomerList
 
         // Layout
         VBox top_layout = new VBox();
-        top_layout.setPadding(new Insets(10,0,10,0));
         top_layout.setAlignment(Pos.CENTER);
         top_layout.getChildren().add(page_info);
+        top_layout.setPadding(new Insets(0,0,20,0));
 
-        VBox right_layout = new VBox(50);
-        right_layout.setPadding(new Insets(10,0,10,0));
-        right_layout.setAlignment(Pos.TOP_RIGHT);
-        right_layout.getChildren().addAll(editDiscount, editStatus);
+        VBox list_layout = new VBox(50);
+        list_layout.setAlignment(Pos.CENTER);
+        list_layout.getChildren().add(table);
+        list_layout.setPadding(new Insets(0,0,20,0));
 
-        VBox center_layout = new VBox();
-        center_layout.setPadding(new Insets(10,10,10,0));
-        center_layout.setAlignment(Pos.CENTER);
-        center_layout.getChildren().add(customerList);
+        HBox button_layout = new HBox(30);
+        button_layout.setAlignment(Pos.CENTER);
+        button_layout.getChildren().addAll(editStatus, editDiscount);
+        button_layout.setPadding(new Insets(0,0,20,0));
 
-        HBox bottom_layout = new HBox();
+        BorderPane center_layout = new BorderPane();
+        center_layout.setCenter(list_layout);
+        center_layout.setBottom(button_layout);
+
+        HBox bottom_layout = new HBox(50);
         bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
         bottom_layout.getChildren().addAll(close);
 
         BorderPane root_layout = new BorderPane();
-        root_layout.setPadding(new Insets(10,10,10,10));
+        root_layout.setPadding(new Insets(10, 10, 10, 10));
         root_layout.setTop(top_layout);
-        root_layout.setRight(right_layout);
         root_layout.setCenter(center_layout);
         root_layout.setBottom(bottom_layout);
 
         // Scene
         Scene scene = new Scene(root_layout);
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // Start window
         window.showAndWait();
+    }
 
+    public static ObservableList<Customer> getCustomers()
+    {
+        ObservableList<Customer> customers = FXCollections.observableArrayList();
+        try {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+            // SQL query to find matching customers
+            String query = "SELECT * FROM customer";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next())
+            {
+                customers.add(new Customer(resultSet.getString("firstName"),
+                                           resultSet.getString("surName"),
+                                           resultSet.getString("type"),
+                                           resultSet.getDouble("discount") ));
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return customers;
     }
 }
 

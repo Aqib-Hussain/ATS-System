@@ -1,4 +1,4 @@
-package Staff;
+package sample.Staff;
 
 public class OfficeManager extends StaffAccount
 {

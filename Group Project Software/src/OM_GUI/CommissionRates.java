@@ -37,15 +37,16 @@ public class CommissionRates
 
         // Labels
         Label label_task = new Label("Please enter a value");
-        label_task.setFont(Font.font(14));
+        label_task.getStyleClass().add("label-title");
 
         // Text
         TextField text_commissionRate = new TextField();
-        text_commissionRate.setMinSize(50,25);
+        text_commissionRate.setMaxSize(200,25);
+        text_commissionRate.setFont(Font.font(16));
 
         // Buttons
         Button button_setRates = new Button("Set");
-        button_setRates.setMinSize(50,25);
+        button_setRates.setMinSize(75,0);
         button_setRates.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -58,7 +59,7 @@ public class CommissionRates
                     Statement statement = connection.createStatement();
 
                     // SQL query to find matching email and password
-                    String query = "INSERT INTO commissionrate VALUES ('e', 'x', '" + Float.parseFloat(text_commissionRate.getText()) + "')";
+                    String query = "UPDATE commissionrate SET CommissionRate = '"+Float.parseFloat(text_commissionRate.getText())+"' WHERE StaffID = '1'";
                     statement.executeUpdate(query);
                     System.out.println("Working 2");
 
@@ -69,6 +70,7 @@ public class CommissionRates
         });
 
         Button cancel = new Button("Cancel");
+        cancel.getStyleClass().add("button-exit");
         cancel.setMinSize(75,25);
         cancel.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -100,6 +102,7 @@ public class CommissionRates
 
         // Scene
         Scene scene = new Scene(root_layout);
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // Start window

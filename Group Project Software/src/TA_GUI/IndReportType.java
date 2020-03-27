@@ -30,7 +30,7 @@ public class IndReportType
 
         // Labels
         Label selectAReport = new Label("Please Select a Report Type");
-        selectAReport.setFont(Font.font(14));
+        selectAReport.getStyleClass().add("label-title");
         selectAReport.setPadding(new Insets(10,0,10,0));
 
         // Buttons
@@ -41,6 +41,7 @@ public class IndReportType
         domesticReportButton.setMaxWidth(175);
 
         Button close = new Button("Close");
+        close.getStyleClass().add("button-exit");
         close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -68,6 +69,7 @@ public class IndReportType
 
         // Scene
         Scene scene = new Scene(root_layout);
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // Start window

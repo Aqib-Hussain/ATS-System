@@ -31,6 +31,7 @@ public class ViewReports
 
         // Labels
         Label refund_label = new Label("Reports");
+        refund_label.getStyleClass().add("label-title");
         refund_label.setFont(Font.font(20));
 
         // List
@@ -38,6 +39,7 @@ public class ViewReports
 
         // Buttons
         Button close = new Button("Close");
+        close.getStyleClass().add("button-exit");
         close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -71,6 +73,7 @@ public class ViewReports
 
         //Scene
         Scene scene = new Scene(root_layout);
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // Start window

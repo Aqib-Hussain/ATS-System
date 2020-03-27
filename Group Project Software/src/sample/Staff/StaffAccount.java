@@ -1,15 +1,10 @@
-package Staff;
+package sample.Staff;
 
 public class StaffAccount
 {
     protected String email;
     protected String password;
     protected String userType;
-
-    public void animalSound()
-    {
-        System.out.println("hello");
-    }
 
     public String getEmail() {
         return email;

@@ -31,19 +31,20 @@ public class ViewBlankStock_SA
 
         // Labels
         Label page_info = new Label("Blank Stock");
-        page_info.setFont(Font.font(20));
+        page_info.getStyleClass().add("label-title");
 
         // List
         ListView blankStock = new ListView();
 
         // Buttons
         Button addBlank = new Button("Add Blanks");
-        addBlank.setMinSize(100, 25);
+        addBlank.setMinSize(140, 25);
 
         Button removeBlank = new Button("Remove Blanks");
-        removeBlank.setMinSize(100, 25);
+        removeBlank.setMinSize(140, 25);
 
         Button close = new Button("Close");
+        close.getStyleClass().add("button-exit");
         close.setMinSize(75, 25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -86,6 +87,7 @@ public class ViewBlankStock_SA
 
         // Scene
         Scene scene = new Scene(root_layout);
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // Start window

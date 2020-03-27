@@ -1,10 +1,10 @@
-package Staff;
+package sample.Staff;
 
-public class TravelAdvisor extends StaffAccount
+public class SystemAdmin extends StaffAccount
 {
-    private String email = "3";
-    private String password = "3";
-    private String userType = "Travel Advisor";
+    private String email = "2";
+    private String password = "2";
+    private String userType = "System Administrator";
 
     public String getEmail()
     {

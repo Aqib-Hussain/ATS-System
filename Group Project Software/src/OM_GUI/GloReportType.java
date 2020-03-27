@@ -30,17 +30,17 @@ public class GloReportType
 
         // Labels
         Label selectAReport = new Label("Please Select a Report Type");
-        selectAReport.setFont(Font.font(14));
         selectAReport.setPadding(new Insets(10,0,10,0));
 
         // Buttons
         Button interlineReportButton = new Button("Generate Interline Report");
-        interlineReportButton.setMaxWidth(175);
+        interlineReportButton.setMaxWidth(200);
 
         Button domesticReportButton = new Button("Generate Domestic Report");
-        domesticReportButton.setMaxWidth(175);
+        domesticReportButton.setMaxWidth(200);
 
         Button close = new Button("Close");
+        close.getStyleClass().add("button-exit");
         close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -51,23 +51,30 @@ public class GloReportType
         });
 
         // Layout
+        VBox top_layout = new VBox();
+        top_layout.setAlignment(Pos.CENTER);
+        top_layout.setPadding(new Insets(0,0,10,0));
+        top_layout.getChildren().add(selectAReport);
+
         VBox center_layout = new VBox(15);
         center_layout.setAlignment(Pos.CENTER);
         center_layout.setSpacing(10);
         center_layout.getChildren().addAll(interlineReportButton, domesticReportButton);
 
         HBox bottom_layout = new HBox();
-        bottom_layout.setAlignment(Pos.BASELINE_CENTER);
+        bottom_layout.setPadding(new Insets(10,0,10,0));
+        bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
         bottom_layout.getChildren().add(close);
 
         BorderPane root_layout = new BorderPane();
         root_layout.setPadding(new Insets(10,10,10,10));
         root_layout.setCenter(center_layout);
         root_layout.setBottom(bottom_layout);
-        root_layout.setTop(selectAReport);
+        root_layout.setTop(top_layout);
 
         // Scene
         Scene scene = new Scene(root_layout);
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // Start window

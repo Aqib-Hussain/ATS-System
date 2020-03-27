@@ -25,10 +25,10 @@ public class AlertBox
 
         // Labels
         Label label = new Label(msg);
-        label.setFont(Font.font(15));
 
         // Buttons
-        Button button = new Button("Close this window!");
+        Button button = new Button("Close");
+        button.getStyleClass().add("button-exit");
         button.setOnAction(e -> window.close());
 
         // Layout
@@ -42,6 +42,7 @@ public class AlertBox
 
         // Scene
         Scene scene = new Scene(root_layout);
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // Start window

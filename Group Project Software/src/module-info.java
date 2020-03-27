@@ -6,4 +6,5 @@ module Group.Project.Software
     requires mysql.connector.java;
 
     opens sample;
+    opens sample.Staff;
 }

@@ -31,7 +31,7 @@ public class ViewBlankStock_OM
 
         // Labels
         Label page_info = new Label("Blank Stock");
-        page_info.setFont(Font.font(20));
+        page_info.getStyleClass().add("label-title");
 
         // List
         ListView blankStock = new ListView();
@@ -44,6 +44,7 @@ public class ViewBlankStock_OM
         assign.setMinSize(75,25);
 
         Button close = new Button("Close");
+        close.getStyleClass().add("button-exit");
         close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -86,6 +87,7 @@ public class ViewBlankStock_OM
 
         // Scene
         Scene scene = new Scene(root_layout);
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // Start window

@@ -1,22 +1,38 @@
 package OM_GUI;
 
+import Database.DBConnectivity;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sample.Customer;
+import sample.Refund;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class RefundLog
 {
+    // Database
+    static DBConnectivity dbConnectivity = new DBConnectivity();
+    static Connection connection = dbConnectivity.getConnection();
+
+    // Table View
+    static TableView<Refund> table;
+
     public static void display(String title)
     {
         // Creating a new window
@@ -31,13 +47,28 @@ public class RefundLog
 
         // Labels
         Label refund_label = new Label("Refund Log");
-        refund_label.setFont(Font.font(20));
+        refund_label.getStyleClass().add("label-title");
 
-        // List
-        ListView refundList = new ListView();
+        // Table
+        TableColumn<Refund, String> dateColumn = new TableColumn<>("Date");
+        dateColumn.setMinWidth(100);
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+        TableColumn<Refund, String> blankIDColumn = new TableColumn<>("Blank ID");
+        blankIDColumn.setMinWidth(100);
+        blankIDColumn.setCellValueFactory(new PropertyValueFactory<>("blank"));
+
+        TableColumn<Refund, String> amountColumn = new TableColumn<>("Amount");
+        amountColumn.setMinWidth(100);
+        amountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
+
+        table = new TableView<>();
+        table.setItems(getRefunds());
+        table.getColumns().addAll(dateColumn, blankIDColumn, amountColumn);
 
         // Buttons
         Button close = new Button("Close");
+        close.getStyleClass().add("button-exit");
         close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -57,9 +88,10 @@ public class RefundLog
         VBox centre_layout = new VBox();
         centre_layout.setAlignment(Pos.CENTER);
         centre_layout.setPadding(new Insets(0,0,10,0));
-        centre_layout.getChildren().add(refundList);
+        centre_layout.getChildren().add(table);
 
         HBox bottom_layout = new HBox();
+        bottom_layout.setPadding(new Insets(10,0,0,0));
         bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
         bottom_layout.getChildren().add(close);
 
@@ -71,9 +103,37 @@ public class RefundLog
 
         //Scene
         Scene scene = new Scene(root_layout);
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // Start window
         window.showAndWait();
+    }
+
+    public static ObservableList<Refund> getRefunds()
+    {
+        ObservableList<Refund> refunds = FXCollections.observableArrayList();
+
+        try {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+
+            // SQL query to find matching email and password
+            String query = "SELECT * FROM refunds";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next())
+            {
+                refunds.add(new Refund(resultSet.getString("date"),
+                                       resultSet.getString("blank"),
+                                       resultSet.getString("amount")));
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return refunds;
     }
 }

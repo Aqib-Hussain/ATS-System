@@ -1,20 +1,36 @@
 package SA_GUI;
 
+import Database.DBConnectivity;
+import sample.Staff.TravelAdvisor;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class TravelAdvisors
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class ViewTravelAdvisors
 {
+    // Database
+    static DBConnectivity dbConnectivity = new DBConnectivity();
+    static Connection connection = dbConnectivity.getConnection();
+
+    // Table View
+    static TableView<TravelAdvisor> table;
+
     // Layouts
     static BorderPane root_layout = new BorderPane();
     static BorderPane addTA_Root_Layout = new BorderPane();
@@ -38,14 +54,24 @@ public class TravelAdvisors
 
         // Labels
         Label page_info = new Label("Travel Advisors");
-        page_info.setFont(Font.font(20));
+        page_info.getStyleClass().add("label-title");
 
-        // List
-        ListView travelAdvisorList = new ListView();
+        // Table
+        TableColumn<TravelAdvisor, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setMinWidth(250);
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        TableColumn<TravelAdvisor, String> iDColumn = new TableColumn<>("ID");
+        iDColumn.setMinWidth(250);
+        iDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        table = new TableView<>();
+        table.setItems(getAdvisors());
+        table.getColumns().addAll(nameColumn, iDColumn);
 
         // Buttons
         Button addNewTA = new Button("Add Travel Advisor");
-        addNewTA.setMinSize(100, 25);
+        addNewTA.setMinSize(140, 25);
         addNewTA.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -56,10 +82,10 @@ public class TravelAdvisors
         });
 
         Button removeTA = new Button("Remove Travel Advisor");
-        removeTA.setMinSize(100, 25);
+        removeTA.setMinSize(140, 25);
 
         Button editTA = new Button("Edit Travel Advisor");
-        editTA.setMinSize(100,25);
+        editTA.setMinSize(140,25);
         editTA.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -70,6 +96,7 @@ public class TravelAdvisors
         });
 
         Button close = new Button("Close");
+        close.getStyleClass().add("button-exit");
         close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -86,7 +113,7 @@ public class TravelAdvisors
 
         VBox list_layout = new VBox(50);
         list_layout.setAlignment(Pos.CENTER);
-        list_layout.getChildren().add(travelAdvisorList);
+        list_layout.getChildren().add(table);
         list_layout.setPadding(new Insets(0,0,20,0));
 
         HBox button_layout = new HBox(30);
@@ -108,12 +135,13 @@ public class TravelAdvisors
         root_layout.setBottom(bottom_layout);
 
         // Scene
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // *************Add Travel Advisor Window************ \\
         // Label
         Label addTA_pageInfo = new Label("Enter details for a new Travel Advisor");
-        addTA_pageInfo.setFont(Font.font(20));
+        addTA_pageInfo.getStyleClass().add("label-title");
 
         Label addTA_firstName = new Label("Firstname:");
         Label addTA_surname = new Label("Surname:");
@@ -125,6 +153,7 @@ public class TravelAdvisors
         create.setMinSize(200,25);
 
         Button cancel = new Button("Cancel");
+        cancel.getStyleClass().add("button-exit");
         cancel.setMinSize(75,25);
         cancel.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -177,10 +206,13 @@ public class TravelAdvisors
         addTA_Root_Layout.setBottom(addTA_bottom_layout);
         addTA_Root_Layout.setLeft(addTA_left_layout);
 
+        // Scene
+        addTA_scene.getStylesheets().add("Stylesheet.css");
+
         // *************Edit Travel Advisor Window************ \\
         // Label
         Label editTA_pageInfo = new Label("Editing Details for ...");
-        editTA_pageInfo.setFont(Font.font(20));
+        editTA_pageInfo.getStyleClass().add("label-title");
 
         Label editTA_firstName = new Label("Firstname:");
         Label editTA_surname = new Label("Surname:");
@@ -189,9 +221,11 @@ public class TravelAdvisors
 
         // Buttons
         Button editTA_save = new Button("Save");
+        editTA_save.getStyleClass().add("button-login");
         editTA_save.setMinSize(125,25);
 
         Button editTA_cancel = new Button("Cancel");
+        editTA_cancel.getStyleClass().add("button-exit");
         editTA_cancel.setMinSize(75,25);
         editTA_cancel.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -244,7 +278,33 @@ public class TravelAdvisors
         editTA_Root_Layout.setBottom(editTA_bottom_layout);
         editTA_Root_Layout.setLeft(editTA_left_layout);
 
+        // Scene
+        editTA_scene.getStylesheets().add("Stylesheet.css");
+
         // Start window
         window.showAndWait();
+    }
+
+    public static ObservableList<TravelAdvisor> getAdvisors()
+    {
+        ObservableList<TravelAdvisor> advisors = FXCollections.observableArrayList();
+        try {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+            // SQL query to find matching travel advisors
+            String query = "SELECT * FROM staff WHERE StaffType = 'Travel Advisor'";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next())
+            {
+                advisors.add(new TravelAdvisor(resultSet.getString("name"),
+                                               resultSet.getString("ID")));
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return advisors;
     }
 }

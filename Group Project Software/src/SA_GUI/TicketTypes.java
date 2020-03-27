@@ -29,22 +29,23 @@ public class TicketTypes
 
         // Labels
         Label page_info = new Label("Ticket Types");
-        page_info.setFont(Font.font(20));
+        page_info.getStyleClass().add("label-title");
 
         // List
         ListView ticketTypesList = new ListView();
 
         // Buttons
         Button addTicketType = new Button("Add Ticket Type");
-        addTicketType.setMinSize(100, 25);
+        addTicketType.setMinSize(140, 25);
 
         Button removeTicketType = new Button("Remove Ticket Type");
-        removeTicketType.setMinSize(100, 25);
+        removeTicketType.setMinSize(140, 25);
 
         Button editTicketType = new Button("Edit Ticket Type");
-        editTicketType.setMinSize(100,25);
+        editTicketType.setMinSize(140,25);
 
         Button close = new Button("Close");
+        close.getStyleClass().add("button-exit");
         close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -85,6 +86,7 @@ public class TicketTypes
 
         // Scene
         Scene scene = new Scene(root_layout);
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // Start window

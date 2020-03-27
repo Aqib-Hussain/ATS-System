@@ -31,17 +31,19 @@ public class CurrencyExchange
 
         // Labels
         Label label_task = new Label("Please enter a value");
-        label_task.setFont(Font.font(14));
+        label_task.getStyleClass().add("label-title");
 
         // Text
-        TextField text_currencyExchg = new TextField();
-        text_currencyExchg.setMinSize(50,25);
+        TextField text_currencyExchange = new TextField();
+        text_currencyExchange.setFont(Font.font(16));
+        text_currencyExchange.setMaxSize(100,25);
 
         // Buttons
         Button button_setRates = new Button("Set");
         button_setRates.setMinSize(50,25);
 
         Button cancel = new Button("Cancel");
+        cancel.getStyleClass().add("button-exit");
         cancel.setMinSize(75,25);
         cancel.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -55,7 +57,7 @@ public class CurrencyExchange
         // Layout
         VBox button_layout = new VBox(10);
         button_layout.setAlignment(Pos.CENTER);
-        button_layout.getChildren().addAll(text_currencyExchg, button_setRates);
+        button_layout.getChildren().addAll(text_currencyExchange, button_setRates);
 
         HBox bottom_layout = new HBox();
         bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
@@ -73,6 +75,7 @@ public class CurrencyExchange
 
         // Scene
         Scene scene = new Scene(root_layout);
+        scene.getStylesheets().add("Stylesheet.css");
         window.setScene(scene);
 
         // Start window
