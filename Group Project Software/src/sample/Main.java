@@ -108,7 +108,7 @@ public class Main extends Application {
                     // Connect to the Database
                     Statement statement = connection.createStatement();
                     // SQL query to find matching email and password
-                    String query = "SELECT EMAIL, PASSWORD, STAFFTYPE FROM STAFF WHERE EMAIL ='" + nameText.getText() + "'";
+                    String query = "SELECT name, password, StaffType FROM STAFF WHERE name ='" + nameText.getText() + "'";
                     ResultSet resultSet = statement.executeQuery(query);
 
                     while (resultSet.next())
