@@ -25,13 +25,13 @@ import Staff.SystemAdmin;
 import Staff.TravelAdvisor;
 import Staff.StaffAccount;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Main extends Application
-{
+public class Main extends Application {
     // Database
     DBConnectivity dbConnectivity = new DBConnectivity();
     Connection connection = dbConnectivity.getConnection();
@@ -102,7 +102,7 @@ public class Main extends Application
                 boolean loggedIn = false;
                 String officeManagerType = "om";
                 String systemAdminType = "sa";
-                String travelAdviorType = "ta";
+                String travelAdvisorType = "ta";
 
                 try {
                     // Connect to the Database
@@ -110,25 +110,19 @@ public class Main extends Application
                     // SQL query to find matching email and password
                     String query = "SELECT EMAIL, PASSWORD, STAFFTYPE FROM STAFF WHERE EMAIL ='" + emailText.getText() + "'";
                     ResultSet resultSet = statement.executeQuery(query);
-                    // System.out.println(resultSet.getString("email"));
-                    while (resultSet.next())
-                    {
+                    // Make sure SQL has not returned empty
+                    while (resultSet.next()) {
                         if (emailText.getText().equals(resultSet.getString("email")) &&
                                 passwordText.getText().equals(resultSet.getString("password")) &&
-                                officeManagerType.equals(resultSet.getString("StaffType")));
+                                officeManagerType.equals(resultSet.getString("StaffType"))) ;
                         {
-                            if (officeManagerType.equals(resultSet.getString("StaffType")))
-                            {
+                            if (officeManagerType.equals(resultSet.getString("StaffType"))) {
                                 window.setScene(OM_mainMenu);
                                 loggedIn = true;
-                            }
-                            else if(systemAdminType.equals(resultSet.getString("StaffType")))
-                            {
+                            } else if (systemAdminType.equals(resultSet.getString("StaffType"))) {
                                 window.setScene(SA_mainMenu);
                                 loggedIn = true;
-                            }
-                            else if(travelAdviorType.equals(resultSet.getString("StaffType")))
-                            {
+                            } else if (travelAdvisorType.equals(resultSet.getString("StaffType"))) {
                                 window.setScene(TA_mainMenu);
                                 loggedIn = true;
                             }
@@ -137,13 +131,10 @@ public class Main extends Application
                         passwordText.clear();
                     }
 
-                }
-                catch (SQLException e)
-                {
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                if (!loggedIn)
-                {
+                if (!loggedIn) {
                     AlertBox.display("ALERT!", "Please provide correct details");
                     emailText.clear();
                     passwordText.clear();
@@ -153,7 +144,7 @@ public class Main extends Application
 
         // Layout
         VBox top_layout = new VBox();
-        top_layout.setPadding(new Insets(10,0,0,0));
+        top_layout.setPadding(new Insets(10, 0, 0, 0));
         top_layout.setAlignment(Pos.CENTER);
         top_layout.getChildren().add(login_label);
 
@@ -166,7 +157,7 @@ public class Main extends Application
         center_layout.getChildren().addAll(emailLabel, emailText, passwordLabel, passwordText, loginButton);
 
         BorderPane root_layout = new BorderPane();
-        root_layout.setPadding(new Insets(10,10,10,10));
+        root_layout.setPadding(new Insets(10, 10, 10, 10));
         root_layout.setTop(top_layout);
         root_layout.setBottom(bottom_layout);
         root_layout.setCenter(center_layout);
@@ -271,9 +262,21 @@ public class Main extends Application
 
         Button backUp = new Button("Back-Up System");
         backUp.setMinWidth(250);
+        backUp.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                SystemAdmin.SystemBackUp();
+            }
+        });
 
         Button restore = new Button("Restore System");
         restore.setMinWidth(250);
+        backUp.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                SystemAdmin.SystemRestore();
+            }
+        });
 
         Button viewTravelAdvisors = new Button("View Travel Advisors");
         viewTravelAdvisors.setMinWidth(250);

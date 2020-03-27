@@ -12,7 +12,7 @@ public  Connection connection;
 
         String dbName="ats";
         String userName="root";
-        String password="Edward220600!!";
+        String password="AB+J#bveL3Sm35j9KXmg_@mE^xny7e";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
