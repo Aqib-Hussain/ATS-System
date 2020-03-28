@@ -30,7 +30,6 @@ public class SystemAdmin extends StaffAccount {
     public static void SystemBackUp() {
         String savePath = "C:\\Users\\Aqib\\Desktop\\ATS-System\\BackupDump\\BackUp.sql";
         try {
-
             String dbName = "ats";
             String dbUser = "root";
             String dbPass = "password";
@@ -51,7 +50,7 @@ public class SystemAdmin extends StaffAccount {
                 String str = new String(buffer);
                 System.out.println(str);
             } else {
-                // abnormally terminated, there was some problem
+                // abnormally terminated, there was a problem
                 InputStream errorStream = runtimeProcess.getErrorStream();
                 byte[] buffer = new byte[errorStream.available()];
                 errorStream.read(buffer);
@@ -69,7 +68,6 @@ public class SystemAdmin extends StaffAccount {
     public static void SystemRestore() {
         String restorePath = "C:\\Users\\Aqib\\Desktop\\ATS-System\\BackupDump\\BackUp.sql";
         try {
-
             String dbName = "ats";
             String dbUser = "root";
             String dbPass = "password";
