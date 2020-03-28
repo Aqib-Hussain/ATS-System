@@ -32,7 +32,7 @@ public class SystemAdmin extends StaffAccount {
             /*NOTE: Creating Database Constraints*/
             String dbName = "ats";
             String dbUser = "root";
-            String dbPass = "AB+J#bveL3Sm35j9KXmg_@mE^xny7e";
+            String dbPass = "Edward220600!!";
 
             /*NOTE: Used to create a cmd command*/
             String executeCmd = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump -u" + dbUser + " -p" + dbPass + " --database" + dbName + " -r" + savePath;
@@ -57,7 +57,7 @@ public class SystemAdmin extends StaffAccount {
     }
 
     public static void SystemRestore() {
-        String restorePath = "C:\\Users\\Aqib\\Desktop\\ATS-System\\BackupDump\\BackUp.sql";
+        String restorePath = "C:\\Users\\edwar\\Desktop\\ATS-System\\BackupDump\\BackUp.sql";
         try {
 
             /*NOTE: Creating Database Constraints*/

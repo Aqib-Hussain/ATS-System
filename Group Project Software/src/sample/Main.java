@@ -282,7 +282,7 @@ public class Main extends Application {
         backUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                systemAdmin.SystemBackUp();
+                SystemAdmin.SystemBackUp();
             }
         });
 
@@ -291,7 +291,7 @@ public class Main extends Application {
         backUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                systemAdmin.SystemRestore();
+                SystemAdmin.SystemRestore();
             }
         });
 

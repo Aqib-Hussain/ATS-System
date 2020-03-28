@@ -1,22 +1,39 @@
 package OM_GUI;
 
+import Database.DBConnectivity;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sample.Blank;
+import sample.Refund;
+import sample.Staff.TravelAdvisor;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class ViewBlankStock_OM
 {
+    // Database
+    static DBConnectivity dbConnectivity = new DBConnectivity();
+    static Connection connection = dbConnectivity.getConnection();
+
+    // Table View
+    static TableView<Blank> table;
+
     public static void display(String title)
     {
         // Creating a new window
@@ -33,8 +50,34 @@ public class ViewBlankStock_OM
         Label page_info = new Label("Blank Stock");
         page_info.getStyleClass().add("label-title");
 
-        // List
-        ListView blankStock = new ListView();
+        // Table
+        TableColumn<Blank, String> blankIDColumn = new TableColumn<>("Blank ID");
+        blankIDColumn.setMinWidth(100);
+        blankIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Blank, String> blankTypeColumn = new TableColumn<>("Blank Type");
+        blankTypeColumn.setMinWidth(100);
+        blankTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        TableColumn<Blank, String> blankAssignedToColumn = new TableColumn<>("Assigned To");
+        blankAssignedToColumn.setMinWidth(100);
+        blankAssignedToColumn.setCellValueFactory(new PropertyValueFactory<>("assignedTo"));
+
+        TableColumn<Blank, String> blankReceivedDateColumn = new TableColumn<>("Received Date");
+        blankReceivedDateColumn.setMinWidth(100);
+        blankReceivedDateColumn.setCellValueFactory(new PropertyValueFactory<>("receivedDate"));
+
+        TableColumn<Blank, String> blankAssignedDateColumn = new TableColumn<>("Assigned Date");
+        blankAssignedDateColumn.setMinWidth(100);
+        blankAssignedDateColumn.setCellValueFactory(new PropertyValueFactory<>("assignedDate"));
+
+        TableColumn<Blank, String> blankStateColumn = new TableColumn<>("Blank State");
+        blankStateColumn.setMinWidth(100);
+        blankStateColumn.setCellValueFactory(new PropertyValueFactory<>("state"));
+
+        table = new TableView<>();
+        table.setItems(getBlanks());
+        table.getColumns().addAll(blankIDColumn, blankTypeColumn, blankAssignedToColumn, blankReceivedDateColumn, blankAssignedDateColumn, blankStateColumn);
 
         // Buttons
         Button re_assign = new Button("Re-Assign");
@@ -63,7 +106,7 @@ public class ViewBlankStock_OM
 
         VBox list_layout = new VBox(50);
         list_layout.setAlignment(Pos.CENTER);
-        list_layout.getChildren().add(blankStock);
+        list_layout.getChildren().add(table);
         list_layout.setPadding(new Insets(0, 0, 20, 0));
 
         HBox button_layout = new HBox(60);
@@ -92,5 +135,32 @@ public class ViewBlankStock_OM
 
         // Start window
         window.showAndWait();
+    }
+
+    public static ObservableList<Blank> getBlanks()
+    {
+        ObservableList<Blank> blanks = FXCollections.observableArrayList();
+        try {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+            // SQL query to find matching travel advisors
+            String query = "SELECT * FROM blank";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next())
+            {
+                blanks.add(new Blank(resultSet.getString(1),
+                                     resultSet.getString(2),
+                                     resultSet.getString(3),
+                                     resultSet.getString(4),
+                                     resultSet.getString(5),
+                                     resultSet.getString(6)));
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return blanks;
     }
 }

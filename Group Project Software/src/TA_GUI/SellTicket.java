@@ -256,13 +256,6 @@ public class SellTicket
         EC_custAddress.setMinWidth(200);
 
         //---Layout---\\
-//        VBox EC_centre_layout = new VBox(10);
-//        EC_centre_layout.getChildren().addAll(EC_custFirstname, EC_custSurname, EC_custAddress);
-//        EC_centre_layout.setAlignment(Pos.CENTER);
-//
-//        VBox EC_left_layout = new VBox(21);
-//        EC_left_layout.getChildren().addAll(EC_firstName, EC_surname, EC_address);
-//        EC_left_layout.setAlignment(Pos.CENTER_LEFT);
         GridPane EC_centre_layout = new GridPane();
         EC_centre_layout.setAlignment(Pos.CENTER);
         EC_centre_layout.setHgap(15);
