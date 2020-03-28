@@ -4,8 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.security.CodeSource;
+import java.util.Arrays;
 
 public class SystemAdmin extends StaffAccount {
     private String email = "2";
@@ -29,27 +31,35 @@ public class SystemAdmin extends StaffAccount {
         String savePath = "C:\\Users\\Aqib\\Desktop\\ATS-System\\BackupDump\\BackUp.sql";
         try {
 
-            /*NOTE: Creating Database Constraints*/
             String dbName = "ats";
             String dbUser = "root";
-            String dbPass = "AB+J#bveL3Sm35j9KXmg_@mE^xny7e";
+            String dbPass = "password";
 
-            /*NOTE: Used to create a cmd command*/
-            String executeCmd = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump -u" + dbUser + " -p" + dbPass + " --database" + dbName + " -r" + savePath;
+            //Create the command to be executed in the terminal
+            String executeCmd = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump.exe -u" + dbUser + " -p" + dbPass + " --all-databases" + " -r" + savePath;
             System.out.println(executeCmd);
 
-            /*NOTE: Executing the command here*/
+            // Command is executed here
             Process runtimeProcess = Runtime.getRuntime().exec(executeCmd);
 
-            int processComplete = runtimeProcess.waitFor();
+            if (runtimeProcess.waitFor() == 0) {
+                //normally terminated, a way to read the output
+                InputStream inputStream = runtimeProcess.getInputStream();
+                byte[] buffer = new byte[inputStream.available()];
+                inputStream.read(buffer);
 
-            // If backup is successful processComplete returns 0
-            if (processComplete == 0) {
-                System.out.println("Backup Complete");
+                String str = new String(buffer);
+                System.out.println(str);
             } else {
-                System.out.println("Backup Failure");
-            }
+                // abnormally terminated, there was some problem
+                InputStream errorStream = runtimeProcess.getErrorStream();
+                byte[] buffer = new byte[errorStream.available()];
+                errorStream.read(buffer);
 
+                String str = new String(buffer);
+                System.out.println(str);
+
+            }
         } catch (IOException | InterruptedException ex) {
             JOptionPane.showMessageDialog(null, "SystemBackUp Error " + ex.getMessage());
         }
@@ -60,24 +70,17 @@ public class SystemAdmin extends StaffAccount {
         String restorePath = "C:\\Users\\Aqib\\Desktop\\ATS-System\\BackupDump\\BackUp.sql";
         try {
 
-            /*NOTE: Creating Database Constraints*/
             String dbName = "ats";
             String dbUser = "root";
-            String dbPass = "Edward220600!!";
+            String dbPass = "password";
 
-            // Used to create a cmd command
+            //Create the command to be executed in the terminal
             String[] executeCmd = new String[]{"mysql", dbName, "-u" + dbUser, "-p" + dbPass, "-e", " source " + restorePath};
+            System.out.println(Arrays.toString(executeCmd));
 
-
+            //Execute the command
             Process runtimeProcess = Runtime.getRuntime().exec(executeCmd);
             int processComplete = runtimeProcess.waitFor();
-
-            // If restore is successful processComplete returns 0
-            if (processComplete == 0) {
-                JOptionPane.showMessageDialog(null, "Successfully restored from SQL");
-            } else {
-                JOptionPane.showMessageDialog(null, "Error at restoring");
-            }
 
 
         } catch (IOException | InterruptedException | HeadlessException ex) {

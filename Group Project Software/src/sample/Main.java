@@ -33,6 +33,8 @@ public class Main extends Application {
     DBConnectivity dbConnectivity = new DBConnectivity();
     Connection connection = dbConnectivity.getConnection();
 
+    SystemAdmin systemAdmin = new SystemAdmin();
+
     // Stage
     Stage window;
 
@@ -45,7 +47,7 @@ public class Main extends Application {
     // Travel Advisor Scenes
     Scene TA_mainMenu;
 
-    SystemAdmin systemAdmin = new SystemAdmin();
+   // SystemAdmin systemAdmin = new SystemAdmin();
 
     public static void main(String[] args) {
         launch(args);
@@ -282,16 +284,16 @@ public class Main extends Application {
         backUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                systemAdmin.SystemBackUp();
+               SystemAdmin.SystemBackUp();
             }
         });
 
         Button restore = new Button("Restore System");
         restore.setMinWidth(250);
-        backUp.setOnAction(new EventHandler<ActionEvent>() {
+        restore.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                systemAdmin.SystemRestore();
+                SystemAdmin.SystemRestore();
             }
         });
 
