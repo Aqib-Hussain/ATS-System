@@ -24,6 +24,7 @@ import TA_GUI.ViewReports;
 import javafx.stage.WindowEvent;
 import sample.Staff.SystemAdmin;
 import sample.Staff.TravelAdvisor;
+import BCrypt.*;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -64,46 +65,37 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         window = primaryStage;
         primaryStage.setResizable(false);
-        window.setOnCloseRequest(new EventHandler<WindowEvent>()
-        {
+        window.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
-            public void handle(WindowEvent event)
-            {
+            public void handle(WindowEvent event) {
                 event.consume();
-                if (window.getScene() != login)
-                {
+                if (window.getScene() != login) {
                     ConfirmLogOut.display();
-                    if (ConfirmLogOut.isIsLoogedOut())
-                    {
+                    if (ConfirmLogOut.isIsLoogedOut()) {
                         window.setScene(login);
-                        try
-                        {
+                        try {
                             // Connect to the Database
                             Statement statement = connection.createStatement();
 
                             // SQL query to set status of all staff to loggedOut
                             String updateStatus = "UPDATE staff SET status = 'loggedOut' WHERE status = 'loggedIn'";
                             statement.executeUpdate(updateStatus);
-                        } catch (SQLException e)
-                        {
+                        } catch (SQLException e) {
                             e.printStackTrace();
                         }
                     }
-                }
-                else
-                {
+                } else {
                     window.close();
                 }
             }
         });
 
 
-
         //--------------------------Log-in Menu------------------------------\\
         // Labels
         Label login_label = new Label("ATS-System Login");
         login_label.getStyleClass().add("label-login");
-        login_label.setPadding(new Insets(30,0,0,0));
+        login_label.setPadding(new Insets(30, 0, 0, 0));
 
         Label emailLabel = new Label("Name");
         emailLabel.setFont(Font.font(15));
@@ -142,6 +134,8 @@ public class Main extends Application {
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+
+                String hashed = BCrypt.hashpw(passwordText.getText(), BCrypt.gensalt(12));
                 boolean loggedIn = false;
 
                 try {
@@ -149,30 +143,25 @@ public class Main extends Application {
                     Statement statement = connection.createStatement();
 
                     // SQL to set user status to loggedIn
-                    String statusQuery = "UPDATE staff SET status = 'loggedIn' WHERE name = '"+ nameText.getText() +"'";
+                    String statusQuery = "UPDATE staff SET status = 'loggedIn' WHERE name = '" + nameText.getText() + "'";
                     statement.executeUpdate(statusQuery);
 
                     // SQL query to find matching email and password
                     String query = "SELECT name, password, StaffType FROM STAFF WHERE name ='" + nameText.getText() + "'";
                     ResultSet resultSet = statement.executeQuery(query);
 
-                    while (resultSet.next())
-                    {
+                    // Execute while the data set is not empty
+                    while (resultSet.next()) {
                         if (nameText.getText().equals(resultSet.getString("name")) &&
-                                passwordText.getText().equals(resultSet.getString("password")));
-                        {
-                            if (officeManagerType.equals(resultSet.getString("StaffType")))
-                            {
+                                BCrypt.checkpw(passwordText.getText(), hashed) &&
+                                passwordText.getText().equals(resultSet.getString("password"))) {
+                            if (officeManagerType.equals(resultSet.getString("StaffType"))) {
                                 window.setScene(OM_mainMenu);
                                 loggedIn = true;
-                            }
-                            else if(systemAdminType.equals(resultSet.getString("StaffType")))
-                            {
+                            } else if (systemAdminType.equals(resultSet.getString("StaffType"))) {
                                 window.setScene(SA_mainMenu);
                                 loggedIn = true;
-                            }
-                            else if(travelAdviorType.equals(resultSet.getString("StaffType")))
-                            {
+                            } else if (travelAdviorType.equals(resultSet.getString("StaffType"))) {
                                 window.setScene(TA_mainMenu);
                                 loggedIn = true;
                             }
@@ -180,14 +169,11 @@ public class Main extends Application {
                         nameText.clear();
                         passwordText.clear();
                     }
-                }
-                catch (SQLException e)
-                {
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
 
-                if (!loggedIn)
-                {
+                if (!loggedIn) {
                     AlertBox.display("ALERT!", "Please provide correct details");
                     nameText.clear();
                     passwordText.clear();
@@ -201,8 +187,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 ConfirmLogOut.display();
-                if (ConfirmLogOut.isIsLoogedOut())
-                {
+                if (ConfirmLogOut.isIsLoogedOut()) {
                     window.setScene(login);
                     reSetStatus();
                 }
@@ -211,7 +196,7 @@ public class Main extends Application {
 
         // Layout
         VBox top_layout = new VBox();
-        top_layout.setPadding(new Insets(10,0,50,0));
+        top_layout.setPadding(new Insets(10, 0, 50, 0));
         top_layout.setAlignment(Pos.BASELINE_CENTER);
         top_layout.getChildren().add(login_label);
 
@@ -220,7 +205,7 @@ public class Main extends Application {
         bottom_layout.getChildren().addAll(OM_login, SA_login, TA1_login, TA2_login);
 
         VBox center_layout = new VBox(15);
-        center_layout.setPadding(new Insets(-100,0,0,0));
+        center_layout.setPadding(new Insets(-100, 0, 0, 0));
         center_layout.setAlignment(Pos.CENTER);
         center_layout.getChildren().addAll(emailLabel, nameText, passwordLabel, passwordText, loginButton);
 
@@ -242,7 +227,7 @@ public class Main extends Application {
         // Labels
         Label welcome_message_OM = new Label("Hello Office Manager");
         welcome_message_OM.getStyleClass().add("label_title");
-        welcome_message_OM.setPadding(new Insets(0,0,35,0));
+        welcome_message_OM.setPadding(new Insets(0, 0, 35, 0));
 
         // Buttons
         Button generateReport = new Button("Generate a Global Report");
@@ -290,11 +275,9 @@ public class Main extends Application {
         logOutButton_OM.getStyleClass().add("button-exit");
         logOutButton_OM.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent)
-            {
+            public void handle(ActionEvent actionEvent) {
                 ConfirmLogOut.display();
-                if (ConfirmLogOut.isIsLoogedOut())
-                {
+                if (ConfirmLogOut.isIsLoogedOut()) {
                     window.setScene(login);
                     reSetStatus();
                 }
@@ -313,7 +296,7 @@ public class Main extends Application {
 
         VBox top_layout_OM = new VBox();
 
-        top_layout_OM.setPadding(new Insets(10,0,50,0));
+        top_layout_OM.setPadding(new Insets(10, 0, 50, 0));
         top_layout_OM.getChildren().add(welcome_message_OM);
         top_layout_OM.setAlignment(Pos.CENTER);
         // Root Layout
@@ -334,7 +317,7 @@ public class Main extends Application {
         // Label
         Label welcome_message_SA = new Label("Hello Administrator");
         welcome_message_SA.getStyleClass().add("label_title");
-        welcome_message_SA.setPadding(new Insets(0,0,35,0));
+        welcome_message_SA.setPadding(new Insets(0, 0, 35, 0));
         welcome_message_SA.setFont(Font.font(20));
 
         // Buttons
@@ -346,7 +329,7 @@ public class Main extends Application {
         backUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-               SystemAdmin.SystemBackUp();
+                SystemAdmin.SystemBackUp();
             }
         });
 
@@ -392,8 +375,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 ConfirmLogOut.display();
-                if (ConfirmLogOut.isIsLoogedOut())
-                {
+                if (ConfirmLogOut.isIsLoogedOut()) {
                     window.setScene(login);
                     reSetStatus();
                 }
@@ -411,7 +393,7 @@ public class Main extends Application {
         bottom_layout_SA.setAlignment(Pos.BASELINE_RIGHT);
 
         VBox top_layout_SA = new VBox();
-        top_layout_SA.setPadding(new Insets(10,0,50,0));
+        top_layout_SA.setPadding(new Insets(10, 0, 50, 0));
         top_layout_SA.getChildren().add(welcome_message_SA);
         top_layout_SA.setAlignment(Pos.CENTER);
 
@@ -433,7 +415,7 @@ public class Main extends Application {
         // Label
         Label welcome_message_TA = new Label("Hello Travel Advisor");
         welcome_message_TA.getStyleClass().add("label_title");
-        welcome_message_TA.setPadding(new Insets(0,0,35,0));
+        welcome_message_TA.setPadding(new Insets(0, 0, 35, 0));
         welcome_message_TA.setFont(Font.font(20));
 
         // Buttons
@@ -488,8 +470,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 ConfirmLogOut.display();
-                if (ConfirmLogOut.isIsLoogedOut())
-                {
+                if (ConfirmLogOut.isIsLoogedOut()) {
                     window.setScene(login);
                     reSetStatus();
                 }
@@ -507,7 +488,7 @@ public class Main extends Application {
         bottom_layout_TA.setAlignment(Pos.BASELINE_RIGHT);
 
         VBox top_layout_TA = new VBox();
-        top_layout_TA.setPadding(new Insets(10,0,50,0));
+        top_layout_TA.setPadding(new Insets(10, 0, 50, 0));
         top_layout_TA.getChildren().add(welcome_message_TA);
         top_layout_TA.setAlignment(Pos.CENTER);
 
@@ -529,19 +510,15 @@ public class Main extends Application {
 
     }
 
-    public void reSetStatus()
-    {
-        try
-        {
+    public void reSetStatus() {
+        try {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
             // SQL query to set status of all staff to loggedOut
             String updateStatus = "UPDATE staff SET status = 'loggedOut' WHERE status = 'loggedIn'";
             statement.executeUpdate(updateStatus);
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
