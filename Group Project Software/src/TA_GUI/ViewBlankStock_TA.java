@@ -1,4 +1,4 @@
-package SA_GUI;
+package TA_GUI;
 
 import Database.DBConnectivity;
 import javafx.collections.FXCollections;
@@ -8,12 +8,14 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.Blank;
@@ -23,7 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class ViewBlankStock_SA
+public class ViewBlankStock_TA
 {
     // Database
     static DBConnectivity dbConnectivity = new DBConnectivity();
@@ -78,15 +80,15 @@ public class ViewBlankStock_SA
         table.getColumns().addAll(blankIDColumn, blankTypeColumn, blankAssignedToColumn, blankReceivedDateColumn, blankAssignedDateColumn, blankStateColumn);
 
         // Buttons
-        Button addBlank = new Button("Add Blanks");
-        addBlank.setMinSize(140, 25);
+        Button re_assign = new Button("Re-Assign");
+        re_assign.setMinSize(75, 25);
 
-        Button removeBlank = new Button("Remove Blanks");
-        removeBlank.setMinSize(140, 25);
+        Button assign = new Button("Assign");
+        assign.setMinSize(75,25);
 
         Button close = new Button("Close");
         close.getStyleClass().add("button-exit");
-        close.setMinSize(75, 25);
+        close.setMinSize(75,25);
         close.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -109,7 +111,7 @@ public class ViewBlankStock_SA
 
         HBox button_layout = new HBox(60);
         button_layout.setAlignment(Pos.CENTER);
-        button_layout.getChildren().addAll(addBlank, removeBlank);
+        button_layout.getChildren().addAll(assign, re_assign);
         button_layout.setPadding(new Insets(0, 0, 20, 0));
 
         BorderPane center_layout = new BorderPane();
@@ -137,12 +139,14 @@ public class ViewBlankStock_SA
 
     public static ObservableList<Blank> getBlanks()
     {
+        String name;
         ObservableList<Blank> blanks = FXCollections.observableArrayList();
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
+
             // SQL query to find matching travel advisors
-            String query = "SELECT * FROM blank";
+            String query = "SELECT * FROM blank INNER JOIN staff ON blank.assignedTo = staff.name WHERE (staff.name = 'Penelope Pitstop' OR staff.name = 'Dennis Menace') AND staff.status = 'loggedIn'";
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next())

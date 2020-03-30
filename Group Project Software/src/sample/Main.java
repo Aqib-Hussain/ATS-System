@@ -1,6 +1,7 @@
 package sample;
 
 import Database.DBConnectivity;
+import TA_GUI.ViewBlankStock_TA;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,7 +21,9 @@ import SA_GUI.ViewBlankStock_SA;
 import TA_GUI.CurrencyExchange;
 import TA_GUI.SellTicket;
 import TA_GUI.ViewReports;
+import javafx.stage.WindowEvent;
 import sample.Staff.SystemAdmin;
+import sample.Staff.TravelAdvisor;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -47,6 +50,12 @@ public class Main extends Application {
     // Travel Advisor Scenes
     Scene TA_mainMenu;
 
+    // User data
+
+    String officeManagerType = "Manager";
+    String systemAdminType = "Administrator";
+    String travelAdviorType = "Travel Advisor";
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -55,6 +64,40 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         window = primaryStage;
         primaryStage.setResizable(false);
+        window.setOnCloseRequest(new EventHandler<WindowEvent>()
+        {
+            @Override
+            public void handle(WindowEvent event)
+            {
+                event.consume();
+                if (window.getScene() != login)
+                {
+                    ConfirmLogOut.display();
+                    if (ConfirmLogOut.isIsLoogedOut())
+                    {
+                        window.setScene(login);
+                        try
+                        {
+                            // Connect to the Database
+                            Statement statement = connection.createStatement();
+
+                            // SQL query to set status of all staff to loggedOut
+                            String updateStatus = "UPDATE staff SET status = 'loggedOut' WHERE status = 'loggedIn'";
+                            statement.executeUpdate(updateStatus);
+                        } catch (SQLException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                else
+                {
+                    window.close();
+                }
+            }
+        });
+
+
 
         //--------------------------Log-in Menu------------------------------\\
         // Labels
@@ -100,13 +143,15 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 boolean loggedIn = false;
-                String officeManagerType = "Manager";
-                String systemAdminType = "Administrator";
-                String travelAdviorType = "Travel Advisor";
 
                 try {
                     // Connect to the Database
                     Statement statement = connection.createStatement();
+
+                    // SQL to set user status to loggedIn
+                    String statusQuery = "UPDATE staff SET status = 'loggedIn' WHERE name = '"+ nameText.getText() +"'";
+                    statement.executeUpdate(statusQuery);
+
                     // SQL query to find matching email and password
                     String query = "SELECT name, password, StaffType FROM STAFF WHERE name ='" + nameText.getText() + "'";
                     ResultSet resultSet = statement.executeQuery(query);
@@ -135,17 +180,31 @@ public class Main extends Application {
                         nameText.clear();
                         passwordText.clear();
                     }
-
                 }
                 catch (SQLException e)
                 {
                     e.printStackTrace();
                 }
+
                 if (!loggedIn)
                 {
                     AlertBox.display("ALERT!", "Please provide correct details");
                     nameText.clear();
                     passwordText.clear();
+                }
+            }
+        });
+
+        Button logOutButton = new Button("Log-Out");
+        logOutButton.getStyleClass().add("button-exit");
+        logOutButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                ConfirmLogOut.display();
+                if (ConfirmLogOut.isIsLoogedOut())
+                {
+                    window.setScene(login);
+                    reSetStatus();
                 }
             }
         });
@@ -226,17 +285,22 @@ public class Main extends Application {
                 RefundLog.display("Refund Log");
             }
         });
+
         Button logOutButton_OM = new Button("Log-Out");
         logOutButton_OM.getStyleClass().add("button-exit");
         logOutButton_OM.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent) {
+            public void handle(ActionEvent actionEvent)
+            {
                 ConfirmLogOut.display();
-                if (ConfirmLogOut.isIsLoogedOut()) {
+                if (ConfirmLogOut.isIsLoogedOut())
+                {
                     window.setScene(login);
+                    reSetStatus();
                 }
             }
         });
+
         //---Layout---\\
         // Button Layout
         VBox button_layout_OM = new VBox(10);
@@ -328,8 +392,10 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 ConfirmLogOut.display();
-                if (ConfirmLogOut.isIsLoogedOut()) {
+                if (ConfirmLogOut.isIsLoogedOut())
+                {
                     window.setScene(login);
+                    reSetStatus();
                 }
             }
         });
@@ -389,6 +455,15 @@ public class Main extends Application {
             }
         });
 
+        Button viewBlankStock_TA = new Button("Your Blank Stock");
+        viewBlankStock_TA.setMinWidth(250);
+        viewBlankStock_TA.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ViewBlankStock_TA.display("Your Blank Stock");
+            }
+        });
+
         Button viewReports = new Button("View Reports");
         viewReports.setMinWidth(250);
         viewReports.setOnAction(new EventHandler<ActionEvent>() {
@@ -413,8 +488,10 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 ConfirmLogOut.display();
-                if (ConfirmLogOut.isIsLoogedOut()) {
+                if (ConfirmLogOut.isIsLoogedOut())
+                {
                     window.setScene(login);
+                    reSetStatus();
                 }
             }
         });
@@ -422,7 +499,7 @@ public class Main extends Application {
         //---Layout---\\
         // Button Layout
         VBox button_layout_TA = new VBox(10);
-        button_layout_TA.getChildren().addAll(generateIndividualReport, sellTicket, viewReports, setCurrExchangeRate);
+        button_layout_TA.getChildren().addAll(generateIndividualReport, sellTicket, viewBlankStock_TA, viewReports, setCurrExchangeRate);
         button_layout_TA.setAlignment(Pos.CENTER);
 
         HBox bottom_layout_TA = new HBox();
@@ -450,6 +527,23 @@ public class Main extends Application {
         window.setTitle("ATS System");
         window.show();
 
+    }
+
+    public void reSetStatus()
+    {
+        try
+        {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+
+            // SQL query to set status of all staff to loggedOut
+            String updateStatus = "UPDATE staff SET status = 'loggedOut' WHERE status = 'loggedIn'";
+            statement.executeUpdate(updateStatus);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 
 }

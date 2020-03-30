@@ -10,8 +10,6 @@ import java.security.CodeSource;
 import java.util.Arrays;
 
 public class SystemAdmin extends StaffAccount {
-    private String email = "2";
-    private String password = "2";
     private String userType = "System Administrator";
 
 
@@ -32,7 +30,7 @@ public class SystemAdmin extends StaffAccount {
         try {
             String dbName = "ats";
             String dbUser = "root";
-            String dbPass = "AB+J#bveL3Sm35j9KXmg_@mE^xny7e";
+            String dbPass = "";
 
             //Create the command to be executed in the terminal
             String executeCmd = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump.exe -u" + dbUser + " -p" + dbPass + " --all-databases" + " -r" + savePath;

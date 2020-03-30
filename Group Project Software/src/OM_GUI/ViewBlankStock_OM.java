@@ -56,7 +56,7 @@ public class ViewBlankStock_OM
         blankIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         TableColumn<Blank, String> blankTypeColumn = new TableColumn<>("Blank Type");
-        blankTypeColumn.setMinWidth(100);
+        blankTypeColumn.setMinWidth(50);
         blankTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
 
         TableColumn<Blank, String> blankAssignedToColumn = new TableColumn<>("Assigned To");

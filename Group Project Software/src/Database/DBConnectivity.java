@@ -12,12 +12,14 @@ public  Connection connection;
 
         String dbName="ats";
         String userName="root";
-        String password="password";
+        String password="";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             connection= DriverManager.getConnection("jdbc:mysql://localhost/"+dbName,userName,password);
+
+
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
