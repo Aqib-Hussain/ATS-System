@@ -504,9 +504,11 @@ public class Main extends Application {
         TA_mainMenu.getStylesheets().add("Stylesheet.css");
 
         // Start-up
-        window.setScene(login);
-        window.setTitle("ATS System");
-        window.show();
+//        window.setScene(login);
+//        window.setTitle("ATS System");
+//        window.show();
+
+        ViewTravelAdvisors.display("test");
 
     }
 

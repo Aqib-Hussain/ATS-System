@@ -5,6 +5,8 @@ public class TravelAdvisor
     private String name;
     private String StaffType;
     private String password;
+    private String email;
+    private String address;
     private String id;
 
     public TravelAdvisor()
@@ -15,18 +17,12 @@ public class TravelAdvisor
         this.id = "";
     }
 
-    public TravelAdvisor(String name, String StaffType, String password, String id)
-    {
-        this.name = name;
-        this.StaffType = StaffType;
-        this.password = password;
-        this.id = id;
-    }
-
-    public TravelAdvisor(String name, String id)
+    public TravelAdvisor(String name, String id, String email, String address)
     {
         this.name = name;
         this.id = id;
+        this.email = email;
+        this.address = address;
     }
 
     public String getName()
@@ -67,5 +63,25 @@ public class TravelAdvisor
     public void setId(String id)
     {
         this.id = id;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+
+    public String getAddress()
+    {
+        return address;
+    }
+
+    public void setAddress(String address)
+    {
+        this.address = address;
     }
 }

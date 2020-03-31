@@ -32,7 +32,7 @@ public class SystemAdmin extends StaffAccount {
         try {
             String dbName = "ats";
             String dbUser = "root";
-            String dbPass = "password";
+            String dbPass = "Edward220600!!";
 
             //Create the command to be executed in the terminal
             String executeCmd = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump.exe -u" + dbUser + " -p" + dbPass + " --all-databases" + " -r" + savePath;

@@ -268,8 +268,6 @@ public class SellTicket
         GridPane.setConstraints(EC_custAddress, 1, 2);
         EC_centre_layout.getChildren().addAll(EC_firstName, EC_custFirstname, EC_surname, EC_custSurname, EC_address, EC_custAddress);
 
-
-
         HBox EC_bottom_layout = new HBox(139);
         EC_bottom_layout.getChildren().addAll(EC_search, EC_cancel);
         EC_bottom_layout.setAlignment(Pos.CENTER);
