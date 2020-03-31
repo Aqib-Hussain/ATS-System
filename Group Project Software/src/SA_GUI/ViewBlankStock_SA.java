@@ -41,7 +41,7 @@ public class ViewBlankStock_SA
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setHeight(500);
-        window.setWidth(625);
+        window.setWidth(750);
         window.setResizable(false);
 
         // Labels
@@ -50,27 +50,27 @@ public class ViewBlankStock_SA
 
         // Table
         TableColumn<Blank, String> blankIDColumn = new TableColumn<>("Blank ID");
-        blankIDColumn.setMinWidth(100);
+        blankIDColumn.setMinWidth(120);
         blankIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         TableColumn<Blank, String> blankTypeColumn = new TableColumn<>("Blank Type");
-        blankTypeColumn.setMinWidth(50);
+        blankTypeColumn.setMinWidth(120);
         blankTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
 
         TableColumn<Blank, String> blankAssignedToColumn = new TableColumn<>("Assigned To");
-        blankAssignedToColumn.setMinWidth(100);
+        blankAssignedToColumn.setMinWidth(120);
         blankAssignedToColumn.setCellValueFactory(new PropertyValueFactory<>("assignedTo"));
 
         TableColumn<Blank, String> blankReceivedDateColumn = new TableColumn<>("Received Date");
-        blankReceivedDateColumn.setMinWidth(100);
+        blankReceivedDateColumn.setMinWidth(120);
         blankReceivedDateColumn.setCellValueFactory(new PropertyValueFactory<>("receivedDate"));
 
         TableColumn<Blank, String> blankAssignedDateColumn = new TableColumn<>("Assigned Date");
-        blankAssignedDateColumn.setMinWidth(100);
+        blankAssignedDateColumn.setMinWidth(120);
         blankAssignedDateColumn.setCellValueFactory(new PropertyValueFactory<>("assignedDate"));
 
         TableColumn<Blank, String> blankStateColumn = new TableColumn<>("Blank State");
-        blankStateColumn.setMinWidth(100);
+        blankStateColumn.setMinWidth(120);
         blankStateColumn.setCellValueFactory(new PropertyValueFactory<>("state"));
 
         table = new TableView<>();

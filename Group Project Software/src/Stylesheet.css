@@ -1,8 +1,12 @@
 /* Root design */
 .root
 {
-    -fx-background-color: rgba(135,206,235, 0.5);
+
     -fx-font-family: 'Rubik Mono One', sans-serif;
+    -fx-background-image: url("image.jpg");
+    -fx-background-size: 900 600;
+    -fx-background-position: center center;
+    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);
 }
 
 /* Label design */
