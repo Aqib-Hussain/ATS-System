@@ -26,12 +26,19 @@ import javafx.stage.WindowEvent;
 import sample.Staff.SystemAdmin;
 import sample.Staff.TravelAdvisor;
 import BCrypt.*;
+import sample.Timers.LateTimer;
+import sample.Timers.MonthlyTimer;
 
+import java.util.Timer;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
     // Database
@@ -64,6 +71,23 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
+        //Begin timer for late payments
+        LateTimer lateTimer = new LateTimer();
+        lateTimer.checkIsPaid();
+
+        //Create a backup every 1st of the month at 1:00pm
+        int the1st = 1;
+        int at13hrs = 13;
+
+        MonthlyTimer t = MonthlyTimer.schedule(new Runnable() {
+            public void run() {
+                SystemAdmin.SystemBackUp();
+            }
+        }, the1st, at13hrs);
+
+
+
         window = primaryStage;
         primaryStage.setResizable(false);
         window.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -505,17 +529,16 @@ public class Main extends Application {
         TA_mainMenu.getStylesheets().add("Stylesheet.css");
 
         // Start-up
-//        window.setScene(login);
-//        window.setTitle("ATS System");
-//        window.show();
-        SellTicket.display("test");
+        window.setScene(login);
+        window.setTitle("ATS System");
+        window.show();
+
     }
 
     public void reSetStatus() {
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
-
             // SQL query to set status of all staff to loggedOut
             String updateStatus = "UPDATE staff SET status = 'loggedOut' WHERE status = 'loggedIn'";
             statement.executeUpdate(updateStatus);
@@ -523,6 +546,7 @@ public class Main extends Application {
             e.printStackTrace();
         }
     }
+
 
 }
 

@@ -2,7 +2,7 @@
 .root
 {
 
-    -fx-font-family: 'Rubik Mono One', sans-serif;
+    -fx-font-family: 'Calibri Light', sans-serif;
     -fx-background-image: url("image.jpg");
     -fx-background-size: 900 600;
     -fx-background-position: center center;
