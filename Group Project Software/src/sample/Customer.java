@@ -2,45 +2,70 @@ package sample;
 
 public class Customer
 {
-    private String firstName;
-    private String surName;
+    private String ID;
+    private String name;
+    private String phoneNumber;
+    private String address;
     private String type;
     private double discount;
 
     public Customer()
     {
-        this.firstName = "";
-        this.surName = "";
+        this.ID = "";
+        this.name = "";
+        this.phoneNumber = "";
+        this.address = "";
         this.type = "";
-        this.discount = 0.0;
+        this.discount = 0.00;
     }
 
-    public Customer(String firstName, String surName, String type, double discount)
+    public Customer(String ID, String name, String phoneNumber, String type, double discount)
     {
-        this.firstName = firstName;
-        this.surName = surName;
+        this.ID = ID;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
         this.type = type;
         this.discount = discount;
     }
 
-    public String getFirstName()
+    public String getID()
     {
-        return firstName;
+        return ID;
     }
 
-    public void setFirstName(String firstName)
+    public void setID(String ID)
     {
-        this.firstName = firstName;
+        this.ID = ID;
     }
 
-    public String getSurName()
+    public String getName()
     {
-        return surName;
+        return name;
     }
 
-    public void setSurName(String surName)
+    public void setName(String name)
     {
-        this.surName = surName;
+        this.name = name;
+    }
+
+    public String getPhoneNumber()
+    {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber)
+    {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress()
+    {
+        return address;
+    }
+
+    public void setAddress(String address)
+    {
+        this.address = address;
     }
 
     public String getType()

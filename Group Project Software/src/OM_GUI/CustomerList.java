@@ -40,7 +40,7 @@ public class CustomerList
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setHeight(500);
-        window.setWidth(625);
+        window.setWidth(750);
         window.setResizable(false);
 
         // Labels
@@ -48,13 +48,13 @@ public class CustomerList
         page_info.getStyleClass().add("label-title");
 
         // Table
-        TableColumn<Customer, String> firstNameColumn = new TableColumn<>("Firstname");
-        firstNameColumn.setMinWidth(100);
-        firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        TableColumn<Customer, String> IDColumn = new TableColumn<>("ID");
+        IDColumn.setMinWidth(100);
+        IDColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
 
-        TableColumn<Customer, String> surnameColumn = new TableColumn<>("Surname");
-        surnameColumn.setMinWidth(100);
-        surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surName"));
+        TableColumn<Customer, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setMinWidth(100);
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
         TableColumn<Customer, String> typeColumn = new TableColumn<>("Type");
         typeColumn.setMinWidth(100);
@@ -66,7 +66,7 @@ public class CustomerList
 
         table = new TableView<>();
         table.setItems(getCustomers());
-        table.getColumns().addAll(firstNameColumn, surnameColumn, typeColumn, discount);
+        table.getColumns().addAll(IDColumn, nameColumn, typeColumn, discount);
 
         // Buttons
         Button editStatus = new Button("Edit Status");
@@ -138,8 +138,9 @@ public class CustomerList
 
             while (resultSet.next())
             {
-                customers.add(new Customer(resultSet.getString("firstName"),
-                                           resultSet.getString("surName"),
+                customers.add(new Customer(resultSet.getString("ID"),
+                                           resultSet.getString("name"),
+                                           resultSet.getString("phoneNumber"),
                                            resultSet.getString("type"),
                                            resultSet.getDouble("discount") ));
             }
@@ -150,6 +151,11 @@ public class CustomerList
         }
 
         return customers;
+    }
+
+    public static void refreshTable()
+    {
+
     }
 }
 

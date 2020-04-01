@@ -508,8 +508,7 @@ public class Main extends Application {
 //        window.setScene(login);
 //        window.setTitle("ATS System");
 //        window.show();
-        ViewBlankStock_SA.display("Test");
-
+        SellTicket.display("test");
     }
 
     public void reSetStatus() {

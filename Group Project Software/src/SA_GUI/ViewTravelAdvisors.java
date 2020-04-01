@@ -128,7 +128,8 @@ public class ViewTravelAdvisors
                         table.getItems().remove(selectedTA_Remove);
                         table.getSelectionModel().clearSelection();
                         removeAdvisor(selectedTA_Remove.getId());
-                    } else
+                    }
+                    else
                     {
                         table.getSelectionModel().clearSelection();
                     }

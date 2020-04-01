@@ -1,14 +1,18 @@
 package TA_GUI;
 
 import Database.DBConnectivity;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -16,11 +20,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sample.Customer;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.function.Predicate;
 
 public class SellTicket
 {
@@ -28,18 +34,28 @@ public class SellTicket
     static DBConnectivity dbConnectivity = new DBConnectivity();
     static Connection connection = dbConnectivity.getConnection();
 
+    // Table View
+    static TableView<Customer> table;
+    static ObservableList<Customer> customers = FXCollections.observableArrayList();
+
     // Layouts
     static BorderPane root_layout = new BorderPane();
     static BorderPane CC_root_layout = new BorderPane();
     static BorderPane EC_root_Layout = new BorderPane();
+    static BorderPane payment_layout = new BorderPane();
+    static BorderPane cashPayment_layout = new BorderPane();
+    static BorderPane cardPayment_layout = new BorderPane();
 
     // Scenes
     static Scene scene = new Scene(root_layout);
     static Scene CC_scene = new Scene(CC_root_layout);
     static Scene EC_scene = new Scene(EC_root_Layout);
+    static Scene payment_scene = new Scene(payment_layout);
+    static Scene cashPayment_scene = new Scene(cashPayment_layout);
+    static Scene cardPayment_scene = new Scene(cardPayment_layout);
 
-    // sample.Customer id
-    static int cust_id;
+    // Labels
+    static Label paymentMethod_label = new Label();
 
     public static void display(String title)
     {
@@ -47,8 +63,8 @@ public class SellTicket
         // **************Selection Window***************** \\
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setWidth(400);
-        window.setHeight(450);
+        window.setHeight(500);
+        window.setWidth(750);
         window.setResizable(false);
 
         // Labels
@@ -111,7 +127,6 @@ public class SellTicket
         root_layout.setTop(top_layout);
 
         // Scene
-        window.setScene(scene);
         scene.getStylesheets().add("Stylesheet.css");
 
 
@@ -121,27 +136,22 @@ public class SellTicket
         createCust_Label.getStyleClass().add("label-title");
         createCust_Label.setFont(Font.font(16));
 
-        Label firstName = new Label("Firstname:");
-        Label surname = new Label("Surname:");
-        Label address = new Label("Address:");
-        Label phoneNumber = new Label("Phone No:");
+        Label CC_name_label = new Label("Name:");
+        Label CC_phone_label = new Label("Phone Number:");
+        Label CC_address_label = new Label("Address: ");
 
         //TextFields
-        TextField custFirstname = new TextField();
-        custFirstname.setPromptText("Firstname");
-        custFirstname.setMinWidth(200);
+        TextField CC_name_textfield = new TextField();
+        CC_name_textfield.setPromptText("Name");
+        CC_name_textfield.setMinWidth(200);
 
-        TextField custSurname = new TextField();
-        custSurname.setPromptText("Surname");
-        custSurname.setMinWidth(200);
+        TextField CC_phone_textfield = new TextField();
+        CC_phone_textfield.setPromptText("Phone Number");
+        CC_phone_textfield.setMinWidth(200);
 
-        TextField custAddress = new TextField();
-        custAddress.setPromptText("Address");
-        custAddress.setMinWidth(200);
-
-        TextField custPhoneNum = new TextField();
-        custPhoneNum.setPromptText("Phone Number");
-        custPhoneNum.setMinWidth(200);
+        TextField CC_address_text = new TextField();
+        CC_address_text.setPromptText("Address");
+        CC_address_text.setMinWidth(200);
 
         // Buttons
         Button create = new Button("Create customer");
@@ -155,19 +165,20 @@ public class SellTicket
                 try {
                     // Connect to the Database
                     Statement statement = connection.createStatement();
-//                    String idQuery = "SELECT 'ID' FROM customer";
-//                    ResultSet resultSet = statement.executeQuery(idQuery);
-//                    cust_id = resultSet.getInt(1);
-//                    cust_id++;
 
                     // SQL query to find matching email and password
-                    String query = "INSERT INTO customer VALUES ('00003', '"+custFirstname.getText()+"', '" + custSurname.getText() + "', '" + custAddress.getText() + "', '" + custPhoneNum.getText() +"')";
+                    String query = "INSERT INTO customer (name, address, phoneNumber, type, discount)VALUES ('"+CC_name_textfield.getText()+"', '"+CC_address_text.getText()+"' , '" + CC_phone_textfield.getText() +"', 'regular', '0.00')";
                     statement.executeUpdate(query);
                 }
                 catch (SQLException e)
                 {
                     e.printStackTrace();
                 }
+                refreshTable();
+                window.setScene(scene);
+                CC_name_textfield.clear();
+                CC_phone_textfield.clear();
+                CC_address_text.clear();
             }
         });
 
@@ -188,15 +199,13 @@ public class SellTicket
         CC_centre_layout.setAlignment(Pos.CENTER);
         CC_centre_layout.setHgap(15);
         CC_centre_layout.setVgap(12);
-        GridPane.setConstraints(firstName, 0, 0);
-        GridPane.setConstraints(custFirstname, 1, 0);
-        GridPane.setConstraints(surname, 0, 1);
-        GridPane.setConstraints(custSurname, 1, 1);
-        GridPane.setConstraints(address, 0, 2);
-        GridPane.setConstraints(custAddress, 1, 2);
-        GridPane.setConstraints(phoneNumber, 0, 3);
-        GridPane.setConstraints(custPhoneNum, 1, 3);
-        CC_centre_layout.getChildren().addAll(firstName, custFirstname, surname, custSurname, address, custAddress, phoneNumber,custPhoneNum);
+        GridPane.setConstraints(CC_name_label, 0, 0);
+        GridPane.setConstraints(CC_name_textfield, 1, 0);
+        GridPane.setConstraints(CC_phone_label, 0, 1);
+        GridPane.setConstraints(CC_phone_textfield, 1, 1);
+        GridPane.setConstraints(CC_address_label, 0, 2);
+        GridPane.setConstraints(CC_address_text, 1, 2);
+        CC_centre_layout.getChildren().addAll(CC_name_label, CC_name_textfield, CC_phone_label, CC_phone_textfield, CC_address_label, CC_address_text);
 
         HBox CC_bottom_layout = new HBox(139);
         CC_bottom_layout.getChildren().addAll(create, cancel);
@@ -211,24 +220,114 @@ public class SellTicket
         CC_root_layout.setTop(CC_top_layout);
         CC_root_layout.setCenter(CC_centre_layout);
         CC_root_layout.setBottom(CC_bottom_layout);
-//        CC_root_layout.setLeft(CC_left_layout);
 
         // Scene
         CC_scene.getStylesheets().add("Stylesheet.css");
 
         // *****************Existing Customer Window****************** \\
-        // Label
-        Label EC_details_label = new Label("Enter Customer Details");
-        EC_details_label.getStyleClass().add("label-title");
-        EC_details_label.setFont(Font.font(16));
+        // Labels
+        Label EC_page_info = new Label("Customers");
+        EC_page_info.getStyleClass().add("label-title");
 
-        Label EC_firstName = new Label("Firstname:");
-        Label EC_surname = new Label("Surname:");
-        Label EC_address = new Label("Address:");
+        Label EC_search_label = new Label("Search name:   ");
+
+        // Table
+        TableColumn<Customer, String> IDColumn = new TableColumn<>("ID");
+        IDColumn.setMinWidth(144);
+        IDColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
+
+        TableColumn<Customer, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setMinWidth(144);
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        TableColumn<Customer, String> phoneColumn = new TableColumn<>("Phone Number");
+        phoneColumn.setMinWidth(144);
+        phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+
+        TableColumn<Customer, String> typeColumn = new TableColumn<>("Type");
+        typeColumn.setMinWidth(144);
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        TableColumn<Customer, Double> discount = new TableColumn<>("Discount");
+        discount.setMinWidth(136);
+        discount.setCellValueFactory(new PropertyValueFactory<>("discount"));
+
+        table = new TableView<>();
+        table.setItems(getCustomers());
+        table.getColumns().addAll(IDColumn, nameColumn, phoneColumn, typeColumn, discount);
+
+        // TextField
+        FilteredList<Customer> customerFilteredList = new FilteredList<>(customers, b -> true);
+
+        TextField EC_search_bar_textField = new TextField();
+        EC_search_bar_textField.setPromptText("Search by name...");
+        EC_search_bar_textField.setMinWidth(100);
+        // Creating a listener for a search function
+        EC_search_bar_textField.setOnKeyReleased(e ->
+        {
+            EC_search_bar_textField.textProperty().addListener((observable, oldValue, newValue) ->
+            {
+                customerFilteredList.setPredicate(customer ->
+                {
+                    if(newValue == null || newValue.isEmpty())
+                    {
+                        return true;
+                    }
+
+                    String lowerCaseFilter = newValue.toLowerCase();
+
+                    if(customer.getName().toLowerCase().contains(lowerCaseFilter))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                });
+            });
+        });
+
+        // Creating a sorted list for the new items
+        SortedList<Customer> sortedList = new SortedList<>(customerFilteredList);
+        // Binding the sorted list comparator to the table view comparator
+        sortedList.comparatorProperty().bind(table.comparatorProperty());
+        // Adding the sorted items to the table
+        table.setItems(sortedList);
 
         // Buttons
-        Button EC_search = new Button("Search");
-        EC_search.setMinWidth(150);
+        Button EC_select = new Button("Select");
+        EC_select.setMinWidth(150);
+        EC_select.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                if(!(table.getSelectionModel().isEmpty()))
+                {
+                    window.setScene(payment_scene);
+                    paymentMethod_label.setText("Select a payment method for " + table.getSelectionModel().getSelectedItem().getName());
+                    table.getSelectionModel().clearSelection();
+                }
+                else
+                {
+                    SelectACustomerAlert.display();
+                    table.getSelectionModel().clearSelection();
+                }
+            }
+        });
+
+        Button EC_refreshTable_button = new Button("Refresh Table");
+        EC_refreshTable_button.getStyleClass().add("button-login");
+        EC_refreshTable_button.setMinWidth(150);
+        EC_refreshTable_button.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                refreshTable();
+            }
+        });
 
         Button EC_cancel = new Button("Cancel");
         EC_cancel.getStyleClass().add("button-exit");
@@ -242,50 +341,265 @@ public class SellTicket
             }
         });
 
-        //TextFields
-        TextField EC_custFirstname = new TextField();
-        EC_custFirstname.setPromptText("Firstname");
-        EC_custFirstname.setMinWidth(200);
-
-        TextField EC_custSurname = new TextField();
-        EC_custSurname.setPromptText("Surname");
-        EC_custSurname.setMinWidth(200);
-
-        TextField EC_custAddress = new TextField();
-        EC_custAddress.setPromptText("Address");
-        EC_custAddress.setMinWidth(200);
-
         //---Layout---\\
-        GridPane EC_centre_layout = new GridPane();
-        EC_centre_layout.setAlignment(Pos.CENTER);
-        EC_centre_layout.setHgap(15);
-        EC_centre_layout.setVgap(12);
-        GridPane.setConstraints(EC_firstName, 0, 0);
-        GridPane.setConstraints(EC_custFirstname, 1, 0);
-        GridPane.setConstraints(EC_surname, 0, 1);
-        GridPane.setConstraints(EC_custSurname, 1, 1);
-        GridPane.setConstraints(EC_address, 0, 2);
-        GridPane.setConstraints(EC_custAddress, 1, 2);
-        EC_centre_layout.getChildren().addAll(EC_firstName, EC_custFirstname, EC_surname, EC_custSurname, EC_address, EC_custAddress);
+        VBox EC_top_layout = new VBox();
+        EC_top_layout.setAlignment(Pos.CENTER);
+        EC_top_layout.getChildren().add(EC_page_info);
+        EC_top_layout.setPadding(new Insets(0,0,5,0));
+
+        HBox EC_searchBar_layout = new HBox(10);
+        EC_searchBar_layout.setAlignment(Pos.CENTER_RIGHT);
+        EC_searchBar_layout.getChildren().addAll(EC_search_label, EC_search_bar_textField);
+        EC_searchBar_layout.setPadding(new Insets(0,0,5,0));
+
+        VBox EC_list_layout = new VBox(50);
+        EC_list_layout.setAlignment(Pos.CENTER);
+        EC_list_layout.getChildren().add(table);
+        EC_list_layout.setPadding(new Insets(0,0,20,0));
+
+        HBox EC_button_layout = new HBox(30);
+        EC_button_layout.setAlignment(Pos.CENTER);
+        EC_button_layout.getChildren().addAll(EC_select, EC_refreshTable_button);
+        EC_button_layout.setPadding(new Insets(0,0,20,0));
+
+        BorderPane EC_center_layout = new BorderPane();
+        EC_center_layout.setTop(EC_searchBar_layout);
+        EC_center_layout.setCenter(EC_list_layout);
+        EC_center_layout.setBottom(EC_button_layout);
 
         HBox EC_bottom_layout = new HBox(139);
-        EC_bottom_layout.getChildren().addAll(EC_search, EC_cancel);
-        EC_bottom_layout.setAlignment(Pos.CENTER);
-
-        VBox EC_top_layout = new VBox();
-        EC_top_layout.getChildren().add(EC_details_label);
-        EC_top_layout.setAlignment(Pos.TOP_CENTER);
+        EC_bottom_layout.getChildren().addAll(EC_cancel);
+        EC_bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
 
         // Root Layout
         EC_root_Layout.setPadding(new Insets(10,10,10,10));
         EC_root_Layout.setTop(EC_top_layout);
-        EC_root_Layout.setCenter(EC_centre_layout);
+        EC_root_Layout.setCenter(EC_center_layout);
         EC_root_Layout.setBottom(EC_bottom_layout);
 
         // Scene
         EC_scene.getStylesheets().add("Stylesheet.css");
 
+
+        // *****************Payment Window****************** \\
+        // Labels
+        paymentMethod_label.getStyleClass().add("label-title");
+        paymentMethod_label.setPadding(new Insets(0,0,13,8));
+
+        // Buttons
+        Button cash_button = new Button("Cash");
+        cash_button.setMaxWidth(150);
+        cash_button.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                window.setScene(cashPayment_scene);
+            }
+        });
+
+        Button card_button = new Button("Card");
+        card_button.setMaxWidth(150);
+        card_button.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                window.setScene(cardPayment_scene);
+            }
+        });
+
+        Button cancel_payment_button = new Button("Cancel");
+        cancel_payment_button.getStyleClass().add("button-exit");
+        cancel_payment_button.setMinWidth(75);
+        cancel_payment_button.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                window.setScene(scene);
+            }
+        });
+
+        // Layout
+        VBox top_layout_payment = new VBox();
+        top_layout_payment.setAlignment(Pos.CENTER);
+        top_layout_payment.setPadding(new Insets(0,0,10,0));
+        top_layout_payment.getChildren().add(paymentMethod_label);
+
+        VBox center_layout_payment = new VBox(10);
+        center_layout_payment.setAlignment(Pos.CENTER);
+        center_layout_payment.setSpacing(10);
+        center_layout_payment.getChildren().addAll(cash_button, card_button);
+
+        HBox bottom_layout_payment = new HBox();
+        bottom_layout_payment.getChildren().add(cancel_payment_button);
+        bottom_layout_payment.setAlignment(Pos.BASELINE_RIGHT);
+
+        payment_layout.setPadding(new Insets(10,10,10,10));
+        payment_layout.setCenter(center_layout_payment);
+        payment_layout.setBottom(bottom_layout_payment);
+        payment_layout.setTop(top_layout_payment);
+
+        // Scene
+        payment_scene.getStylesheets().add("Stylesheet.css");
+
+        // *****************CASH Payment Window****************** \\
+        // Label
+        Label cashPayment_pageinfo = new Label("Please enter cash amount");
+        cashPayment_pageinfo.getStyleClass().add("label-title");
+
+        Label cashAmount_label = new Label("Cash Amount: ");
+
+        // TextFields
+        TextField cashAmount = new TextField();
+        cashAmount.setPromptText("Enter amount...");
+        cashAmount.setMaxWidth(200);
+
+        // Buttons
+        Button submitCash = new Button("Submit");
+        submitCash.setMaxWidth(150);
+
+        Button cancelCash = new Button("Cancel");
+        cancelCash.getStyleClass().add("button-exit");
+        cancelCash.setMinWidth(75);
+        cancelCash.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                window.setScene(scene);
+            }
+        });
+
+        // Layout
+        VBox cash_top_layout_payment = new VBox();
+        cash_top_layout_payment.setAlignment(Pos.CENTER);
+        cash_top_layout_payment.setPadding(new Insets(0,0,10,0));
+        cash_top_layout_payment.getChildren().add(cashPayment_pageinfo);
+
+        GridPane cash_center_layout_payment = new GridPane();
+        cash_center_layout_payment.setAlignment(Pos.CENTER);
+        cash_center_layout_payment.setHgap(15);
+        cash_center_layout_payment.setVgap(12);
+        GridPane.setConstraints(cashAmount_label, 0, 0);
+        GridPane.setConstraints(cashAmount, 2, 0);
+        GridPane.setConstraints(submitCash, 1, 1);
+        cash_center_layout_payment.getChildren().addAll(cashAmount_label, cashAmount, submitCash);
+
+        HBox cash_bottom_layout_payment = new HBox();
+        cash_bottom_layout_payment.getChildren().add(cancelCash);
+        cash_bottom_layout_payment.setAlignment(Pos.BASELINE_RIGHT);
+
+        cashPayment_layout.setPadding(new Insets(10,10,10,10));
+        cashPayment_layout.setCenter(cash_center_layout_payment);
+        cashPayment_layout.setBottom(cash_bottom_layout_payment);
+        cashPayment_layout.setTop(cash_top_layout_payment);
+
+        // Scene
+        cashPayment_scene.getStylesheets().add("Stylesheet.css");
+
+
+
+        // *****************CARD Payment Window****************** \\
+        // Label
+        Label cardPayment_pageinfo = new Label("Please enter cash amount");
+        cardPayment_pageinfo.getStyleClass().add("label-title");
+
+        Label cardAmount_label = new Label("Payment amount: ");
+
+        Label cardNumber_label = new Label("Card number: ");
+
+        // TextFields
+        TextField cardAmount_textField = new TextField();
+        cardAmount_textField.setPromptText("Enter amount...");
+        cardAmount_textField.setMaxWidth(100);
+
+        TextField cardNumber_textField = new TextField();
+        cardNumber_textField.setPromptText("XXXX-XXXX-XXXX-XXXX");
+        cardNumber_textField.setMaxWidth(200);
+
+        // Buttons
+        Button submitCard = new Button("Submit");
+        submitCard.setMaxWidth(150);
+
+        Button cancelCard = new Button("Cancel");
+        cancelCard.getStyleClass().add("button-exit");
+        cancelCard.setMinWidth(75);
+        cancelCard.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                window.setScene(scene);
+            }
+        });
+
+        // Layout
+        VBox card_top_layout_payment = new VBox();
+        card_top_layout_payment.setAlignment(Pos.CENTER);
+        card_top_layout_payment.setPadding(new Insets(0,0,10,0));
+        card_top_layout_payment.getChildren().add(cardPayment_pageinfo);
+
+        GridPane card_center_layout_payment = new GridPane();
+        card_center_layout_payment.setAlignment(Pos.CENTER);
+        card_center_layout_payment.setHgap(15);
+        card_center_layout_payment.setVgap(12);
+        GridPane.setConstraints(cardAmount_label, 0, 0);
+        GridPane.setConstraints(cardAmount_textField, 2, 0);
+        GridPane.setConstraints(cardNumber_label, 0, 1);
+        GridPane.setConstraints(cardNumber_textField, 2, 1);
+        GridPane.setConstraints(submitCard, 1, 2);
+        card_center_layout_payment.getChildren().addAll(cardAmount_label, cardAmount_textField, cardNumber_label, cardNumber_textField, submitCard);
+
+        HBox card_bottom_layout_payment = new HBox();
+        card_bottom_layout_payment.getChildren().add(cancelCard);
+        card_bottom_layout_payment.setAlignment(Pos.BASELINE_RIGHT);
+
+        cardPayment_layout.setPadding(new Insets(10,10,10,10));
+        cardPayment_layout.setCenter(card_center_layout_payment);
+        cardPayment_layout.setBottom(card_bottom_layout_payment);
+        cardPayment_layout.setTop(card_top_layout_payment);
+
+        // Scene
+        cardPayment_scene.getStylesheets().add("Stylesheet.css");
+
+
+
         // Start window
+        window.setScene(scene);
         window.showAndWait();
+    }
+
+    public static ObservableList<Customer> getCustomers()
+    {
+        try {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+            // SQL query to find matching customers
+            String query = "SELECT * FROM customer ORDER BY ID DESC";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next())
+            {
+                customers.add(new Customer(resultSet.getString("ID"),
+                        resultSet.getString("name"),
+                        resultSet.getString("phoneNumber"),
+                        resultSet.getString("type"),
+                        resultSet.getDouble("discount") ));
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return customers;
+    }
+
+    public static void refreshTable()
+    {
+        customers.clear();
+        getCustomers();
     }
 }
