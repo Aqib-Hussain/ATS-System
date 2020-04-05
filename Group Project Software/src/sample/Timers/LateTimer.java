@@ -20,7 +20,7 @@ public class LateTimer {
     DBConnectivity dbConnectivity = new DBConnectivity();
     Connection connection = dbConnectivity.getConnection();
 
-    public void checkIsPaid() {
+    public Object checkIsPaid() {
 
         // Comparison string to check for a no value
         String customerPaid = "no";
@@ -40,8 +40,9 @@ public class LateTimer {
                 unpaidCustomer = String.valueOf(resultSet);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            return null;
         }
+     return null;
     }
 
     public void latePayment() {
