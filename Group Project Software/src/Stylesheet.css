@@ -1,30 +1,27 @@
 /* Root design */
 .root
 {
-    -fx-font-family: 'Roboto', sans-serif;
-    -fx-background-image: url("image.jpg");
+    -fx-font-family: 'Roboto Light', sans-serif;
     -fx-background-size: 900 600;
+    -fx-background-color:  lightblue;
     -fx-background-position: center center;
 }
 
 /* Label design */
 .label
 {
-    -fx-font-weight: bold;
     -fx-font-size: 1.1em;
 }
 
 /* Login label design */
 .label-login
 {
-    -fx-font-weight: bold;
     -fx-font-size: 3em;
 }
 
 /* Title label design */
 .label-title
 {
-    -fx-font-weight: bold;
     -fx-font-size: 2em;
 }
 
@@ -33,15 +30,14 @@
 {
     -fx-padding: 8 15 15 15;
     -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
-    -fx-background-radius: 8;
+    -fx-background-radius: 0;
     -fx-background-color:
             linear-gradient(from 0% 93% to 0% 100%, #4397a3 0%, #4397a3 100%),
             #4397a3,
             #4eb6c2,
             radial-gradient(center 50% 50%, radius 100%, #4eb6c2, #4397a3);
     -fx-effect: dropshadow( gaussian , rgba(0, 0, 0, 0.75), 4,0,0,1 );
-    -fx-font-weight: bold;
-    -fx-font-size: 1.1em;
+    -fx-font-size: 1.3em;
 }
 .button:hover
 {
@@ -62,15 +58,14 @@
 {
     -fx-padding: 8 15 15 15;
     -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
-    -fx-background-radius: 8;
+    -fx-background-radius: 0;
     -fx-background-color:
             linear-gradient(from 0% 93% to 0% 100%, #479a3d 0%, #46983d 100%),
             #479a3d,
             #4fb145,
             radial-gradient(center 50% 50%, radius 100%, #55c14b, #479a3d);
     -fx-effect: dropshadow( gaussian , rgba(0, 0, 0, 0.75), 4,0,0,1 );
-    -fx-font-weight: bold;
-    -fx-font-size: 1.1em;
+    -fx-font-size: 1.3em;
 }
 .button-login:hover
 {
@@ -91,15 +86,14 @@
 {
     -fx-padding: 8 15 15 15;
     -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
-    -fx-background-radius: 8;
+    -fx-background-radius: 0;
     -fx-background-color:
             linear-gradient(from 0% 93% to 0% 100%, #a82a2a 0%, #8e2222 100%),
             #ce342f,
             #ee3731,
             radial-gradient(center 50% 50%, radius 100%, #ff3a34, #e33a2f);
     -fx-effect: dropshadow( gaussian , rgba(0, 0, 0, 0.75), 4,0,0,1 );
-    -fx-font-weight: bold;
-    -fx-font-size: 1.1em;
+    -fx-font-size: 1.3em;
 }
 .button-exit:hover
 {

@@ -9,7 +9,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -73,8 +72,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         //Begin timer for late payments
-        LateTimer lateTimer = new LateTimer();
-        lateTimer.checkIsPaid();
+//        LateTimer lateTimer = new LateTimer();
+//        lateTimer.checkIsPaid();
 
         //Create a backup every 1st of the month at 1:00pm
         int the1st = 1;
@@ -532,8 +531,6 @@ public class Main extends Application {
         window.setScene(login);
         window.setTitle("ATS System");
         window.show();
-
-        //SellTicket.display("test");
 
     }
 

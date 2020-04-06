@@ -25,14 +25,13 @@ public class LateTimer {
         // Comparison string to check for a no value
         String customerPaid = "no";
 
-
         try {
             // Establish a database connection
             Statement statement = connection.createStatement();
             // SQL query to check if a customer has paid
             String query = "SELECT isPaid FROM sales";
             ResultSet resultSet = statement.executeQuery(query);
-            if (customerPaid.equals(resultSet.getString("no"))) {
+            if (customerPaid.equals(resultSet.getString("isPaid"))) {
 
                 //Check if the customer has paid
                 final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);

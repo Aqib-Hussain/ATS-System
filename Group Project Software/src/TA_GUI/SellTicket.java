@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import sample.Blank;
 import sample.Customer;
 import sample.Staff.TravelAdvisor;
+import sample.Timers.MonthlyTimer;
 
 import java.awt.*;
 import java.sql.Connection;
@@ -110,7 +111,7 @@ public class SellTicket
 
         // Buttons
         Button existingCust = new Button("Select from existing customers");
-        existingCust.setMaxWidth(230);
+        existingCust.setMaxWidth(250);
         existingCust.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -121,7 +122,7 @@ public class SellTicket
         });
 
         Button createCust = new Button("Create customer account");
-        createCust.setMaxWidth(230);
+        createCust.setMaxWidth(250);
         createCust.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -132,7 +133,7 @@ public class SellTicket
         });
 
         Button casualCust = new Button("Casual Customer");
-        casualCust.setMaxWidth(230);
+        casualCust.setMaxWidth(250);
         casualCust.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -694,6 +695,7 @@ public class SellTicket
         {
             e.printStackTrace();
         }
+
     }
 
     public static void createCustomer(String name, String address, String phone)
@@ -749,5 +751,4 @@ public class SellTicket
         }
         return name;
     }
-
 }
