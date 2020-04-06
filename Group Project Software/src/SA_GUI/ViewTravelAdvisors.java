@@ -395,9 +395,9 @@ public class ViewTravelAdvisors
             while (resultSet.next())
             {
                 advisors.add(new TravelAdvisor(resultSet.getString("name"),
-                                               resultSet.getString("ID"),
-                                               resultSet.getString("email"),
-                                               resultSet.getString("address")));
+                        resultSet.getString("ID"),
+                        resultSet.getString("email"),
+                        resultSet.getString("address")));
             }
         }
         catch (SQLException e)

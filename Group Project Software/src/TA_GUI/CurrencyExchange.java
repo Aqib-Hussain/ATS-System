@@ -1,5 +1,6 @@
 package TA_GUI;
 
+import Database.DBConnectivity;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,9 +15,22 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sample.Blank;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class CurrencyExchange
 {
+    // Database
+    static DBConnectivity dbConnectivity = new DBConnectivity();
+    static Connection connection = dbConnectivity.getConnection();
+
+    // Currency
+    static double currency;
+
     public static void display(String title)
     {
         // Creating a new window
@@ -37,6 +51,7 @@ public class CurrencyExchange
         TextField text_currencyExchange = new TextField();
         text_currencyExchange.setFont(Font.font(16));
         text_currencyExchange.setMaxSize(100,25);
+        currency = Double.parseDouble(text_currencyExchange.getText());
 
         // Buttons
         Button button_setRates = new Button("Set");
@@ -80,5 +95,39 @@ public class CurrencyExchange
 
         // Start window
         window.showAndWait();
+    }
+
+    public static void updateCurrencyExchange()
+    {
+        try {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+
+            // SQL query to find matching travel advisors
+            String query = "UPDATE currencyexchange SET currencyExchange = '"+currency+"'";
+            statement.executeUpdate(query);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static double getCurrency()
+    {
+        try {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+
+            // SQL query to find matching travel advisors
+            String query = "SELECT * FROM currecyExchange";
+            ResultSet resultSet = statement.executeQuery(query);
+            currency = resultSet.getDouble(1);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return currency;
     }
 }

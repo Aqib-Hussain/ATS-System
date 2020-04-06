@@ -71,13 +71,9 @@ public class ViewBlankStock_TA
         blankAssignedDateColumn.setMinWidth(100);
         blankAssignedDateColumn.setCellValueFactory(new PropertyValueFactory<>("assignedDate"));
 
-        TableColumn<Blank, String> blankStateColumn = new TableColumn<>("Blank State");
-        blankStateColumn.setMinWidth(100);
-        blankStateColumn.setCellValueFactory(new PropertyValueFactory<>("state"));
-
         table = new TableView<>();
         table.setItems(getBlanks());
-        table.getColumns().addAll(blankIDColumn, blankTypeColumn, blankAssignedToColumn, blankReceivedDateColumn, blankAssignedDateColumn, blankStateColumn);
+        table.getColumns().addAll(blankIDColumn, blankTypeColumn, blankAssignedToColumn, blankReceivedDateColumn, blankAssignedDateColumn);
 
         // Buttons
         Button re_assign = new Button("Re-Assign");
@@ -139,14 +135,13 @@ public class ViewBlankStock_TA
 
     public static ObservableList<Blank> getBlanks()
     {
-        String name;
         ObservableList<Blank> blanks = FXCollections.observableArrayList();
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
             // SQL query to find matching travel advisors
-            String query = "SELECT * FROM blank INNER JOIN staff ON blank.assignedTo = staff.name WHERE (staff.name = 'Penelope Pitstop' OR staff.name = 'Dennis Menace') AND staff.status = 'loggedIn'";
+            String query = "SELECT * FROM blank INNER JOIN staff ON blank.assignedTo = staff.name WHERE (staff.name = 'Penelope Pitstop' OR staff.name = 'Dennis Menace') AND staff.status = 'loggedIn' AND blank.state = 'Assigned'";
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next())
@@ -155,8 +150,7 @@ public class ViewBlankStock_TA
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
-                        resultSet.getString(5),
-                        resultSet.getString(6)));
+                        resultSet.getString(5)));
             }
         }
         catch (SQLException e)

@@ -125,8 +125,8 @@ public class RefundLog
             while (resultSet.next())
             {
                 refunds.add(new Refund(resultSet.getString("date"),
-                                       resultSet.getString("blank"),
-                                       resultSet.getString("amount")));
+                        resultSet.getString("blank"),
+                        resultSet.getString("amount")));
             }
         }
         catch (SQLException e)

@@ -11,6 +11,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -20,8 +23,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sample.Blank;
 import sample.Customer;
+import sample.Staff.TravelAdvisor;
 
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,36 +36,66 @@ import java.util.function.Predicate;
 
 public class SellTicket
 {
+    // Stage
+    static Stage window = new Stage();
+
     // Database
     static DBConnectivity dbConnectivity = new DBConnectivity();
     static Connection connection = dbConnectivity.getConnection();
 
     // Table View
-    static TableView<Customer> table;
+    static TableView<Customer> Customertable;
     static ObservableList<Customer> customers = FXCollections.observableArrayList();
+
+    static TableView<Blank> BlankTable;
+    static ObservableList<Blank> blanks = FXCollections.observableArrayList();
 
     // Layouts
     static BorderPane root_layout = new BorderPane();
     static BorderPane CC_root_layout = new BorderPane();
     static BorderPane EC_root_Layout = new BorderPane();
     static BorderPane payment_layout = new BorderPane();
-    static BorderPane cashPayment_layout = new BorderPane();
-    static BorderPane cardPayment_layout = new BorderPane();
+    static BorderPane blankSelect_layout = new BorderPane();
 
     // Scenes
     static Scene scene = new Scene(root_layout);
     static Scene CC_scene = new Scene(CC_root_layout);
     static Scene EC_scene = new Scene(EC_root_Layout);
     static Scene payment_scene = new Scene(payment_layout);
-    static Scene cashPayment_scene = new Scene(cashPayment_layout);
-    static Scene cardPayment_scene = new Scene(cardPayment_layout);
+    static Scene blankSelect_scene = new Scene(blankSelect_layout);
 
     // Labels
     static Label paymentMethod_label = new Label();
 
+    // Sale
+    static Blank selectedBlank = new Blank();
+    static double amount = 0.0;
+    static String paymentMethod = "";
+    static double tax = 0.0;
+    static String creditCard = "";
+    static String origin = "";
+    static String destination = "";
+    static double commRate = 0.0;
+    static Customer customer = new Customer();
+    static boolean payLate = false;
+
+    // Payment
+    static TextField payment_amount_textField = new TextField();
+    static TextField payment_creditCard_textField = new TextField();
+    static TextField payment_tax_textField = new TextField();
+    static TextField payment_origin_textField = new TextField();
+    static TextField payment_destination_textField = new TextField();
+
+    static ChoiceBox<String> payment_payMethod_choiceBox = new ChoiceBox<>();
+    static ChoiceBox<String> payment_currency_choiceBox = new ChoiceBox<>();
+
+    //***** Payment *****\\
+    // Radio Buttons
+    static RadioButton payment_payLateYES_radioButton = new RadioButton("Yes");
+    static RadioButton payment_payLateNO_radioButton = new RadioButton("No");
+
     public static void display(String title)
     {
-        Stage window = new Stage();
         // **************Selection Window***************** \\
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
@@ -95,6 +131,21 @@ public class SellTicket
             }
         });
 
+        Button casualCust = new Button("Casual Customer");
+        casualCust.setMaxWidth(230);
+        casualCust.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                window.setScene(blankSelect_scene);
+                paymentMethod_label.setText("Select a payment method for a casual customer");
+                payment_payLateNO_radioButton.setDisable(true);
+                payment_payLateYES_radioButton.setDisable(true);
+                customer.setName("Casual customer");
+            }
+        });
+
         Button close = new Button("Close");
         close.getStyleClass().add("button-exit");
         close.setMinWidth(75);
@@ -115,7 +166,7 @@ public class SellTicket
         VBox center_layout = new VBox(10);
         center_layout.setAlignment(Pos.CENTER);
         center_layout.setSpacing(10);
-        center_layout.getChildren().addAll(existingCust, createCust);
+        center_layout.getChildren().addAll(existingCust, createCust, casualCust);
 
         HBox bottom_layout = new HBox();
         bottom_layout.getChildren().add(close);
@@ -162,18 +213,7 @@ public class SellTicket
             @Override
             public void handle(ActionEvent event)
             {
-                try {
-                    // Connect to the Database
-                    Statement statement = connection.createStatement();
-
-                    // SQL query to find matching email and password
-                    String query = "INSERT INTO customer (name, address, phoneNumber, type, discount)VALUES ('"+CC_name_textfield.getText()+"', '"+CC_address_text.getText()+"' , '" + CC_phone_textfield.getText() +"', 'regular', '0.00')";
-                    statement.executeUpdate(query);
-                }
-                catch (SQLException e)
-                {
-                    e.printStackTrace();
-                }
+                createCustomer(CC_name_textfield.getText(), CC_address_text.getText(), CC_phone_textfield.getText());
                 refreshTable();
                 window.setScene(scene);
                 CC_name_textfield.clear();
@@ -196,6 +236,8 @@ public class SellTicket
 
         //---Layout---\\
         GridPane CC_centre_layout = new GridPane();
+        CC_centre_layout.setScaleY(1.2);
+        CC_centre_layout.setScaleX(1.2);
         CC_centre_layout.setAlignment(Pos.CENTER);
         CC_centre_layout.setHgap(15);
         CC_centre_layout.setVgap(12);
@@ -252,9 +294,9 @@ public class SellTicket
         discount.setMinWidth(136);
         discount.setCellValueFactory(new PropertyValueFactory<>("discount"));
 
-        table = new TableView<>();
-        table.setItems(getCustomers());
-        table.getColumns().addAll(IDColumn, nameColumn, phoneColumn, typeColumn, discount);
+        Customertable = new TableView<>();
+        Customertable.setItems(getCustomers());
+        Customertable.getColumns().addAll(IDColumn, nameColumn, phoneColumn, typeColumn, discount);
 
         // TextField
         FilteredList<Customer> customerFilteredList = new FilteredList<>(customers, b -> true);
@@ -291,9 +333,9 @@ public class SellTicket
         // Creating a sorted list for the new items
         SortedList<Customer> sortedList = new SortedList<>(customerFilteredList);
         // Binding the sorted list comparator to the table view comparator
-        sortedList.comparatorProperty().bind(table.comparatorProperty());
+        sortedList.comparatorProperty().bind(Customertable.comparatorProperty());
         // Adding the sorted items to the table
-        table.setItems(sortedList);
+        Customertable.setItems(sortedList);
 
         // Buttons
         Button EC_select = new Button("Select");
@@ -303,16 +345,27 @@ public class SellTicket
             @Override
             public void handle(ActionEvent event)
             {
-                if(!(table.getSelectionModel().isEmpty()))
+                if(!(Customertable.getSelectionModel().isEmpty()))
                 {
-                    window.setScene(payment_scene);
-                    paymentMethod_label.setText("Select a payment method for " + table.getSelectionModel().getSelectedItem().getName());
-                    table.getSelectionModel().clearSelection();
+                    window.setScene(blankSelect_scene);
+                    paymentMethod_label.setText("Select a payment method for " + Customertable.getSelectionModel().getSelectedItem().getName());
+                    customer = Customertable.getSelectionModel().getSelectedItem();
+                    if(Customertable.getSelectionModel().getSelectedItem().getType().equals("regular"))
+                    {
+                        payment_payLateYES_radioButton.setDisable(true);
+                        payment_payLateNO_radioButton.setDisable(true);
+                    }
+                    else
+                    {
+                        payment_payLateYES_radioButton.setDisable(false);
+                        payment_payLateNO_radioButton.setDisable(false);
+                    }
+                    Customertable.getSelectionModel().clearSelection();
                 }
                 else
                 {
                     SelectACustomerAlert.display();
-                    table.getSelectionModel().clearSelection();
+                    Customertable.getSelectionModel().clearSelection();
                 }
             }
         });
@@ -354,7 +407,7 @@ public class SellTicket
 
         VBox EC_list_layout = new VBox(50);
         EC_list_layout.setAlignment(Pos.CENTER);
-        EC_list_layout.getChildren().add(table);
+        EC_list_layout.getChildren().add(Customertable);
         EC_list_layout.setPadding(new Insets(0,0,20,0));
 
         HBox EC_button_layout = new HBox(30);
@@ -380,32 +433,141 @@ public class SellTicket
         // Scene
         EC_scene.getStylesheets().add("Stylesheet.css");
 
+        // *****************Select Blank Window****************** \\
+        // Labels
+        Label selectBlank_pageinfo_label = new Label("Please select a blank for the transaction");
+        selectBlank_pageinfo_label.getStyleClass().add("label-title");
+        selectBlank_pageinfo_label.setPadding(new Insets(0,0,10,0));
+
+        // Table
+        TableColumn<Blank, String> blankIDColumn = new TableColumn<>("Blank ID");
+        blankIDColumn.setMinWidth(146);
+        blankIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Blank, String> blankTypeColumn = new TableColumn<>("Blank Type");
+        blankTypeColumn.setMinWidth(115);
+        blankTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        TableColumn<Blank, String> blankAssignedToColumn = new TableColumn<>("Assigned To");
+        blankAssignedToColumn.setMinWidth(146);
+        blankAssignedToColumn.setCellValueFactory(new PropertyValueFactory<>("assignedTo"));
+
+        TableColumn<Blank, String> blankReceivedDateColumn = new TableColumn<>("Received Date");
+        blankReceivedDateColumn.setMinWidth(146);
+        blankReceivedDateColumn.setCellValueFactory(new PropertyValueFactory<>("receivedDate"));
+
+        TableColumn<Blank, String> blankAssignedDateColumn = new TableColumn<>("Assigned Date");
+        blankAssignedDateColumn.setMinWidth(146);
+        blankAssignedDateColumn.setCellValueFactory(new PropertyValueFactory<>("assignedDate"));
+
+        BlankTable = new TableView<>();
+        BlankTable.setItems(ViewBlankStock_TA.getBlanks());
+        BlankTable.getColumns().addAll(blankIDColumn, blankTypeColumn, blankAssignedToColumn, blankReceivedDateColumn, blankAssignedDateColumn);
+
+        // Buttons
+        Button selectBlank_continue_button = new Button("Continue");
+        selectBlank_continue_button.getStyleClass().add("button-login");
+        selectBlank_continue_button.setMinWidth(125);
+        selectBlank_continue_button.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                if(!(BlankTable.getSelectionModel().isEmpty()))
+                {
+                    selectedBlank = BlankTable.getSelectionModel().getSelectedItem();
+                    window.setScene(payment_scene);
+                    BlankTable.getSelectionModel().clearSelection();
+                }
+                else
+                {
+                    SelectBlankAlert.display();
+                }
+            }
+        });
+
+        // Layout
+        VBox selectBlank_top_layout = new VBox();
+        selectBlank_top_layout.setAlignment(Pos.CENTER);
+        selectBlank_top_layout.getChildren().add(selectBlank_pageinfo_label);
+        selectBlank_top_layout.setPadding(new Insets(0, 0, 20, 0));
+
+        VBox selectBlank_list_layout = new VBox(50);
+        selectBlank_list_layout.setAlignment(Pos.CENTER);
+        selectBlank_list_layout.getChildren().add(BlankTable);
+        selectBlank_list_layout.setPadding(new Insets(0, 0, 20, 0));
+
+        HBox selectBlank_button_layout = new HBox(60);
+        selectBlank_button_layout.setAlignment(Pos.CENTER);
+        selectBlank_button_layout.getChildren().add(selectBlank_continue_button);
+        selectBlank_button_layout.setPadding(new Insets(0, 0, 20, 0));
+
+        BorderPane selectBlank_center_layout = new BorderPane();
+        selectBlank_center_layout.setCenter(selectBlank_list_layout);
+        selectBlank_center_layout.setBottom(selectBlank_button_layout);
+
+        blankSelect_layout.setPadding(new Insets(10, 10, 10, 10));
+        blankSelect_layout.setTop(selectBlank_top_layout);
+        blankSelect_layout.setCenter(selectBlank_center_layout);
+
+        // Scene
+        blankSelect_scene.getStylesheets().add("Stylesheet.css");
 
         // *****************Payment Window****************** \\
         // Labels
         paymentMethod_label.getStyleClass().add("label-title");
         paymentMethod_label.setPadding(new Insets(0,0,13,8));
 
-        // Buttons
-        Button cash_button = new Button("Cash");
-        cash_button.setMaxWidth(150);
-        cash_button.setOnAction(new EventHandler<ActionEvent>()
-        {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                window.setScene(cashPayment_scene);
-            }
-        });
+        Label payment_amount_label = new Label("Amount");
+        Label payment_method_label = new Label("Credit Card");
+        Label payment_tax_label = new Label("Tax");
+        Label payment_origin_label = new Label("Origin");
+        Label payment_destination_label = new Label("Destination");
+        Label payment_payLater_label = new Label("Pay later");
 
-        Button card_button = new Button("Card");
-        card_button.setMaxWidth(150);
-        card_button.setOnAction(new EventHandler<ActionEvent>()
+        // TextFields
+        payment_amount_textField.setPromptText("Amount");
+        payment_creditCard_textField.setPromptText("XXXX-XXXX-XXXX");
+        payment_tax_textField.setPromptText("Tax");
+        payment_origin_textField.setPromptText("Origin of flight");
+        payment_destination_textField.setPromptText("Destination of flight");
+
+        // Choice Box
+        payment_payMethod_choiceBox.getItems().addAll("Cash", "Card");
+        payment_payMethod_choiceBox.setMinWidth(70);
+        payment_payMethod_choiceBox.setValue("Cash");
+
+        payment_currency_choiceBox.getItems().addAll("GBP", "USD");
+        payment_currency_choiceBox.setMinWidth(70);
+        payment_currency_choiceBox.setValue("GBP");
+
+        // Radio buttons
+        ToggleGroup payment_toggleGroup = new ToggleGroup();
+        payment_payLateYES_radioButton.setToggleGroup(payment_toggleGroup);
+        payment_payLateNO_radioButton.setToggleGroup(payment_toggleGroup);
+
+        // Buttons
+        Button payment_confirmPayment_button = new Button("Confirm Sale");
+        payment_confirmPayment_button.getStyleClass().add("button-login");
+        payment_confirmPayment_button.setMinWidth(125);
+        payment_confirmPayment_button.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent event)
             {
-                window.setScene(cardPayment_scene);
+                amount = Double.parseDouble(payment_amount_textField.getText());
+                creditCard = payment_creditCard_textField.getText();
+                tax = Double.parseDouble(payment_tax_textField.getText());
+                origin = payment_origin_textField.getText();
+                destination = payment_destination_textField.getText();
+                paymentMethod = payment_payMethod_choiceBox.getSelectionModel().getSelectedItem();
+                if(payment_currency_choiceBox.getSelectionModel().getSelectedItem().equals("USD"))
+                {
+                    amount = amount * CurrencyExchange.getCurrency();
+                }
+                createSale(amount, paymentMethod, tax, creditCard, origin, destination, commRate, customer.getName(), selectedBlank.getId(), payLate);
+
+                endPayment();
             }
         });
 
@@ -417,7 +579,10 @@ public class SellTicket
             @Override
             public void handle(ActionEvent event)
             {
-                window.setScene(scene);
+                if(CancelPaymentAlert.display())
+                {
+                    endPayment();
+                }
             }
         });
 
@@ -427,10 +592,43 @@ public class SellTicket
         top_layout_payment.setPadding(new Insets(0,0,10,0));
         top_layout_payment.getChildren().add(paymentMethod_label);
 
-        VBox center_layout_payment = new VBox(10);
+        HBox radioButtons_layout_payment = new HBox(15);
+        radioButtons_layout_payment.setAlignment(Pos.CENTER);
+        radioButtons_layout_payment.getChildren().addAll(payment_payLateYES_radioButton, payment_payLateNO_radioButton);
+
+        GridPane grid_layout_payment = new GridPane();
+        grid_layout_payment.setScaleX(1.2);
+        grid_layout_payment.setScaleY(1.2);
+        grid_layout_payment.setAlignment(Pos.CENTER);
+        grid_layout_payment.setHgap(15);
+        grid_layout_payment.setVgap(12);
+        // Row 1
+        GridPane.setConstraints(payment_amount_label,0,0);
+        GridPane.setConstraints(payment_amount_textField, 1,0);
+        GridPane.setConstraints(payment_currency_choiceBox, 2, 0);
+        GridPane.setConstraints(payment_payMethod_choiceBox, 3, 0);
+        // Row 2
+        GridPane.setConstraints(payment_method_label, 0, 1);
+        GridPane.setConstraints(payment_creditCard_textField,1, 1);
+        // Row 3
+        GridPane.setConstraints(payment_tax_label, 0, 2);
+        GridPane.setConstraints(payment_tax_textField,1, 2);
+        // Row 4
+        GridPane.setConstraints(payment_origin_label, 0, 3);
+        GridPane.setConstraints(payment_origin_textField, 1, 3);
+        // Row 5
+        GridPane.setConstraints(payment_destination_label, 0, 4);
+        GridPane.setConstraints(payment_destination_textField, 1, 4);
+        // Row 6
+        GridPane.setConstraints(payment_payLater_label, 0, 5);
+        GridPane.setConstraints(radioButtons_layout_payment, 1, 5);
+        grid_layout_payment.getChildren().addAll(payment_amount_label, payment_amount_textField, payment_currency_choiceBox, payment_payMethod_choiceBox, payment_method_label, payment_creditCard_textField,
+                payment_tax_label, payment_tax_textField, payment_origin_label, payment_origin_textField, payment_destination_label, payment_destination_textField,
+                payment_payLater_label, radioButtons_layout_payment);
+
+        VBox center_layout_payment = new VBox(40);
         center_layout_payment.setAlignment(Pos.CENTER);
-        center_layout_payment.setSpacing(10);
-        center_layout_payment.getChildren().addAll(cash_button, card_button);
+        center_layout_payment.getChildren().addAll(grid_layout_payment, payment_confirmPayment_button);
 
         HBox bottom_layout_payment = new HBox();
         bottom_layout_payment.getChildren().add(cancel_payment_button);
@@ -443,128 +641,6 @@ public class SellTicket
 
         // Scene
         payment_scene.getStylesheets().add("Stylesheet.css");
-
-        // *****************CASH Payment Window****************** \\
-        // Label
-        Label cashPayment_pageinfo = new Label("Please enter cash amount");
-        cashPayment_pageinfo.getStyleClass().add("label-title");
-
-        Label cashAmount_label = new Label("Cash Amount: ");
-
-        // TextFields
-        TextField cashAmount = new TextField();
-        cashAmount.setPromptText("Enter amount...");
-        cashAmount.setMaxWidth(200);
-
-        // Buttons
-        Button submitCash = new Button("Submit");
-        submitCash.setMaxWidth(150);
-
-        Button cancelCash = new Button("Cancel");
-        cancelCash.getStyleClass().add("button-exit");
-        cancelCash.setMinWidth(75);
-        cancelCash.setOnAction(new EventHandler<ActionEvent>()
-        {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                window.setScene(scene);
-            }
-        });
-
-        // Layout
-        VBox cash_top_layout_payment = new VBox();
-        cash_top_layout_payment.setAlignment(Pos.CENTER);
-        cash_top_layout_payment.setPadding(new Insets(0,0,10,0));
-        cash_top_layout_payment.getChildren().add(cashPayment_pageinfo);
-
-        GridPane cash_center_layout_payment = new GridPane();
-        cash_center_layout_payment.setAlignment(Pos.CENTER);
-        cash_center_layout_payment.setHgap(15);
-        cash_center_layout_payment.setVgap(12);
-        GridPane.setConstraints(cashAmount_label, 0, 0);
-        GridPane.setConstraints(cashAmount, 2, 0);
-        GridPane.setConstraints(submitCash, 1, 1);
-        cash_center_layout_payment.getChildren().addAll(cashAmount_label, cashAmount, submitCash);
-
-        HBox cash_bottom_layout_payment = new HBox();
-        cash_bottom_layout_payment.getChildren().add(cancelCash);
-        cash_bottom_layout_payment.setAlignment(Pos.BASELINE_RIGHT);
-
-        cashPayment_layout.setPadding(new Insets(10,10,10,10));
-        cashPayment_layout.setCenter(cash_center_layout_payment);
-        cashPayment_layout.setBottom(cash_bottom_layout_payment);
-        cashPayment_layout.setTop(cash_top_layout_payment);
-
-        // Scene
-        cashPayment_scene.getStylesheets().add("Stylesheet.css");
-
-
-
-        // *****************CARD Payment Window****************** \\
-        // Label
-        Label cardPayment_pageinfo = new Label("Please enter cash amount");
-        cardPayment_pageinfo.getStyleClass().add("label-title");
-
-        Label cardAmount_label = new Label("Payment amount: ");
-
-        Label cardNumber_label = new Label("Card number: ");
-
-        // TextFields
-        TextField cardAmount_textField = new TextField();
-        cardAmount_textField.setPromptText("Enter amount...");
-        cardAmount_textField.setMaxWidth(100);
-
-        TextField cardNumber_textField = new TextField();
-        cardNumber_textField.setPromptText("XXXX-XXXX-XXXX-XXXX");
-        cardNumber_textField.setMaxWidth(200);
-
-        // Buttons
-        Button submitCard = new Button("Submit");
-        submitCard.setMaxWidth(150);
-
-        Button cancelCard = new Button("Cancel");
-        cancelCard.getStyleClass().add("button-exit");
-        cancelCard.setMinWidth(75);
-        cancelCard.setOnAction(new EventHandler<ActionEvent>()
-        {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                window.setScene(scene);
-            }
-        });
-
-        // Layout
-        VBox card_top_layout_payment = new VBox();
-        card_top_layout_payment.setAlignment(Pos.CENTER);
-        card_top_layout_payment.setPadding(new Insets(0,0,10,0));
-        card_top_layout_payment.getChildren().add(cardPayment_pageinfo);
-
-        GridPane card_center_layout_payment = new GridPane();
-        card_center_layout_payment.setAlignment(Pos.CENTER);
-        card_center_layout_payment.setHgap(15);
-        card_center_layout_payment.setVgap(12);
-        GridPane.setConstraints(cardAmount_label, 0, 0);
-        GridPane.setConstraints(cardAmount_textField, 2, 0);
-        GridPane.setConstraints(cardNumber_label, 0, 1);
-        GridPane.setConstraints(cardNumber_textField, 2, 1);
-        GridPane.setConstraints(submitCard, 1, 2);
-        card_center_layout_payment.getChildren().addAll(cardAmount_label, cardAmount_textField, cardNumber_label, cardNumber_textField, submitCard);
-
-        HBox card_bottom_layout_payment = new HBox();
-        card_bottom_layout_payment.getChildren().add(cancelCard);
-        card_bottom_layout_payment.setAlignment(Pos.BASELINE_RIGHT);
-
-        cardPayment_layout.setPadding(new Insets(10,10,10,10));
-        cardPayment_layout.setCenter(card_center_layout_payment);
-        cardPayment_layout.setBottom(card_bottom_layout_payment);
-        cardPayment_layout.setTop(card_top_layout_payment);
-
-        // Scene
-        cardPayment_scene.getStylesheets().add("Stylesheet.css");
-
-
 
         // Start window
         window.setScene(scene);
@@ -601,5 +677,55 @@ public class SellTicket
     {
         customers.clear();
         getCustomers();
+    }
+
+    public static void createSale(double amount, String paymentMeth, double tax, String creditCard, String origin, String destination, double commRate, String custName, String blankID, boolean payLate)
+    {
+        try {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+
+            // SQL query to find matching travel advisors
+            String query = "INSERT INTO sales (BlankID, amount, paymentMethod, tax, creditcard, origin, destination, commissionRate, customer) VALUES ('"+blankID+"', '"+amount+"', '"+paymentMeth+"', '"+tax+"', '"+creditCard+"', '"+origin+"', '"+destination+"', '"+commRate+"', '"+custName+"')";
+            statement.executeUpdate(query);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void createCustomer(String name, String address, String phone)
+    {
+        try {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+
+            // SQL query to create a customer
+            String query = "INSERT INTO customer (name, address, phoneNumber, type, discount)VALUES ('"+name+"', '"+address+"' , '" +phone+"', 'regular', '0.00')";
+            statement.executeUpdate(query);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void endPayment()
+    {
+        window.setScene(scene);
+        payment_amount_textField.clear();
+        payment_tax_textField.clear();
+        payment_origin_textField.clear();
+        payment_destination_textField.clear();
+        payment_payMethod_choiceBox.setValue("Cash");
+        payment_currency_choiceBox.setValue("GBP");
+        if (payment_payLateYES_radioButton.isSelected())
+        {
+            payment_payLateYES_radioButton.setSelected(false);
+        } else if (payment_payLateNO_radioButton.isSelected())
+        {
+            payment_payLateNO_radioButton.setSelected(false);
+        }
     }
 }

@@ -29,6 +29,15 @@ public class Blank
         this.state = state;
     }
 
+    public Blank(String id, String type, String assignedTo, String receivedDate, String assignedDate)
+    {
+        this.id = id;
+        this.type = type;
+        this.assignedTo = assignedTo;
+        this.receivedDate = receivedDate;
+        this.assignedDate = assignedDate;
+    }
+
     public String getId()
     {
         return id;

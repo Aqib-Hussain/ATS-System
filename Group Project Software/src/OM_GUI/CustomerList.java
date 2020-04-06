@@ -139,10 +139,10 @@ public class CustomerList
             while (resultSet.next())
             {
                 customers.add(new Customer(resultSet.getString("ID"),
-                                           resultSet.getString("name"),
-                                           resultSet.getString("phoneNumber"),
-                                           resultSet.getString("type"),
-                                           resultSet.getDouble("discount") ));
+                        resultSet.getString("name"),
+                        resultSet.getString("phoneNumber"),
+                        resultSet.getString("type"),
+                        resultSet.getDouble("discount") ));
             }
         }
         catch (SQLException e)
