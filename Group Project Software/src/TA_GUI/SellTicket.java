@@ -563,10 +563,11 @@ public class SellTicket
                 paymentMethod = payment_payMethod_choiceBox.getSelectionModel().getSelectedItem();
                 if(payment_currency_choiceBox.getSelectionModel().getSelectedItem().equals("USD"))
                 {
-                    amount = amount * CurrencyExchange.getCurrency();
+                    //amount = amount * CurrencyExchange.getCurrency();
+                    amount = 0.50;
                 }
-                createSale(amount, paymentMethod, tax, creditCard, origin, destination, commRate, customer.getName(), selectedBlank.getId(), payLate);
 
+                createSale(amount, paymentMethod, tax, creditCard, origin, destination, commRate, customer.getName(), selectedBlank.getId(), payLate, getTAname());
                 endPayment();
             }
         });
@@ -679,14 +680,14 @@ public class SellTicket
         getCustomers();
     }
 
-    public static void createSale(double amount, String paymentMeth, double tax, String creditCard, String origin, String destination, double commRate, String custName, String blankID, boolean payLate)
+    public static void createSale(double amount, String paymentMeth, double tax, String creditCard, String origin, String destination, double commRate, String custName, String blankID, boolean payLate, String soldBy)
     {
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
             // SQL query to find matching travel advisors
-            String query = "INSERT INTO sales (BlankID, amount, paymentMethod, tax, creditcard, origin, destination, commissionRate, customer) VALUES ('"+blankID+"', '"+amount+"', '"+paymentMeth+"', '"+tax+"', '"+creditCard+"', '"+origin+"', '"+destination+"', '"+commRate+"', '"+custName+"')";
+            String query = "INSERT INTO sales (BlankID, amount, paymentMethod, tax, creditcard, origin, destination, commissionRate, customer, soldBy) VALUES ('"+blankID+"', '"+amount+"', '"+paymentMeth+"', '"+tax+"', '"+creditCard+"', '"+origin+"', '"+destination+"', '"+commRate+"', '"+custName+"', '"+soldBy+"')";
             statement.executeUpdate(query);
         }
         catch (SQLException e)
@@ -728,4 +729,25 @@ public class SellTicket
             payment_payLateNO_radioButton.setSelected(false);
         }
     }
+
+    public static String getTAname()
+    {
+        String name = "";
+        try
+        {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+
+            // SQL query to get the current logged in TA
+            String query = "SELECT name FROM staff WHERE StaffType = 'Travel Advisor' AND status = 'loggedIn'";
+            ResultSet resultSet = statement.executeQuery(query);
+            name = resultSet.getString(1);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return name;
+    }
+
 }

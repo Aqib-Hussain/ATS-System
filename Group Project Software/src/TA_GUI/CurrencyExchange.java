@@ -115,7 +115,8 @@ public class CurrencyExchange
 
     public static double getCurrency()
     {
-        try {
+        try
+        {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
