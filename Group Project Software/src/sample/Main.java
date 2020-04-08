@@ -1,7 +1,7 @@
 package sample;
 
 import Database.DBConnectivity;
-import TA_GUI.ViewBlankStock_TA;
+import TA_GUI.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,9 +18,6 @@ import OM_GUI.*;
 import SA_GUI.TicketTypes;
 import SA_GUI.ViewTravelAdvisors;
 import SA_GUI.ViewBlankStock_SA;
-import TA_GUI.CurrencyExchange;
-import TA_GUI.SellTicket;
-import TA_GUI.ViewReports;
 import javafx.stage.WindowEvent;
 import sample.Staff.SystemAdmin;
 import sample.Staff.TravelAdvisor;
@@ -461,6 +458,17 @@ public class Main extends Application {
             }
         });
 
+        Button refundSale = new Button("Refund Sale");
+        refundSale.setMinWidth(250);
+        refundSale.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                RefundSale.display();
+            }
+        });
+
         Button viewBlankStock_TA = new Button("Your Blank Stock");
         viewBlankStock_TA.setMinWidth(250);
         viewBlankStock_TA.setOnAction(new EventHandler<ActionEvent>() {
@@ -504,7 +512,7 @@ public class Main extends Application {
         //---Layout---\\
         // Button Layout
         VBox button_layout_TA = new VBox(10);
-        button_layout_TA.getChildren().addAll(generateIndividualReport, sellTicket, viewBlankStock_TA, viewReports, setCurrExchangeRate);
+        button_layout_TA.getChildren().addAll(generateIndividualReport, sellTicket, refundSale, viewBlankStock_TA, viewReports, setCurrExchangeRate);
         button_layout_TA.setAlignment(Pos.CENTER);
 
         HBox bottom_layout_TA = new HBox();
@@ -528,10 +536,11 @@ public class Main extends Application {
         TA_mainMenu.getStylesheets().add("Stylesheet.css");
 
         // Start-up
-        window.setScene(login);
-        window.setTitle("ATS System");
-        window.show();
-
+//        window.setScene(login);
+//        window.setTitle("ATS System");
+//        window.show();
+//        RefundSale.display();
+        SellTicket.display("test");
     }
 
     public void reSetStatus() {

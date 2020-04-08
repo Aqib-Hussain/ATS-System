@@ -104,7 +104,7 @@ public class CurrencyExchange
             Statement statement = connection.createStatement();
 
             // SQL query to find matching travel advisors
-            String query = "UPDATE currencyexchange SET currencyExchange = '"+currency+"'";
+            String query = "UPDATE currency_exchange SET currencyExchange = '"+currency+"'";
             statement.executeUpdate(query);
         }
         catch (SQLException e)
@@ -121,9 +121,12 @@ public class CurrencyExchange
             Statement statement = connection.createStatement();
 
             // SQL query to find matching travel advisors
-            String query = "SELECT * FROM currecyExchange";
+            String query = "SELECT * FROM currency_exchange";
             ResultSet resultSet = statement.executeQuery(query);
-            currency = resultSet.getDouble(1);
+            if(resultSet.next())
+            {
+                currency = resultSet.getDouble(1);
+            }
         }
         catch (SQLException e)
         {

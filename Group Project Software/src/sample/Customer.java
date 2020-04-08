@@ -8,6 +8,7 @@ public class Customer
     private String address;
     private String type;
     private double discount;
+    private double dueBalance;
 
     public Customer()
     {
@@ -16,7 +17,8 @@ public class Customer
         this.phoneNumber = "";
         this.address = "";
         this.type = "";
-        this.discount = 0.00;
+        this.discount = 0.0;
+        this.dueBalance = 0.0;
     }
 
     public Customer(String ID, String name, String phoneNumber, String type, double discount)
@@ -86,5 +88,15 @@ public class Customer
     public void setDiscount(double discount)
     {
         this.discount = discount;
+    }
+
+    public double getDueBalance()
+    {
+        return dueBalance;
+    }
+
+    public void setDueBalance(double dueBalance)
+    {
+        this.dueBalance = dueBalance;
     }
 }
