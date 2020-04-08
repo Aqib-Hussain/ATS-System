@@ -43,7 +43,7 @@ public class Main extends Application {
     // Database
     DBConnectivity dbConnectivity = new DBConnectivity();
     Connection connection = dbConnectivity.getConnection();
-
+    LateTimer lateTimer = new LateTimer();
     SystemAdmin systemAdmin = new SystemAdmin();
 
     // Stage
@@ -182,6 +182,7 @@ public class Main extends Application {
                             if (officeManagerType.equals(resultSet.getString("StaffType"))) {
                                 window.setScene(OM_mainMenu);
                                 loggedIn = true;
+                                lateTimer.checkIsPaid();
                             } else if (systemAdminType.equals(resultSet.getString("StaffType"))) {
                                 window.setScene(SA_mainMenu);
                                 loggedIn = true;
