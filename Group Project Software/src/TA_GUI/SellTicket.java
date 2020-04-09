@@ -697,7 +697,7 @@ public class SellTicket
                 }
 
                 createSale(amount, currency,paymentMethod, tax, creditCard, ticketType, origin, destination, commRate, customer.getName(), payByDate,selectedBlank.getId(), getTAname(),saleDate, isPaid);
-                //setBlankState(selectedBlank.getId());
+                setBlankState(selectedBlank.getId());
                 endPayment();
             }
         });

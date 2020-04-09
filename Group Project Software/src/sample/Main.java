@@ -273,7 +273,7 @@ public class Main extends Application {
         viewBlankStock_OM.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                ViewBlankStock_OM.display("Blank Stock");
+                ViewBlankStock_OM.display();
             }
         });
         Button setCommissionRates = new Button("Commission Rates");
@@ -387,7 +387,7 @@ public class Main extends Application {
         viewBlankStock_SA.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ViewBlankStock_SA.display("Blank Stock");
+                ViewBlankStock_SA.display();
             }
         });
 
@@ -537,11 +537,9 @@ public class Main extends Application {
         TA_mainMenu.getStylesheets().add("Stylesheet.css");
 
         // Start-up
-//        window.setScene(login);
-//        window.setTitle("ATS System");
-//        window.show();
-//        RefundSale.display();
-        SellTicket.display("test");
+        window.setScene(login);
+        window.setTitle("ATS System");
+        window.show();
     }
 
     public void reSetStatus() {

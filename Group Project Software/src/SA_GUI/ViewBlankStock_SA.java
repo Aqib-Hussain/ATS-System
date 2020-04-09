@@ -25,6 +25,15 @@ import java.sql.Statement;
 
 public class ViewBlankStock_SA
 {
+    // Stage
+    static Stage window = new Stage();
+
+    // Layouts
+    static BorderPane main_root_layout = new BorderPane();
+
+    // Scenes
+    static Scene main_scene = new Scene(main_root_layout);
+
     // Database
     static DBConnectivity dbConnectivity = new DBConnectivity();
     static Connection connection = dbConnectivity.getConnection();
@@ -32,14 +41,11 @@ public class ViewBlankStock_SA
     // Table View
     static TableView<Blank> table;
 
-    public static void display(String title)
+    public static void display()
     {
-        // Creating a new window
-        Stage window = new Stage();
-
         // Window takes priority until taken care of
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle(title);
+        window.setTitle("Blank Stock");
         window.setHeight(500);
         window.setWidth(750);
         window.setResizable(false);
@@ -120,16 +126,14 @@ public class ViewBlankStock_SA
         bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
         bottom_layout.getChildren().addAll(close);
 
-        BorderPane root_layout = new BorderPane();
-        root_layout.setPadding(new Insets(10, 10, 10, 10));
-        root_layout.setTop(top_layout);
-        root_layout.setCenter(center_layout);
-        root_layout.setBottom(bottom_layout);
+        main_root_layout.setPadding(new Insets(10, 10, 10, 10));
+        main_root_layout.setTop(top_layout);
+        main_root_layout.setCenter(center_layout);
+        main_root_layout.setBottom(bottom_layout);
 
         // Scene
-        Scene scene = new Scene(root_layout);
-        scene.getStylesheets().add("Stylesheet.css");
-        window.setScene(scene);
+        main_scene.getStylesheets().add("Stylesheet.css");
+        window.setScene(main_scene);
 
         // Start window
         window.showAndWait();

@@ -23,7 +23,7 @@ public class LateTimer {
             DateTime currentDate = new org.joda.time.DateTime();
             Statement statement = connection.createStatement();
 
-            String saleDateQuery = ("SELECT saleDate FROM sales WHERE isPaid = 'No'");
+            String saleDateQuery = "SELECT saleDate FROM sales WHERE isPaid = 'NO'";
             ResultSet resultSet = statement.executeQuery(saleDateQuery);
 
             while (resultSet.next()) {
@@ -32,14 +32,14 @@ public class LateTimer {
                 date0 = resultSet.getString(1);
 
                 // Convert the string date0 to a joda date
-                DateTime saleDate = DateTime.parse(date0, DateTimeFormat.forPattern("dd/MM/yy"));
+                DateTime saleDate = DateTime.parse(date0, DateTimeFormat.forPattern("yyyy-MM-dd"));
 
                 // Check the days between the sale date and current date
                 int days = (Days.daysBetween(saleDate, currentDate).getDays());
 
                 // If more than 30 days since sale date have passed
                 if (days > 30) {
-                    String customerQuery = ("SELECT customer FROM sales WHERE isPaid = 'No'");
+                    String customerQuery = "SELECT customer FROM sales WHERE isPaid = 'NO'";
                     ResultSet resultSet1 = statement.executeQuery(customerQuery);
                     resultSet1.next();
                     unpaidCustomer = resultSet1.getString(1);
@@ -52,8 +52,5 @@ public class LateTimer {
         } catch (SQLException e) {
             System.out.println("Late Payments have been checked");
         }
-
-
     }
-
 }

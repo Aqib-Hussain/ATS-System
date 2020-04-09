@@ -185,7 +185,7 @@ public class RefundSale
             while (resultSet.next())
             {
                 sales.add(new Sale(resultSet.getString("BlankID"),
-                        resultSet.getDouble("local_amount"),
+                        resultSet.getDouble("amount"),
                         resultSet.getString("currency"),
                         resultSet.getDouble("tax"),
                         resultSet.getString("paymentMethod"),
