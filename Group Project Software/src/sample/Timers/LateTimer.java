@@ -1,17 +1,11 @@
 package sample.Timers;
 
 import Database.DBConnectivity;
-
 import javax.swing.*;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import org.joda.time.*;
+import org.joda.time.format.DateTimeFormat;
+
 
 public class LateTimer {
 
@@ -23,24 +17,40 @@ public class LateTimer {
     public void checkIsPaid() {
 
         try {
+            int n = 0;
+            String[] dates = new String[10];
+            String date0 = null;
             DateTime currentDate = new org.joda.time.DateTime();
             Statement statement = connection.createStatement();
 
             String saleDateQuery = ("SELECT saleDate FROM sales WHERE isPaid = 'No'");
             ResultSet resultSet = statement.executeQuery(saleDateQuery);
-            System.out.println(resultSet.next());
-           // java.sql.Date saleDate = (Date) resultSet;
 
-            DateTime saleDateJoda = new DateTime(resultSet); // Convert to a JODA object.
+            while (resultSet.next()) {
 
-            if ((Days.daysBetween(currentDate, saleDateJoda)).isGreaterThan(Days.days(30))) {
-                String customerQuery = ("SELECT customer FROM sales WHERE isPaid = 'No'");
-                ResultSet resultSet1 = statement.executeQuery(customerQuery);
-                unpaidCustomer = customerQuery;
-                JOptionPane.showMessageDialog(null, "Customer " + unpaidCustomer + " is late for payments");
+                date0 = dates[n];
+                date0 = resultSet.getString(1);
+
+                // Convert the string date0 to a joda date
+                DateTime saleDate = DateTime.parse(date0, DateTimeFormat.forPattern("dd/MM/yy"));
+
+                // Check the days between the sale date and current date
+                int days = (Days.daysBetween(saleDate, currentDate).getDays());
+
+                // If more than 30 days since sale date have passed
+                if (days > 30) {
+                    String customerQuery = ("SELECT customer FROM sales WHERE isPaid = 'No'");
+                    ResultSet resultSet1 = statement.executeQuery(customerQuery);
+                    resultSet1.next();
+                    unpaidCustomer = resultSet1.getString(1);
+                    JOptionPane.showMessageDialog(null, "Customer " + unpaidCustomer + " is late for payments");
+                }
+                n++;
             }
+
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Late Payments have been checked");
         }
 
 
