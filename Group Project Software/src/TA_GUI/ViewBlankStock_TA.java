@@ -8,10 +8,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -28,22 +25,25 @@ import java.sql.Statement;
 public class ViewBlankStock_TA
 {
     // Database
-    static DBConnectivity dbConnectivity = new DBConnectivity();
-    static Connection connection = dbConnectivity.getConnection();
+    private static DBConnectivity dbConnectivity = new DBConnectivity();
+    private static Connection connection = dbConnectivity.getConnection();
 
     // Table View
-    static TableView<Blank> table;
+    private static TableView<Blank> table;
+    private static ObservableList<Blank> blanks = FXCollections.observableArrayList();
 
-    public static void display(String title)
+    // Blank
+    private static Blank selectedBlank;
+
+    public static void display()
     {
         // Creating a new window
         Stage window = new Stage();
 
         // Window takes priority until taken care of
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle(title);
-        window.setHeight(500);
-        window.setWidth(625);
+        window.setTitle("Blank Stock");
+        window.sizeToScene();
         window.setResizable(false);
 
         // Labels
@@ -56,31 +56,42 @@ public class ViewBlankStock_TA
         blankIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         TableColumn<Blank, String> blankTypeColumn = new TableColumn<>("Blank Type");
-        blankTypeColumn.setMinWidth(50);
+        blankTypeColumn.setMinWidth(100);
         blankTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
 
         TableColumn<Blank, String> blankAssignedToColumn = new TableColumn<>("Assigned To");
-        blankAssignedToColumn.setMinWidth(100);
+        blankAssignedToColumn.setMinWidth(150);
         blankAssignedToColumn.setCellValueFactory(new PropertyValueFactory<>("assignedTo"));
 
         TableColumn<Blank, String> blankReceivedDateColumn = new TableColumn<>("Received Date");
-        blankReceivedDateColumn.setMinWidth(100);
+        blankReceivedDateColumn.setMinWidth(125);
         blankReceivedDateColumn.setCellValueFactory(new PropertyValueFactory<>("receivedDate"));
 
         TableColumn<Blank, String> blankAssignedDateColumn = new TableColumn<>("Assigned Date");
-        blankAssignedDateColumn.setMinWidth(100);
+        blankAssignedDateColumn.setMinWidth(125);
         blankAssignedDateColumn.setCellValueFactory(new PropertyValueFactory<>("assignedDate"));
 
         table = new TableView<>();
         table.setItems(getBlanks());
+        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         table.getColumns().addAll(blankIDColumn, blankTypeColumn, blankAssignedToColumn, blankReceivedDateColumn, blankAssignedDateColumn);
 
         // Buttons
-        Button re_assign = new Button("Re-Assign");
-        re_assign.setMinSize(75, 25);
-
-        Button assign = new Button("Assign");
-        assign.setMinSize(75,25);
+        Button markUnused = new Button("Mark Unused");
+        markUnused.setPrefWidth(125);
+        markUnused.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                if(!(table.getSelectionModel().isEmpty()))
+                {
+                    for (Blank b : table.getSelectionModel().getSelectedItems())
+                        markUnused(b.getId());
+                }
+                refreshTable();
+            }
+        });
 
         Button close = new Button("Close");
         close.getStyleClass().add("button-exit");
@@ -107,7 +118,7 @@ public class ViewBlankStock_TA
 
         HBox button_layout = new HBox(60);
         button_layout.setAlignment(Pos.CENTER);
-        button_layout.getChildren().addAll(assign, re_assign);
+        button_layout.getChildren().addAll(markUnused);
         button_layout.setPadding(new Insets(0, 0, 20, 0));
 
         BorderPane center_layout = new BorderPane();
@@ -133,9 +144,8 @@ public class ViewBlankStock_TA
         window.showAndWait();
     }
 
-    public static ObservableList<Blank> getBlanks()
+    private static ObservableList<Blank> getBlanks()
     {
-        ObservableList<Blank> blanks = FXCollections.observableArrayList();
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
@@ -158,5 +168,27 @@ public class ViewBlankStock_TA
             e.printStackTrace();
         }
         return blanks;
+    }
+
+    private static void refreshTable()
+    {
+        blanks.clear();
+        getBlanks();
+    }
+
+    private static void markUnused(String id)
+    {
+        try {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+
+            // SQL query to mark blanks un-used
+            String query = "UPDATE blank SET state = 'Not used' WHERE ID = '"+id+"'";
+            statement.executeUpdate(query);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

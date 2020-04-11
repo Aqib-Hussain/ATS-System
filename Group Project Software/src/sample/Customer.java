@@ -2,7 +2,7 @@ package sample;
 
 public class Customer
 {
-    private String ID;
+    private int ID;
     private String name;
     private String phoneNumber;
     private String address;
@@ -12,7 +12,7 @@ public class Customer
 
     public Customer()
     {
-        this.ID = "";
+        this.ID = 0;
         this.name = "";
         this.phoneNumber = "";
         this.address = "";
@@ -21,21 +21,20 @@ public class Customer
         this.dueBalance = 0.0;
     }
 
-    public Customer(String ID, String name, String phoneNumber, String type, double discount)
+    public Customer(int ID, String name, String phoneNumber, String type)
     {
         this.ID = ID;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.type = type;
-        this.discount = discount;
     }
 
-    public String getID()
+    public int getID()
     {
         return ID;
     }
 
-    public void setID(String ID)
+    public void setID(int ID)
     {
         this.ID = ID;
     }

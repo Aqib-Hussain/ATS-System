@@ -281,7 +281,7 @@ public class Main extends Application {
         setCommissionRates.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                CommissionRates.display("Commission Rate");
+                CommissionRates.display();
             }
         });
         Button viewRefundLog = new Button("Refund Log");
@@ -475,7 +475,7 @@ public class Main extends Application {
         viewBlankStock_TA.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ViewBlankStock_TA.display("Your Blank Stock");
+                ViewBlankStock_TA.display();
             }
         });
 
@@ -537,9 +537,11 @@ public class Main extends Application {
         TA_mainMenu.getStylesheets().add("Stylesheet.css");
 
         // Start-up
-        window.setScene(login);
-        window.setTitle("ATS System");
-        window.show();
+//        window.setScene(login);
+//        window.setTitle("ATS System");
+//        window.show();
+
+        ViewBlankStock_SA.display();
     }
 
     public void reSetStatus() {

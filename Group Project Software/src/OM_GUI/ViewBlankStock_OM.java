@@ -61,7 +61,6 @@ public class ViewBlankStock_OM
     public static void display()
     {
         // Window takes priority until taken care of
-        window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Blank Stock");
         window.setHeight(600);
         window.setWidth(780);
@@ -374,7 +373,7 @@ public class ViewBlankStock_OM
 
         // Start window
         window.setScene(main_scene);
-        window.showAndWait();
+        window.show();
     }
 
     private static void assignBlanks(String name, String blankID, String currentDate)

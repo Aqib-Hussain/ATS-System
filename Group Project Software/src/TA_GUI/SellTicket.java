@@ -15,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -24,13 +23,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.Blank;
-import sample.CommissionRate;
 import sample.Customer;
-import sample.Refund;
-import sample.Staff.TravelAdvisor;
-import sample.Timers.MonthlyTimer;
-
-import java.awt.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,80 +31,79 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.function.Predicate;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
 public class SellTicket
 {
     // Stage
-    static Stage window = new Stage();
+    private static Stage window = new Stage();
 
     // Database
-    static DBConnectivity dbConnectivity = new DBConnectivity();
-    static Connection connection = dbConnectivity.getConnection();
+    private static DBConnectivity dbConnectivity = new DBConnectivity();
+    private static Connection connection = dbConnectivity.getConnection();
 
     // Table View
-    static TableView<Customer> Customertable;
-    static ObservableList<Customer> customers = FXCollections.observableArrayList();
+    private static TableView<Customer> Customertable;
+    private static ObservableList<Customer> customers = FXCollections.observableArrayList();
 
-    static TableView<Blank> BlankTable;
-    static ObservableList<Blank> blanks = FXCollections.observableArrayList();
+    private static TableView<Blank> BlankTable;
+    private static ObservableList<Blank> blanks = FXCollections.observableArrayList();
 
-    static ObservableList<Double> commissionRates = FXCollections.observableArrayList();
+    private static ObservableList<Double> commissionRates = FXCollections.observableArrayList();
 
     // Layouts
-    static BorderPane root_layout = new BorderPane();
-    static BorderPane CC_root_layout = new BorderPane();
-    static BorderPane EC_root_Layout = new BorderPane();
-    static BorderPane payment_layout = new BorderPane();
-    static BorderPane blankSelect_layout = new BorderPane();
+    private static BorderPane root_layout = new BorderPane();
+    private static BorderPane CC_root_layout = new BorderPane();
+    private static BorderPane EC_root_Layout = new BorderPane();
+    private static BorderPane payment_layout = new BorderPane();
+    private static BorderPane blankSelect_layout = new BorderPane();
 
     // Scenes
-    static Scene scene = new Scene(root_layout);
-    static Scene CC_scene = new Scene(CC_root_layout);
-    static Scene EC_scene = new Scene(EC_root_Layout);
-    static Scene payment_scene = new Scene(payment_layout);
-    static Scene blankSelect_scene = new Scene(blankSelect_layout);
+    private static Scene scene = new Scene(root_layout);
+    private static Scene CC_scene = new Scene(CC_root_layout);
+    private static Scene EC_scene = new Scene(EC_root_Layout);
+    private static Scene payment_scene = new Scene(payment_layout);
+    private static Scene blankSelect_scene = new Scene(blankSelect_layout);
 
     // Labels
-    static Label paymentMethod_label = new Label();
+    private static Label paymentMethod_label = new Label();
 
     // Sale
-    static Blank selectedBlank = new Blank();
-    static double amount = 0.0;
-    static String currency = "";
-    static String paymentMethod = "";
-    static double tax = 0.0;
-    static String creditCard = "";
-    static String ticketType = "";
-    static String origin = "";
-    static String destination = "";
-    static double commRate = 0.0;
-    static Customer customer = new Customer();
-    static String saleDate = "";
-    static String payByDate = "";
-    static double dueAmount = 0.0;
-    static String isPaid = "";
+    private static Blank selectedBlank = new Blank();
+    private static double amount = 0.0;
+    private static String currency = "";
+    private static String paymentMethod = "";
+    private static double tax = 0.0;
+    private static String creditCard = "";
+    private static String ticketType = "";
+    private static String origin = "";
+    private static String destination = "";
+    private static double commRate = 0.0;
+    private static Customer customer = new Customer();
+    private static String saleDate = "";
+    private static String payByDate = "";
+    private static double dueAmount = 0.0;
+    private static String isPaid = "";
 
     // Payment
-    static TextField payment_amount_textField = new TextField();
-    static TextField payment_creditCard_textField = new TextField();
-    static TextField payment_tax_textField = new TextField();
-    static TextField payment_origin_textField = new TextField();
-    static TextField payment_destination_textField = new TextField();
+    private static TextField payment_amount_textField = new TextField();
+    private static TextField payment_creditCard_textField = new TextField();
+    private static TextField payment_tax_textField = new TextField();
+    private static TextField payment_origin_textField = new TextField();
+    private static TextField payment_destination_textField = new TextField();
 
-    static ChoiceBox<String> payment_payMethod_choiceBox = new ChoiceBox<>();
-    static ChoiceBox<String> payment_currency_choiceBox = new ChoiceBox<>();
-    static ChoiceBox<Double> payment_commission_choiceBox = new ChoiceBox<>();
+    private static ChoiceBox<String> payment_payMethod_choiceBox = new ChoiceBox<>();
+    private static ChoiceBox<String> payment_currency_choiceBox = new ChoiceBox<>();
+    private static ChoiceBox<Double> payment_commission_choiceBox = new ChoiceBox<>();
 
     //***** Payment *****\\
     // Radio Buttons
-    static RadioButton payment_interline_radioButton = new RadioButton("Interline");
-    static RadioButton payment_domestic_radioButton = new RadioButton("Domestic");
+    private static RadioButton payment_interline_radioButton = new RadioButton("Interline");
+    private static RadioButton payment_domestic_radioButton = new RadioButton("Domestic");
 
-    static RadioButton payment_payLateYES_radioButton = new RadioButton("Yes");
-    static RadioButton payment_payLateNO_radioButton = new RadioButton("No");
+    private static RadioButton payment_payLateYES_radioButton = new RadioButton("Yes");
+    private static RadioButton payment_payLateNO_radioButton = new RadioButton("No");
 
     public static void display(String title)
     {
@@ -294,7 +286,7 @@ public class SellTicket
         Label EC_search_label = new Label("Search name:  ");
 
         // Table
-        TableColumn<Customer, String> IDColumn = new TableColumn<>("ID");
+        TableColumn<Customer, Integer> IDColumn = new TableColumn<>("ID");
         IDColumn.setMinWidth(144);
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
 
@@ -788,7 +780,7 @@ public class SellTicket
         window.showAndWait();
     }
 
-    public static ObservableList<Customer> getCustomers()
+    private static ObservableList<Customer> getCustomers()
     {
         try {
             // Connect to the Database
@@ -799,11 +791,10 @@ public class SellTicket
 
             while (resultSet.next())
             {
-                customers.add(new Customer(resultSet.getString("ID"),
+                customers.add(new Customer(resultSet.getInt("ID"),
                         resultSet.getString("name"),
                         resultSet.getString("phoneNumber"),
-                        resultSet.getString("type"),
-                        resultSet.getDouble("discount") ));
+                        resultSet.getString("type")));
             }
         }
         catch (SQLException e)
@@ -814,7 +805,7 @@ public class SellTicket
         return customers;
     }
 
-    public static ObservableList<Blank> getBlanks()
+    private static ObservableList<Blank> getBlanks()
     {
         try {
             // Connect to the Database
@@ -840,7 +831,7 @@ public class SellTicket
         return blanks;
     }
 
-    public static ObservableList<Double> getCommissionRates(String blankType)
+    private static ObservableList<Double> getCommissionRates(String blankType)
     {
         try {
             // Connect to the Database
@@ -862,13 +853,13 @@ public class SellTicket
         return commissionRates;
     }
 
-    public static void refreshTable()
+    private static void refreshTable()
     {
         customers.clear();
         getCustomers();
     }
 
-    public static void createSale(double amount, String currency, String paymentMeth, double tax, String creditCard, String ticketType, String origin, String destination, double commRate, String custName, String payBy, String blankID, String soldBy, String saleDate, String isPaid)
+    private static void createSale(double amount, String currency, String paymentMeth, double tax, String creditCard, String ticketType, String origin, String destination, double commRate, String custName, String payBy, String blankID, String soldBy, String saleDate, String isPaid)
     {
         try {
             // Connect to the Database
@@ -885,7 +876,7 @@ public class SellTicket
 
     }
 
-    public static double getCustomerDueBalance(String custName)
+    private static double getCustomerDueBalance(String custName)
     {
         double amount = 0.0;
         try {
@@ -907,7 +898,7 @@ public class SellTicket
         return amount;
     }
 
-    public static void increaseDueAmount(String custName, double dueBalance, double amount)
+    private static void increaseDueAmount(String custName, double dueBalance, double amount)
     {
         double balance = dueBalance+=amount;
         try {
@@ -924,15 +915,15 @@ public class SellTicket
         }
     }
 
-    public static void getCurrentDate()
+    private static void getCurrentDate()
     {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
 
         saleDate = dtf.format(now);
     }
 
-    public static void setBlankState(String blankID)
+    private static void setBlankState(String blankID)
     {
         try
         {
@@ -949,14 +940,14 @@ public class SellTicket
         }
     }
 
-    public static void createCustomer(String name, String address, String phone)
+    private static void createCustomer(String name, String address, String phone)
     {
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
             // SQL query to create a customer
-            String query = "INSERT INTO customer (name, address, phoneNumber, type, discount, dueBalance)VALUES ('"+name+"', '"+address+"' , '" +phone+"', 'regular', '0.00', '0.0')";
+            String query = "INSERT INTO customer (name, address, phoneNumber, type, discount, dueBalance)VALUES ('"+name+"', '"+address+"' , '" +phone+"', 'Regular', 'None', '0.0')";
             statement.executeUpdate(query);
         }
         catch (SQLException e)
@@ -965,7 +956,7 @@ public class SellTicket
         }
     }
 
-    public static void endPayment()
+    private static void endPayment()
     {
         window.setScene(scene);
         payment_amount_textField.clear();
@@ -996,7 +987,7 @@ public class SellTicket
         }
     }
 
-    public static String getTAname()
+    private static String getTAname()
     {
         String name = "";
         try

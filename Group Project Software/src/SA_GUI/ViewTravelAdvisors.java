@@ -349,7 +349,6 @@ public class ViewTravelAdvisors
         });
 
         //---Layout---\\
-        // Button Layout
         GridPane editTA_centre_layout = new GridPane();
         editTA_centre_layout.setAlignment(Pos.CENTER);
         editTA_centre_layout.setHgap(15);

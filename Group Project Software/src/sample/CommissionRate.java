@@ -1,19 +1,21 @@
 package sample;
 
+import java.text.DecimalFormat;
+
 public class CommissionRate
 {
-    private String id;
+    private int id;
     private String blankType;
     private double commissionRate;
 
     public CommissionRate()
     {
-        this.id = "";
+        this.id = 0;
         this.blankType = "";
-        this.commissionRate = 0.0;
+        this.commissionRate = 0.00;
     }
 
-    public CommissionRate(String id, String blankType, double commissionRate)
+    public CommissionRate(int id, String blankType, double commissionRate)
     {
         this.id = id;
         this.blankType = blankType;
@@ -25,12 +27,12 @@ public class CommissionRate
         this.commissionRate = commissionRate;
     }
 
-    public String getId()
+    public int getId()
     {
         return id;
     }
 
-    public void setId(String id)
+    public void setId(int id)
     {
         this.id = id;
     }
@@ -52,6 +54,7 @@ public class CommissionRate
 
     public void setCommissionRate(double commissionRate)
     {
+
         this.commissionRate = commissionRate;
     }
 }
