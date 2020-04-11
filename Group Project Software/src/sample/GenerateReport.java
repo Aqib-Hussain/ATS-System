@@ -131,6 +131,7 @@ public class GenerateReport {
 
     }
 
+    // Calculate Report values
     public static void calculateReport(LocalDate date1, LocalDate date2) {
         int totalUSD;
         int totalLocal = 0;
