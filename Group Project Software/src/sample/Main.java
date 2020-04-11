@@ -450,6 +450,17 @@ public class Main extends Application {
             }
         });
 
+        Button restDueAmount = new Button("Change Due amount");
+        restDueAmount.setPrefWidth(250);
+        restDueAmount.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                ResetDueAmount.display("Customers with due amount");
+            }
+        });
+
         Button sellTicket = new Button("Sell Ticket");
         sellTicket.setMinWidth(250);
         sellTicket.setOnAction(new EventHandler<ActionEvent>() {
@@ -513,7 +524,7 @@ public class Main extends Application {
         //---Layout---\\
         // Button Layout
         VBox button_layout_TA = new VBox(10);
-        button_layout_TA.getChildren().addAll(generateIndividualReport, sellTicket, refundSale, viewBlankStock_TA, viewReports, setCurrExchangeRate);
+        button_layout_TA.getChildren().addAll(generateIndividualReport, sellTicket, restDueAmount, refundSale, viewBlankStock_TA, viewReports, setCurrExchangeRate);
         button_layout_TA.setAlignment(Pos.CENTER);
 
         HBox bottom_layout_TA = new HBox();
@@ -537,11 +548,10 @@ public class Main extends Application {
         TA_mainMenu.getStylesheets().add("Stylesheet.css");
 
         // Start-up
-        window.setScene(login);
-        window.setTitle("ATS System");
-        window.show();
-
-       // ViewBlankStock_SA.display();
+//        window.setScene(login);
+//        window.setTitle("ATS System");
+//        window.show();
+        ResetDueAmount.display("sdf");
     }
 
     public void reSetStatus() {

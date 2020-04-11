@@ -70,7 +70,7 @@ public class CustomerList
         page_info.getStyleClass().add("label-title");
 
         // Table
-        TableColumn<Customer, String> IDColumn = new TableColumn<>("ID");
+        TableColumn<Customer, Integer> IDColumn = new TableColumn<>("ID");
         IDColumn.setMinWidth(100);
         IDColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
 
@@ -88,7 +88,7 @@ public class CustomerList
         table.getColumns().addAll(IDColumn, nameColumn, typeColumn);
 
         // Buttons
-        Button editDetails = new Button("Edit Status");
+        Button editDetails = new Button("Edit Details");
         editDetails.setMinSize(140,25);
         editDetails.setOnAction(new EventHandler<ActionEvent>()
         {

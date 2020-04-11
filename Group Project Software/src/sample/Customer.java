@@ -29,6 +29,16 @@ public class Customer
         this.type = type;
     }
 
+    public Customer(int id, String name, String address, String phoneNumber, double amountDue)
+    {
+        this.ID = id;
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.dueBalance = amountDue;
+    }
+
+
     public int getID()
     {
         return ID;
