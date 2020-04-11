@@ -136,6 +136,7 @@ public class RefundSale
             {
                 window.close();
                 endRefund();
+                sales.clear();
             }
         });
 
