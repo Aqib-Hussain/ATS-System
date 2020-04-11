@@ -179,7 +179,7 @@ public class RefundSale
             Statement statement = connection.createStatement();
 
             // SQL query to find matching travel advisors
-            String query = "select * from sales";
+            String query = "SELECT * FROM sales";
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next())
@@ -187,7 +187,8 @@ public class RefundSale
                 sales.add(new Sale(resultSet.getString("BlankID"),
                         resultSet.getDouble("amount"),
                         resultSet.getString("currency"),
-                        resultSet.getDouble("tax"),
+                        resultSet.getDouble("localTax"),
+                        resultSet.getDouble("otherTax"),
                         resultSet.getString("paymentMethod"),
                         resultSet.getString("customer"),
                         resultSet.getString("origin"),

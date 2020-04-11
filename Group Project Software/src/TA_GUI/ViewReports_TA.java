@@ -1,5 +1,8 @@
 package TA_GUI;
 
+import Database.DBConnectivity;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -8,15 +11,30 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sample.Sale;
 
-public class ViewReports
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class ViewReports_TA
 {
+    // Database
+    private static DBConnectivity dbConnectivity = new DBConnectivity();
+    private static Connection connection = dbConnectivity.getConnection();
+
+    // Table
+    private static TableView<Sale> table;
+    private static ObservableList<Sale> reportSales = FXCollections.observableArrayList();
+
     public static void display(String title)
     {
         // Creating a new window
@@ -34,8 +52,8 @@ public class ViewReports
         refund_label.getStyleClass().add("label-title");
         refund_label.setFont(Font.font(20));
 
-        // List
-        ListView reports = new ListView();
+        // Table
+
 
         // Buttons
         Button close = new Button("Close");
@@ -59,7 +77,6 @@ public class ViewReports
         VBox centre_layout = new VBox();
         centre_layout.setAlignment(Pos.CENTER);
         centre_layout.setPadding(new Insets(0,0,10,0));
-        centre_layout.getChildren().add(reports);
 
         HBox bottom_layout = new HBox();
         bottom_layout.setAlignment(Pos.BASELINE_RIGHT);
@@ -78,5 +95,23 @@ public class ViewReports
 
         // Start window
         window.showAndWait();
+    }
+
+    private static ObservableList<Sale> getSales()
+    {
+        ResultSet resultSet = GenerateReport_TA.getCalculateReportResultSet();
+        try
+        {
+            while (resultSet.next())
+            {
+                reportSales.add(new Sale());
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return reportSales;
     }
 }

@@ -1,6 +1,6 @@
 package OM_GUI;
 
-import TA_GUI.ViewReports;
+import TA_GUI.ViewReports_TA;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -11,10 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import sample.GenerateReport;
+import TA_GUI.GenerateReport_TA;
 
 public class GloReportType
 {
@@ -41,8 +40,8 @@ public class GloReportType
         {
             @Override
             public void handle(ActionEvent actionEvent) {
-                GenerateReport.display(title);
-                ViewReports.display(title);
+                GenerateReport_TA.display(title);
+                ViewReports_TA.display(title);
             }
         });
 
@@ -52,8 +51,8 @@ public class GloReportType
         {
             @Override
             public void handle(ActionEvent actionEvent) {
-                GenerateReport.display(title);
-                ViewReports.display(title);
+                GenerateReport_TA.display(title);
+                ViewReports_TA.display(title);
             }
         });
 

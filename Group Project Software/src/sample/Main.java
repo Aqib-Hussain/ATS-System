@@ -20,21 +20,14 @@ import SA_GUI.ViewTravelAdvisors;
 import SA_GUI.ViewBlankStock_SA;
 import javafx.stage.WindowEvent;
 import sample.Staff.SystemAdmin;
-import sample.Staff.TravelAdvisor;
 import BCrypt.*;
 import sample.Timers.LateTimer;
 import sample.Timers.MonthlyTimer;
 
-import java.util.Timer;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
     // Database
@@ -494,8 +487,10 @@ public class Main extends Application {
         viewReports.setMinWidth(250);
         viewReports.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
-                ViewReports.display("Recorded Reports");
+            public void handle(ActionEvent event)
+            {
+                GenerateReport_TA.display("Report dates");
+                //ViewReports.display("Recorded Reports");
             }
         });
 
@@ -551,7 +546,7 @@ public class Main extends Application {
 //        window.setScene(login);
 //        window.setTitle("ATS System");
 //        window.show();
-        ResetDueAmount.display("sdf");
+        RefundLog.display("sdf");
     }
 
     public void reSetStatus() {

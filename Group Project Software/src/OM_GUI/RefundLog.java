@@ -18,6 +18,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.Customer;
 import sample.Refund;
+import sample.Sale;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -31,7 +32,7 @@ public class RefundLog
     static Connection connection = dbConnectivity.getConnection();
 
     // Table View
-    static TableView<Refund> table;
+    static TableView<Sale> table;
 
     public static void display(String title)
     {
@@ -50,17 +51,17 @@ public class RefundLog
         refund_label.getStyleClass().add("label-title");
 
         // Table
-        TableColumn<Refund, String> dateColumn = new TableColumn<>("Date");
+        TableColumn<Sale, String> dateColumn = new TableColumn<>("Date");
         dateColumn.setMinWidth(100);
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("refundDate"));
 
-        TableColumn<Refund, String> blankIDColumn = new TableColumn<>("Blank ID");
+        TableColumn<Sale, String> blankIDColumn = new TableColumn<>("Blank ID");
         blankIDColumn.setMinWidth(100);
-        blankIDColumn.setCellValueFactory(new PropertyValueFactory<>("blank"));
+        blankIDColumn.setCellValueFactory(new PropertyValueFactory<>("BlankID"));
 
-        TableColumn<Refund, String> amountColumn = new TableColumn<>("Amount");
+        TableColumn<Sale, String> amountColumn = new TableColumn<>("Amount");
         amountColumn.setMinWidth(100);
-        amountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        amountColumn.setCellValueFactory(new PropertyValueFactory<>("refundAmount"));
 
         table = new TableView<>();
         table.setItems(getRefunds());
@@ -110,23 +111,23 @@ public class RefundLog
         window.showAndWait();
     }
 
-    public static ObservableList<Refund> getRefunds()
+    public static ObservableList<Sale> getRefunds()
     {
-        ObservableList<Refund> refunds = FXCollections.observableArrayList();
+        ObservableList<Sale> refunds = FXCollections.observableArrayList();
 
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
             // SQL query to find matching email and password
-            String query = "SELECT * FROM refunds";
+            String query = "SELECT refundDate, BlankID, refundAmount FROM sales WHERE state = 'Refunded'";
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next())
             {
-                refunds.add(new Refund(resultSet.getString("date"),
-                        resultSet.getString("blank"),
-                        resultSet.getString("amount")));
+                refunds.add(new Sale(resultSet.getString("refundDate"),
+                        resultSet.getString("BlankID"),
+                        resultSet.getDouble("refundAmount")));
             }
         }
         catch (SQLException e)

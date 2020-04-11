@@ -597,7 +597,7 @@ public class SellTicket
         payment_destination_textField.setPromptText("Destination of flight");
 
         // Choice Box
-        payment_payMethod_choiceBox.getItems().addAll("Cash", "Card");
+        payment_payMethod_choiceBox.getItems().addAll("Cash", "Card", "TBD");
         payment_payMethod_choiceBox.setMinWidth(70);
         payment_payMethod_choiceBox.setValue("Cash");
         payment_payMethod_choiceBox.setOnAction(new EventHandler<ActionEvent>()
@@ -605,7 +605,7 @@ public class SellTicket
             @Override
             public void handle(ActionEvent event)
             {
-                if(payment_payMethod_choiceBox.getSelectionModel().getSelectedItem().equals("Cash"))
+                if(payment_payMethod_choiceBox.getSelectionModel().getSelectedItem().equals("Cash") || payment_payMethod_choiceBox.getSelectionModel().getSelectedItem().equals("TBD"))
                 {
                     payment_creditCard_textField.setDisable(true);
                 }
@@ -866,7 +866,7 @@ public class SellTicket
             Statement statement = connection.createStatement();
 
             // SQL query to find matching travel advisors
-            String query = "INSERT INTO sales (BlankID, amount, currency,paymentMethod, tax, creditcard, ticketType, origin, destination, commissionRate, customer, payBy, isPaid, soldBy,saleDate, state) VALUES ('"+blankID+"', '"+amount+"', '"+currency+"','"+paymentMeth+"', '"+tax+"', '"+creditCard+"', '"+ticketType+"','"+origin+"', '"+destination+"', '"+commRate+"', '"+custName+"', '"+payBy+"','"+isPaid+"','"+soldBy+"', '"+saleDate+"','Valid')";
+            String query = "INSERT INTO sales (BlankID, amount, currency,paymentMethod, localTax, creditcard, ticketType, origin, destination, commissionRate, customer, payBy, isPaid, soldBy,saleDate, state, refundDate, refundAmount) VALUES ('"+blankID+"', '"+amount+"', '"+currency+"','"+paymentMeth+"', '"+tax+"', '"+creditCard+"', '"+ticketType+"','"+origin+"', '"+destination+"', '"+commRate+"', '"+custName+"', '"+payBy+"','"+isPaid+"','"+soldBy+"', '"+saleDate+"','Valid', '', '')";
             statement.executeUpdate(query);
         }
         catch (SQLException e)

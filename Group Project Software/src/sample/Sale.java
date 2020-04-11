@@ -4,10 +4,11 @@ public class Sale
 {
     private int id;
     private String BlankID;
-    private double local_amount;
+    private double amount;
     private String currency;
     private String paymentMethod;
-    private double tax;
+    private double localTax;
+    private double otherTax;
     private String creditcard;
     private String ticketType;
     private String origin;
@@ -17,16 +18,20 @@ public class Sale
     private String payBy;
     private String isPaid;
     private String soldBy;
+    private String saleDate;
     private String state;
+    private String refundDate;
+    private double refundAmount;
 
     public Sale()
     {
         this.id = 0;
         this.BlankID = "";
-        this.local_amount = 0.0;
+        this.amount = 0.0;
         this.currency = "";
         this.paymentMethod = "";
-        this.tax = 0.0;
+        this.localTax = 0.0;
+        this.otherTax = 0.0;
         this.creditcard = "";
         this.ticketType = "";
         this.origin = "";
@@ -36,21 +41,45 @@ public class Sale
         this.payBy = "";
         this.isPaid = "";
         this.soldBy = "";
+        this.saleDate = "";
         this.state = "";
+        this.refundDate = "";
+        this.refundAmount = 0.0;
     }
 
-    public Sale(String blankID, double local_amount, String currency,  double tax, String paymentMethod, String customer, String origin, String destination, String soldBy, String state)
+    public Sale(String blankID, double amount, String currency, double localTax, double otherTax, String paymentMethod, String customer, String origin, String destination, String soldBy, String state)
     {
         this.BlankID = blankID;
-        this.local_amount = local_amount;
+        this.amount = amount;
         this.currency = currency;
-        this.tax = tax;
+        this.localTax = localTax;
+        this.otherTax = otherTax;
         this.paymentMethod = paymentMethod;
         this.customer = customer;
         this.origin = origin;
         this.destination = destination;
         this.soldBy = soldBy;
         this.state = state;
+    }
+
+    public Sale(String refundDate, String blankID, double refundAmount)
+    {
+        this.refundDate = refundDate;
+        this.BlankID = blankID;
+        this.refundAmount = refundAmount;
+    }
+
+    public Sale(int id, String blankID, double amount, String currency, double localTax, double otherTax, String ticketType, String customer, String saleDate)
+    {
+        this.id = id;
+        this.BlankID = blankID;
+        this.amount = amount;
+        this.currency = currency;
+        this.localTax = localTax;
+        this.otherTax = otherTax;
+        this.ticketType = ticketType;
+        this.customer = customer;
+        this.saleDate = saleDate;
     }
 
     public int getId()
@@ -73,14 +102,14 @@ public class Sale
         BlankID = blankID;
     }
 
-    public double getLocal_amount()
+    public double getAmount()
     {
-        return local_amount;
+        return amount;
     }
 
-    public void setLocal_amount(double local_amount)
+    public void setAmount(double amount)
     {
-        this.local_amount = local_amount;
+        this.amount = amount;
     }
 
     public String getCurrency()
@@ -101,16 +130,6 @@ public class Sale
     public void setPaymentMethod(String paymentMethod)
     {
         this.paymentMethod = paymentMethod;
-    }
-
-    public double getTax()
-    {
-        return tax;
-    }
-
-    public void setTax(double tax)
-    {
-        this.tax = tax;
     }
 
     public String getCreditcard()
@@ -211,5 +230,45 @@ public class Sale
     public void setState(String state)
     {
         this.state = state;
+    }
+
+    public double getLocalTax()
+    {
+        return localTax;
+    }
+
+    public void setLocalTax(double localTax)
+    {
+        this.localTax = localTax;
+    }
+
+    public double getOtherTax()
+    {
+        return otherTax;
+    }
+
+    public void setOtherTax(double otherTax)
+    {
+        this.otherTax = otherTax;
+    }
+
+    public String getRefundDate()
+    {
+        return refundDate;
+    }
+
+    public void setRefundDate(String refundDate)
+    {
+        this.refundDate = refundDate;
+    }
+
+    public double getRefundAmount()
+    {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(double refundAmount)
+    {
+        this.refundAmount = refundAmount;
     }
 }
