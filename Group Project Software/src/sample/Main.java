@@ -68,7 +68,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        //Begin timer for late payments
+//       //Begin timer for late payments
 //        LateTimer lateTimer = new LateTimer();
 //        lateTimer.checkIsPaid();
 
@@ -537,11 +537,11 @@ public class Main extends Application {
         TA_mainMenu.getStylesheets().add("Stylesheet.css");
 
         // Start-up
-//        window.setScene(login);
-//        window.setTitle("ATS System");
-//        window.show();
+        window.setScene(login);
+        window.setTitle("ATS System");
+        window.show();
 
-        ViewBlankStock_SA.display();
+       // ViewBlankStock_SA.display();
     }
 
     public void reSetStatus() {

@@ -1,5 +1,6 @@
 package OM_GUI;
 
+import TA_GUI.ViewReports;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -13,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sample.GenerateReport;
 
 public class GloReportType
 {
@@ -24,7 +26,7 @@ public class GloReportType
         // Window takes priority until taken care of
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setMinWidth(200);
+        window.setMinWidth(300);
         window.setMinHeight(250);
         window.setResizable(false);
 
@@ -34,10 +36,26 @@ public class GloReportType
 
         // Buttons
         Button interlineReportButton = new Button("Generate Interline Report");
-        interlineReportButton.setMaxWidth(200);
+        interlineReportButton.setMaxWidth(250);
+        interlineReportButton.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                GenerateReport.display(title);
+                ViewReports.display(title);
+            }
+        });
 
         Button domesticReportButton = new Button("Generate Domestic Report");
-        domesticReportButton.setMaxWidth(200);
+        domesticReportButton.setMaxWidth(250);
+        domesticReportButton.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                GenerateReport.display(title);
+                ViewReports.display(title);
+            }
+        });
 
         Button close = new Button("Close");
         close.getStyleClass().add("button-exit");

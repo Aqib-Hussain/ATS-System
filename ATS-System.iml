@@ -11,5 +11,6 @@
     <orderEntry type="library" exported="" name="javafx-swt" level="application" />
     <orderEntry type="library" name="mysql-connector-java-8.0.19-bin" level="project" />
     <orderEntry type="library" name="joda-time-2.10.5" level="application" />
+    <orderEntry type="library" name="joda-time-2.10.5" level="project" />
   </component>
 </module>

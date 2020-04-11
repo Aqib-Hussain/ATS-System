@@ -25,7 +25,7 @@ public class ViewReports
         // Window takes priority until taken care of
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setMinWidth(500);
+        window.setMinWidth(600);
         window.setMinHeight(425);
         window.setResizable(false);
 
