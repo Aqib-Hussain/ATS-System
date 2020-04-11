@@ -543,10 +543,9 @@ public class Main extends Application {
         TA_mainMenu.getStylesheets().add("Stylesheet.css");
 
         // Start-up
-//        window.setScene(login);
-//        window.setTitle("ATS System");
-//        window.show();
-        RefundLog.display("sdf");
+        window.setScene(login);
+        window.setTitle("ATS System");
+        window.show();
     }
 
     public void reSetStatus() {

@@ -1,6 +1,8 @@
 package TA_GUI;
 
 import Database.DBConnectivity;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -75,6 +77,7 @@ public class SellTicket
     private static String currency = "";
     private static String paymentMethod = "";
     private static double tax = 0.0;
+    private static double otherTax = 0.0;
     private static String creditCard = "";
     private static String ticketType = "";
     private static String origin = "";
@@ -83,13 +86,13 @@ public class SellTicket
     private static Customer customer = new Customer();
     private static String saleDate = "";
     private static String payByDate = "";
-    private static double dueAmount = 0.0;
     private static String isPaid = "";
 
     // Payment
     private static TextField payment_amount_textField = new TextField();
     private static TextField payment_creditCard_textField = new TextField();
     private static TextField payment_tax_textField = new TextField();
+    private static TextField payment_otherTax_textField = new TextField();
     private static TextField payment_origin_textField = new TextField();
     private static TextField payment_destination_textField = new TextField();
 
@@ -362,7 +365,6 @@ public class SellTicket
                     window.setScene(blankSelect_scene);
                     paymentMethod_label.setText("Select a payment method for " + Customertable.getSelectionModel().getSelectedItem().getName());
                     customer = Customertable.getSelectionModel().getSelectedItem();
-                    dueAmount = Customertable.getSelectionModel().getSelectedItem().getDueBalance();
                     if(Customertable.getSelectionModel().getSelectedItem().getType().equals("regular"))
                     {
                         payment_payLateYES_radioButton.setDisable(true);
@@ -581,7 +583,8 @@ public class SellTicket
 
         Label payment_amount_label = new Label("Amount");
         Label payment_method_label = new Label("Credit Card");
-        Label payment_tax_label = new Label("Tax");
+        Label payment_tax_label = new Label("Local Tax");
+        Label payment_otherTax_label = new Label("Other Tax");
         Label payment_commissionRate_label = new Label("Commission Rate");
         Label payment_interlineORdomestic_label = new Label("Interline/Domestic");
         Label payment_origin_label = new Label("Origin");
@@ -593,6 +596,7 @@ public class SellTicket
         payment_creditCard_textField.setPromptText("XXXX-XXXX-XXXX");
         payment_creditCard_textField.setDisable(true);
         payment_tax_textField.setPromptText("Tax");
+        payment_otherTax_textField.setPromptText("Other tax");
         payment_origin_textField.setPromptText("Origin of flight");
         payment_destination_textField.setPromptText("Destination of flight");
 
@@ -623,11 +627,32 @@ public class SellTicket
         // ComboBox
         payment_commission_choiceBox.setMinWidth(70);
 
-
         // Radio buttons
         ToggleGroup payment_toggleGroup_interORDom = new ToggleGroup();
         payment_interline_radioButton.setToggleGroup(payment_toggleGroup_interORDom);
+        payment_interline_radioButton.selectedProperty().addListener(new ChangeListener<Boolean>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
+            {
+                if(payment_interline_radioButton.isSelected())
+                {
+                    payment_otherTax_textField.setDisable(false);
+                }
+            }
+        });
         payment_domestic_radioButton.setToggleGroup(payment_toggleGroup_interORDom);
+        payment_domestic_radioButton.selectedProperty().addListener(new ChangeListener<Boolean>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
+            {
+                if(payment_domestic_radioButton.isSelected())
+                {
+                    payment_otherTax_textField.setDisable(true);
+                }
+            }
+        });
 
         ToggleGroup payment_toggleGroup_payLate = new ToggleGroup();
         payment_payLateYES_radioButton.setToggleGroup(payment_toggleGroup_payLate);
@@ -658,10 +683,12 @@ public class SellTicket
                 if(payment_interline_radioButton.isSelected())
                 {
                     ticketType = "Interline";
+                    otherTax = Double.parseDouble(payment_otherTax_textField.getText());
                 }
                 else
                 {
                     ticketType = "Domestic";
+                    otherTax = 0.0;
                 }
 
                 if (!(payment_payLateNO_radioButton.isDisabled() && payment_payLateYES_radioButton.isDisabled()))
@@ -688,7 +715,7 @@ public class SellTicket
                     }
                 }
 
-                createSale(amount, currency,paymentMethod, tax, creditCard, ticketType, origin, destination, commRate, customer.getName(), payByDate,selectedBlank.getId(), getTAname(),saleDate, isPaid);
+                createSale(amount, currency,paymentMethod, tax, otherTax,creditCard, ticketType, origin, destination, commRate, customer.getName(), payByDate,selectedBlank.getId(), getTAname(),saleDate, isPaid);
                 setBlankState(selectedBlank.getId());
                 endPayment();
             }
@@ -741,22 +768,25 @@ public class SellTicket
         GridPane.setConstraints(payment_tax_label, 0, 2);
         GridPane.setConstraints(payment_tax_textField,1, 2);
         // Row 4
-        GridPane.setConstraints(payment_commissionRate_label, 0, 3);
-        GridPane.setConstraints(payment_commission_choiceBox, 1, 3);
+        GridPane.setConstraints(payment_interlineORdomestic_label,0,3);
+        GridPane.setConstraints(interORDom_layout_payment, 1, 3);
         // Row 5
-        GridPane.setConstraints(payment_interlineORdomestic_label,0,4);
-        GridPane.setConstraints(interORDom_layout_payment, 1, 4);
+        GridPane.setConstraints(payment_otherTax_label, 0, 4);
+        GridPane.setConstraints(payment_otherTax_textField,1, 4);
         // Row 6
-        GridPane.setConstraints(payment_origin_label, 0, 5);
-        GridPane.setConstraints(payment_origin_textField, 1, 5);
+        GridPane.setConstraints(payment_commissionRate_label, 0, 5);
+        GridPane.setConstraints(payment_commission_choiceBox, 1, 5);
         // Row 7
-        GridPane.setConstraints(payment_destination_label, 0, 6);
-        GridPane.setConstraints(payment_destination_textField, 1, 6);
+        GridPane.setConstraints(payment_origin_label, 0, 6);
+        GridPane.setConstraints(payment_origin_textField, 1, 6);
         // Row 8
-        GridPane.setConstraints(payment_payLater_label, 0, 7);
-        GridPane.setConstraints(payLater_layout_payment, 1, 7);
+        GridPane.setConstraints(payment_destination_label, 0, 7);
+        GridPane.setConstraints(payment_destination_textField, 1, 7);
+        // Row 9
+        GridPane.setConstraints(payment_payLater_label, 0, 8);
+        GridPane.setConstraints(payLater_layout_payment, 1, 8);
         grid_layout_payment.getChildren().addAll(payment_amount_label, payment_amount_textField, payment_currency_choiceBox, payment_payMethod_choiceBox, payment_method_label, payment_creditCard_textField,
-                payment_tax_label, payment_tax_textField, payment_commissionRate_label, payment_commission_choiceBox, payment_interlineORdomestic_label, interORDom_layout_payment, payment_origin_label, payment_origin_textField, payment_destination_label, payment_destination_textField,
+                payment_tax_label, payment_tax_textField, payment_otherTax_label, payment_otherTax_textField, payment_commissionRate_label, payment_commission_choiceBox, payment_interlineORdomestic_label, interORDom_layout_payment, payment_origin_label, payment_origin_textField, payment_destination_label, payment_destination_textField,
                 payment_payLater_label, payLater_layout_payment);
 
         VBox center_layout_payment = new VBox(40);
@@ -859,14 +889,14 @@ public class SellTicket
         getCustomers();
     }
 
-    private static void createSale(double amount, String currency, String paymentMeth, double tax, String creditCard, String ticketType, String origin, String destination, double commRate, String custName, String payBy, String blankID, String soldBy, String saleDate, String isPaid)
+    private static void createSale(double amount, String currency, String paymentMeth, double tax, double otherTax, String creditCard, String ticketType, String origin, String destination, double commRate, String custName, String payBy, String blankID, String soldBy, String saleDate, String isPaid)
     {
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
             // SQL query to find matching travel advisors
-            String query = "INSERT INTO sales (BlankID, amount, currency,paymentMethod, localTax, creditcard, ticketType, origin, destination, commissionRate, customer, payBy, isPaid, soldBy,saleDate, state, refundDate, refundAmount) VALUES ('"+blankID+"', '"+amount+"', '"+currency+"','"+paymentMeth+"', '"+tax+"', '"+creditCard+"', '"+ticketType+"','"+origin+"', '"+destination+"', '"+commRate+"', '"+custName+"', '"+payBy+"','"+isPaid+"','"+soldBy+"', '"+saleDate+"','Valid', '', '')";
+            String query = "INSERT INTO sales (BlankID, amount, currency,paymentMethod, localTax, otherTax, creditcard, ticketType, origin, destination, commissionRate, customer, payBy, isPaid, soldBy,saleDate, state, refundDate, refundAmount) VALUES ('"+blankID+"', '"+amount+"', '"+currency+"','"+paymentMeth+"', '"+tax+"', '"+otherTax+"','"+creditCard+"', '"+ticketType+"','"+origin+"', '"+destination+"', '"+commRate+"', '"+custName+"', '"+payBy+"','"+isPaid+"','"+soldBy+"', '"+saleDate+"','Valid', '', '')";
             statement.executeUpdate(query);
         }
         catch (SQLException e)

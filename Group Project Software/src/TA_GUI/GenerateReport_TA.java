@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import sample.Blank;
 
 import java.sql.Connection;
@@ -19,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class GenerateReport_TA
 {
@@ -29,14 +31,84 @@ public class GenerateReport_TA
     // ResultSet
     static ResultSet calculateReportResultSet;
 
+    // Radio buttons
+    static private RadioButton interline_radioButton = new RadioButton("Interline");
+    static private RadioButton domestic_radioButton = new RadioButton("Domestic");
+
     public static void display(String title) {
 
 
         DatePicker datePicker1 = new DatePicker();
-        String pattern = "yyyy-MM-dd";
+        datePicker1.setConverter(new StringConverter<LocalDate>()
+        {
+            String pattern = "yyyy-MM-dd";
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+            {
+                datePicker1.setPromptText(pattern.toLowerCase());
+            }
+
+            @Override
+            public String toString(LocalDate date)
+            {
+                if(date != null)
+                {
+                    return dateFormatter.format(date);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string)
+            {
+                if(string != null && !string.isEmpty())
+                {
+                    return LocalDate.parse(string, dateFormatter);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        });
 
         DatePicker datePicker2 = new DatePicker();
-        String pattern1 = "yyyy-MM-dd";
+        datePicker2.setConverter(new StringConverter<LocalDate>()
+        {
+            String pattern = "yyyy-MM-dd";
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+            {
+                datePicker2.setPromptText(pattern.toLowerCase());
+            }
+
+            @Override
+            public String toString(LocalDate date)
+            {
+                if(date != null)
+                {
+                    return dateFormatter.format(date);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string)
+            {
+                if(string != null && !string.isEmpty())
+                {
+                    return LocalDate.parse(string, dateFormatter);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        });
 
         // Creating a new window
         Stage window = new Stage();
@@ -54,6 +126,13 @@ public class GenerateReport_TA
         Label to = new Label("To");
         to.setPadding(new Insets(10, 0, 10, 0));
 
+        Label ticketType_label = new Label("Ticket Type");
+
+        // Radio buttons
+        ToggleGroup toggleGroup = new ToggleGroup();
+        interline_radioButton.setToggleGroup(toggleGroup);
+        domestic_radioButton.setToggleGroup(toggleGroup);
+
         // Buttons
         Button close = new Button("Close");
         close.getStyleClass().add("button-exit");
@@ -70,30 +149,43 @@ public class GenerateReport_TA
         generate.setMinSize(75, 25);
         generate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent) {
-                LocalDate date1 = datePicker1.getValue();
-                LocalDate date2 = datePicker2.getValue();
-                System.out.println(date1);
-                System.out.println(date2);
-                GenerateReport_TA.calculateReport(date1, date2, getCurrentTA());
-                ViewReports_TA.display(title);
+            public void handle(ActionEvent actionEvent)
+            {
+                if(datePicker1.getValue() != null && datePicker2.getValue() != null)
+                {
+                    String ticketType = "";
+                    if(domestic_radioButton.isSelected())
+                    {
+                        ticketType = "Domestic";
+                    }
+                    else
+                    {
+                        ticketType = "Interline";
+                    }
+                    GenerateReport_TA.calculateReport(datePicker1.getValue(), datePicker2.getValue(), getCurrentTA(), ticketType);
+                    ViewReports_TA.display(title);
+
+                }
+                else
+                {
+                    System.out.println("Error bruh");
+                }
             }
         });
 
         // Layout
+        HBox radio_layout = new HBox(10);
+        radio_layout.setAlignment(Pos.CENTER);
+        radio_layout.getChildren().addAll(domestic_radioButton, interline_radioButton);
+
         VBox top_layout = new VBox();
         top_layout.setAlignment(Pos.CENTER);
         top_layout.setPadding(new Insets(0, 0, 10, 0));
-        top_layout.getChildren().add(selectTimeFrame);
+        top_layout.getChildren().addAll(selectTimeFrame, radio_layout);
 
         VBox center_layout = new VBox(15);
         center_layout.setAlignment(Pos.CENTER);
-        center_layout.setSpacing(10);
-        center_layout.getChildren().add(datePicker1);
-        center_layout.getChildren().add(to);
-        center_layout.setAlignment(Pos.CENTER);
-        center_layout.setSpacing(10);
-        center_layout.getChildren().add(datePicker2);
+        center_layout.getChildren().addAll(datePicker1, to, datePicker2);
 
         HBox bottom_layout = new HBox();
         bottom_layout.setPadding(new Insets(10, 0, 0, 0));
@@ -138,9 +230,8 @@ public class GenerateReport_TA
     }
 
     // Calculate Report values
-    public static void calculateReport(LocalDate date1, LocalDate date2, String name)
+    public static void calculateReport(LocalDate date1, LocalDate date2, String name, String ticketType)
     {
-        int totalUSD;
         int totalLocal = 0;
         int totalTax = 0;
         int totalOtherTax = 0;
@@ -154,12 +245,9 @@ public class GenerateReport_TA
             Statement statement = connection.createStatement();
 
             // SQL query
-            String query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND soldBy = '"+name+"'";
+            String query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND soldBy = '"+name+"' AND ticketType = '"+ticketType+"'";
             ResultSet resultSet = statement.executeQuery(query);
-            if(resultSet.next())
-            {
-                calculateReportResultSet = resultSet;
-            }
+            calculateReportResultSet = resultSet;
 
         } catch (SQLException e) {
             e.printStackTrace();
