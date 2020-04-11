@@ -25,6 +25,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class RefundSale
 {
@@ -35,6 +37,9 @@ public class RefundSale
     // Table View
     static TableView<Sale> table;
     static ObservableList<Sale> sales = FXCollections.observableArrayList();
+
+    // Date
+    static private String refundDate = "";
 
     public static void display()
     {
@@ -59,15 +64,15 @@ public class RefundSale
 
         TableColumn<Sale, Double> amount_column = new TableColumn<>("Amount GBP");
         amount_column.setMinWidth(120);
-        amount_column.setCellValueFactory(new PropertyValueFactory<>("local_amount"));
+        amount_column.setCellValueFactory(new PropertyValueFactory<>("amount"));
 
         TableColumn<Sale, String> currency_column = new TableColumn<>("Currency used");
         currency_column.setMinWidth(120);
         currency_column.setCellValueFactory(new PropertyValueFactory<>("currency"));
 
-        TableColumn<Sale, Double> tax_column = new TableColumn<>("Tax");
+        TableColumn<Sale, Double> tax_column = new TableColumn<>("Local Tax");
         tax_column.setMinWidth(80);
-        tax_column.setCellValueFactory(new PropertyValueFactory<>("tax"));
+        tax_column.setCellValueFactory(new PropertyValueFactory<>("localTax"));
 
         TableColumn<Sale, String> paymentMeth_column = new TableColumn<>("Payment Method");
         paymentMeth_column.setMinWidth(140);
@@ -109,7 +114,8 @@ public class RefundSale
             {
                 if(!(table.getSelectionModel().isEmpty()))
                 {
-                    refundSale(table.getSelectionModel().getSelectedItem().getBlankID());
+                    getCurrentDate();
+                    refundSale(table.getSelectionModel().getSelectedItem().getBlankID(), refundDate, table.getSelectionModel().getSelectedItem().getAmount());
                     endRefund();
                     refreshTable();
                 }
@@ -179,7 +185,7 @@ public class RefundSale
             Statement statement = connection.createStatement();
 
             // SQL query to find matching travel advisors
-            String query = "SELECT * FROM sales";
+            String query = "SELECT * FROM sales WHERE state = 'Valid'";
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next())
@@ -204,7 +210,7 @@ public class RefundSale
         return sales;
     }
 
-    public static void refundSale(String saleID)
+    public static void refundSale(String saleID, String date, double amount)
     {
         try
         {
@@ -212,13 +218,21 @@ public class RefundSale
             Statement statement = connection.createStatement();
 
             // SQL query to update the sale to refunded
-            String query = "UPDATE sales SET state = 'Refunded' WHERE BlankID = '"+saleID+"'";
+            String query = "UPDATE sales SET state = 'Refunded', refundDate = '"+date+"', refundAmount = '"+amount+"' WHERE BlankID = '"+saleID+"'";
             statement.executeUpdate(query);
         }
         catch (SQLException e)
         {
             e.printStackTrace();
         }
+    }
+
+    private static void getCurrentDate()
+    {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+
+        refundDate = dtf.format(now);
     }
 
     public static void refreshTable()

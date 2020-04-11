@@ -69,7 +69,7 @@ public class Sale
         this.refundAmount = refundAmount;
     }
 
-    public Sale(int id, String blankID, double amount, String currency, double localTax, double otherTax, String ticketType, String customer, String saleDate)
+    public Sale(int id, String blankID, double amount, String currency, double localTax, double otherTax, double commissionRate,String ticketType, String customer, String saleDate)
     {
         this.id = id;
         this.BlankID = blankID;
@@ -77,6 +77,7 @@ public class Sale
         this.currency = currency;
         this.localTax = localTax;
         this.otherTax = otherTax;
+        this.commissionRate = commissionRate;
         this.ticketType = ticketType;
         this.customer = customer;
         this.saleDate = saleDate;
@@ -270,5 +271,15 @@ public class Sale
     public void setRefundAmount(double refundAmount)
     {
         this.refundAmount = refundAmount;
+    }
+
+    public String getSaleDate()
+    {
+        return saleDate;
+    }
+
+    public void setSaleDate(String saleDate)
+    {
+        this.saleDate = saleDate;
     }
 }
