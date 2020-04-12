@@ -1,0 +1,8 @@
+2020-04-12 : refundDate | 44400000001 : BlankID | 220.0 : refundAmount | 
+2020-02-10 : refundDate | 44400000002 : BlankID | 230.0 : refundAmount | 
+2020-04-12 : refundDate | 20100000001 : BlankID | 86.0 : refundAmount | 
+2020-04-12 : refundDate | 44400000003 : BlankID | 220.0 : refundAmount | 
+2020-04-12 : refundDate | 44400000004 : BlankID | 230.0 : refundAmount | 
+2020-04-12 : refundDate | 20100000002 : BlankID | 75.0 : refundAmount | 
+2020-04-12 : refundDate | 44400000021 : BlankID | 250.0 : refundAmount | 
+2020-02-10 : refundDate | 20100000011 : BlankID | 75.0 : refundAmount | 
