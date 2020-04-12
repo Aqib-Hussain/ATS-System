@@ -25,6 +25,13 @@
     -fx-font-size: 2em;
 }
 
+/* Label for names in the late payment pop-up */
+.label-name
+{
+    -fx-font-weight: bold;
+    -fx-font-size: 1.5em;
+}
+
 /* Normal button design */
 .button
 {

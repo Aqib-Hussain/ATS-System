@@ -112,11 +112,11 @@ public class Main extends Application {
         login_label.setPadding(new Insets(30, 0, 0, 0));
 
         Label emailLabel = new Label("Name");
-        emailLabel.setFont(Font.font(15));
+        emailLabel.setFont(Font.font(18));
         emailLabel.setPadding(new Insets(0, 0, -5, 0));
 
         Label passwordLabel = new Label("Password");
-        passwordLabel.setFont(Font.font(15));
+        passwordLabel.setFont(Font.font(18));
         passwordLabel.setPadding(new Insets(0, 0, -5, 0));
 
         Label OM_login = new Label("Office Manager \nName: Minnie Minx \nPassword: NotiGirl");
@@ -241,7 +241,7 @@ public class Main extends Application {
         //----------------------------Office Manager Main menu-----------------------------\\
         // Labels
         Label welcome_message_OM = new Label("Hello Office Manager");
-        welcome_message_OM.getStyleClass().add("label_title");
+        welcome_message_OM.getStyleClass().add("label-login");
         welcome_message_OM.setPadding(new Insets(0, 0, 35, 0));
 
         // Buttons
@@ -313,8 +313,7 @@ public class Main extends Application {
         bottom_layout_OM.setAlignment(Pos.BASELINE_RIGHT);
 
         VBox top_layout_OM = new VBox();
-
-        top_layout_OM.setPadding(new Insets(10, 0, 50, 0));
+        top_layout_OM.setPadding(new Insets(10, 0, 10, 0));
         top_layout_OM.getChildren().add(welcome_message_OM);
         top_layout_OM.setAlignment(Pos.CENTER);
         // Root Layout
@@ -334,7 +333,7 @@ public class Main extends Application {
         //----------------------------System Admin Main menu-----------------------------\\
         // Label
         Label welcome_message_SA = new Label("Hello Administrator");
-        welcome_message_SA.getStyleClass().add("label_title");
+        welcome_message_SA.getStyleClass().add("label-login");
         welcome_message_SA.setPadding(new Insets(0, 0, 35, 0));
         welcome_message_SA.setFont(Font.font(20));
 
@@ -411,7 +410,7 @@ public class Main extends Application {
         bottom_layout_SA.setAlignment(Pos.BASELINE_RIGHT);
 
         VBox top_layout_SA = new VBox();
-        top_layout_SA.setPadding(new Insets(10, 0, 50, 0));
+        top_layout_SA.setPadding(new Insets(10, 0, 25, 0));
         top_layout_SA.getChildren().add(welcome_message_SA);
         top_layout_SA.setAlignment(Pos.CENTER);
 
@@ -432,7 +431,7 @@ public class Main extends Application {
         //----------------------------Travel Advisor Main menu-----------------------------\\
         // Label
         Label welcome_message_TA = new Label("Hello Travel Advisor");
-        welcome_message_TA.getStyleClass().add("label_title");
+        welcome_message_TA.getStyleClass().add("label-login");
         welcome_message_TA.setPadding(new Insets(0, 0, 35, 0));
         welcome_message_TA.setFont(Font.font(20));
 
@@ -521,7 +520,7 @@ public class Main extends Application {
         bottom_layout_TA.setAlignment(Pos.BASELINE_RIGHT);
 
         VBox top_layout_TA = new VBox();
-        top_layout_TA.setPadding(new Insets(10, 0, 50, 0));
+        top_layout_TA.setPadding(new Insets(10, 0, 25, 0));
         top_layout_TA.getChildren().add(welcome_message_TA);
         top_layout_TA.setAlignment(Pos.CENTER);
 

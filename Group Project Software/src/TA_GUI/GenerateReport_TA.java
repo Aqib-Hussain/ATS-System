@@ -35,10 +35,14 @@ public class GenerateReport_TA
     static private RadioButton interline_radioButton = new RadioButton("Interline");
     static private RadioButton domestic_radioButton = new RadioButton("Domestic");
 
+    // Date
+    static DatePicker datePicker1 = new DatePicker();
+    static DatePicker datePicker2 = new DatePicker();
+
     public static void display(String title) {
 
 
-        DatePicker datePicker1 = new DatePicker();
+
         datePicker1.setConverter(new StringConverter<LocalDate>()
         {
             String pattern = "yyyy-MM-dd";
@@ -74,7 +78,6 @@ public class GenerateReport_TA
             }
         });
 
-        DatePicker datePicker2 = new DatePicker();
         datePicker2.setConverter(new StringConverter<LocalDate>()
         {
             String pattern = "yyyy-MM-dd";
@@ -121,7 +124,7 @@ public class GenerateReport_TA
         window.setResizable(false);
 
         // Labels
-        Label selectTimeFrame = new Label("Select the time frame");
+        Label selectTimeFrame = new Label("Select the time frame and ticket type");
         selectTimeFrame.setPadding(new Insets(10, 0, 10, 0));
         Label to = new Label("To");
         to.setPadding(new Insets(10, 0, 10, 0));
@@ -202,6 +205,16 @@ public class GenerateReport_TA
 
         // Start window
         window.showAndWait();
+    }
+
+    public static LocalDate getDate1()
+    {
+        return datePicker1.getValue();
+    }
+
+    public static LocalDate getDate2()
+    {
+        return datePicker2.getValue();
     }
 
     private static String getCurrentTA()

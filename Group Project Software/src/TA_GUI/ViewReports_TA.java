@@ -93,7 +93,7 @@ public class ViewReports_TA
         table.getColumns().addAll(id_column, blankID_column, amount_column, currency_column, localTax_column, otherTax_column, payMethod_column,commissionRate_column, customer_column, saleDate_column);
 
         // Labels
-        Label page_info = new Label("Your Sales");
+        Label page_info = new Label("Your Sales from period "+GenerateReport_TA.getDate1()+" to "+GenerateReport_TA.getDate2()+"");
         page_info.getStyleClass().add("label-title");
 
         Label totalAmount_label = new Label("Total Amount: "+totalAmount+"");

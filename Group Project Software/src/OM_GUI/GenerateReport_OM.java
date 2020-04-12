@@ -31,16 +31,17 @@ public class GenerateReport_OM
 
     // ResultSet
     static ResultSet calculateReportResultSet;
-    static int numberOfSales;
 
     // Radio buttons
     static private RadioButton interline_radioButton = new RadioButton("Interline");
     static private RadioButton domestic_radioButton = new RadioButton("Domestic");
 
+    // Date
+    static DatePicker datePicker1 = new DatePicker();
+    static DatePicker datePicker2 = new DatePicker();
+
     public static void display(String title) {
 
-
-        DatePicker datePicker1 = new DatePicker();
         datePicker1.setConverter(new StringConverter<LocalDate>()
         {
             String pattern = "yyyy-MM-dd";
@@ -76,7 +77,6 @@ public class GenerateReport_OM
             }
         });
 
-        DatePicker datePicker2 = new DatePicker();
         datePicker2.setConverter(new StringConverter<LocalDate>()
         {
             String pattern = "yyyy-MM-dd";
@@ -205,19 +205,14 @@ public class GenerateReport_OM
         window.showAndWait();
     }
 
-    public static void calculateAmountOfSales(LocalDate date1, LocalDate date2, String ticketType)
+    public static LocalDate getDate1()
     {
-        try {
-            // Connect to the Database
-            Statement statement = connection.createStatement();
+        return datePicker1.getValue();
+    }
 
-            // SQL query
-            String query = "SELECT COUNT(ID) FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '"+ticketType+"' AND state = 'Valid'";
-            ResultSet resultSet = statement.executeQuery(query);
-            numberOfSales = resultSet.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public static LocalDate getDate2()
+    {
+        return datePicker2.getValue();
     }
 
     // Calculate Report values
@@ -239,10 +234,5 @@ public class GenerateReport_OM
 
     public static ResultSet getCalculateReportResultSet() {
         return calculateReportResultSet;
-    }
-
-    public static int getNumberOfSales()
-    {
-        return numberOfSales;
     }
 }

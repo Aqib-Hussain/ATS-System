@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.sql.*;
 import org.joda.time.*;
 import org.joda.time.format.DateTimeFormat;
+import sample.LateForPayments;
 
 
 public class LateTimer {
@@ -43,7 +44,7 @@ public class LateTimer {
                     ResultSet resultSet1 = statement.executeQuery(customerQuery);
                     resultSet1.next();
                     unpaidCustomer = resultSet1.getString(1);
-                    JOptionPane.showMessageDialog(null, "Customer " + unpaidCustomer + " is late for payments");
+                    LateForPayments.display(unpaidCustomer);
                 }
                 n++;
             }

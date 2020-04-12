@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
@@ -75,12 +76,12 @@ public class ConfirmLogOut
         top_layout.setAlignment(Pos.CENTER);
         top_layout.getChildren().add(label);
 
-        VBox center_layout = new VBox(15);
+        HBox center_layout = new HBox(15);
         center_layout.getChildren().addAll(yes, no);
         center_layout.setAlignment(Pos.CENTER);
 
         BorderPane root_layout = new BorderPane();
-        root_layout.setPadding(new Insets(10,10,15,10));
+        root_layout.setPadding(new Insets(10,10,10,10));
         root_layout.setTop(top_layout);
         root_layout.setCenter(center_layout);
 
