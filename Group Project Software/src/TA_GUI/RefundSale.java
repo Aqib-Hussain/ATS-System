@@ -128,6 +128,7 @@ public class RefundSale {
                         String query = "SELECT refundDate, BlankID, refundAmount FROM sales WHERE state = 'Refunded'";
                         ResultSet resultSet1 = statement.executeQuery(query);
 
+                        // Create the text file that refunds will be shown in
                         ResultSetMetaData rsmd = resultSet1.getMetaData();
                         int columnsNumber = rsmd.getColumnCount();
                         while (resultSet1.next()) {
