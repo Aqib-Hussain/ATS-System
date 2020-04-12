@@ -245,14 +245,17 @@ public class Main extends Application {
         welcome_message_OM.setPadding(new Insets(0, 0, 35, 0));
 
         // Buttons
-        Button generateReport = new Button("Generate a Global Report");
-        generateReport.setMinWidth(250);
-        generateReport.setOnAction(new EventHandler<ActionEvent>() {
+        Button genReport_OM = new Button("Generate Global Report");
+        genReport_OM.setPrefWidth(250);
+        genReport_OM.setOnAction(new EventHandler<ActionEvent>()
+        {
             @Override
-            public void handle(ActionEvent actionEvent) {
-                GloReportType.display("Report Type");
+            public void handle(ActionEvent event)
+            {
+                GenerateReport_OM.display("Generating Reports");
             }
         });
+
         Button viewCustomers = new Button("View Customers");
         viewCustomers.setMinWidth(250);
         viewCustomers.setOnAction(new EventHandler<ActionEvent>() {
@@ -303,7 +306,7 @@ public class Main extends Application {
         // Button Layout
         VBox button_layout_OM = new VBox(10);
         button_layout_OM.setAlignment(Pos.CENTER);
-        button_layout_OM.getChildren().addAll(generateReport, viewCustomers, viewBlankStock_OM, setCommissionRates, viewRefundLog);
+        button_layout_OM.getChildren().addAll(genReport_OM, viewCustomers, viewBlankStock_OM, setCommissionRates, viewRefundLog);
 
         HBox bottom_layout_OM = new HBox();
         bottom_layout_OM.getChildren().add(logOutButton_OM);
@@ -434,15 +437,6 @@ public class Main extends Application {
         welcome_message_TA.setFont(Font.font(20));
 
         // Buttons
-        Button generateIndividualReport = new Button("Generate Individual Report");
-        generateIndividualReport.setMinWidth(250);
-        generateIndividualReport.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                GloReportType.display("Report Type");
-            }
-        });
-
         Button restDueAmount = new Button("Change Due amount");
         restDueAmount.setPrefWidth(250);
         restDueAmount.setOnAction(new EventHandler<ActionEvent>()
@@ -483,7 +477,7 @@ public class Main extends Application {
             }
         });
 
-        Button viewReports = new Button("View Reports");
+        Button viewReports = new Button("Generate Individual Reports");
         viewReports.setMinWidth(250);
         viewReports.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -519,7 +513,7 @@ public class Main extends Application {
         //---Layout---\\
         // Button Layout
         VBox button_layout_TA = new VBox(10);
-        button_layout_TA.getChildren().addAll(generateIndividualReport, sellTicket, restDueAmount, refundSale, viewBlankStock_TA, viewReports, setCurrExchangeRate);
+        button_layout_TA.getChildren().addAll(sellTicket, restDueAmount, refundSale, viewBlankStock_TA, viewReports, setCurrExchangeRate);
         button_layout_TA.setAlignment(Pos.CENTER);
 
         HBox bottom_layout_TA = new HBox();

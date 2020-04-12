@@ -83,6 +83,21 @@ public class Sale
         this.saleDate = saleDate;
     }
 
+    public Sale(int id, String blankID, double amount, String currency, double localTax, double otherTax, String paymentMethod,double commissionRate, String customer, String saleDate, String soldBy)
+    {
+        this.id = id;
+        this.BlankID = blankID;
+        this.amount = amount;
+        this.currency = currency;
+        this.localTax = localTax;
+        this.otherTax = otherTax;
+        this.paymentMethod = paymentMethod;
+        this.commissionRate = commissionRate;
+        this.customer = customer;
+        this.saleDate = saleDate;
+        this.soldBy = soldBy;
+    }
+
     public int getId()
     {
         return id;

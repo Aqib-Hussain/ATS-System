@@ -1,6 +1,8 @@
-package TA_GUI;
+package OM_GUI;
 
 import Database.DBConnectivity;
+import TA_GUI.GenerateReport_TA;
+import TA_GUI.ViewReports_TA;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -13,7 +15,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import sample.Blank;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -22,7 +23,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class GenerateReport_TA
+public class GenerateReport_OM
 {
     // Database
     static DBConnectivity dbConnectivity = new DBConnectivity();
@@ -30,6 +31,7 @@ public class GenerateReport_TA
 
     // ResultSet
     static ResultSet calculateReportResultSet;
+    static int numberOfSales;
 
     // Radio buttons
     static private RadioButton interline_radioButton = new RadioButton("Interline");
@@ -162,9 +164,8 @@ public class GenerateReport_TA
                     {
                         ticketType = "Interline";
                     }
-                    GenerateReport_TA.calculateReport(datePicker1.getValue(), datePicker2.getValue(), getCurrentTA(), ticketType);
-                    ViewReports_TA.display(title);
-
+                    GenerateReport_OM.calculateReport(datePicker1.getValue(), datePicker2.getValue(), ticketType);
+                    ViewReports_OM.display(title);
                 }
             }
         });
@@ -204,46 +205,44 @@ public class GenerateReport_TA
         window.showAndWait();
     }
 
-    private static String getCurrentTA()
-    {
-        String name = "";
-        try {
-            // Connect to the Database
-            Statement statement = connection.createStatement();
-
-            // SQL query to get the current TA
-            String query = "SELECT name FROM staff WHERE StaffType = 'Travel Advisor' AND status = 'loggedIn'";
-            ResultSet resultSet = statement.executeQuery(query);
-            if(resultSet.next())
-            {
-                name = resultSet.getString(1);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return name;
-    }
-
-    // Calculate Report values
-    public static void calculateReport(LocalDate date1, LocalDate date2, String name, String ticketType)
+    public static void calculateAmountOfSales(LocalDate date1, LocalDate date2, String ticketType)
     {
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
             // SQL query
-            String query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND soldBy = '"+name+"' AND ticketType = '"+ticketType+"' AND state = 'Valid'";
+            String query = "SELECT COUNT(ID) FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '"+ticketType+"' AND state = 'Valid'";
+            ResultSet resultSet = statement.executeQuery(query);
+            numberOfSales = resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Calculate Report values
+    public static void calculateReport(LocalDate date1, LocalDate date2, String ticketType)
+    {
+        try {
+            // Connect to the Database
+            Statement statement = connection.createStatement();
+
+            // SQL query
+            String query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '"+ticketType+"' AND state = 'Valid'";
             ResultSet resultSet = statement.executeQuery(query);
             calculateReportResultSet = resultSet;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     public static ResultSet getCalculateReportResultSet() {
         return calculateReportResultSet;
+    }
+
+    public static int getNumberOfSales()
+    {
+        return numberOfSales;
     }
 }
