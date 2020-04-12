@@ -25,7 +25,7 @@ public class SelectAdvisorAlert
         window.setMinHeight(150);
 
         // Labels
-        Label label = new Label("Please select a Travel advisor assign blank(s)");
+        Label label = new Label("Please select a Travel advisor assign blank(s) \n Or make sure that you have selected a blank that is not assigned");
 
         // Buttons
         Button button = new Button("Close");

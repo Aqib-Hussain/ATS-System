@@ -230,6 +230,7 @@ public class ReAssignBlanks
         TA_list.getChildren().addAll(ReAssign_searchAdvisor_layout, reAssignAdvisorsTable);
 
         HBox button_layout = new HBox();
+        button_layout.setPadding(new Insets(10,0,0,0));
         button_layout.setAlignment(Pos.CENTER);
         button_layout.getChildren().add(ReAssign);
 

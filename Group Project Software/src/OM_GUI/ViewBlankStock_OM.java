@@ -261,14 +261,22 @@ public class ViewBlankStock_OM
             {
                 if(!(travelAdvisorTable.getSelectionModel().isEmpty()))
                 {
-                    getCurrentDate();
-                    for(Blank b : blanksTable.getSelectionModel().getSelectedItems())
+                    if(blanksTable.getSelectionModel().getSelectedItem().getAssignedTo().isEmpty())
                     {
-                        assignBlanks(travelAdvisorTable.getSelectionModel().getSelectedItem().getName(), b.getId(), currentDate);
+
+                        getCurrentDate();
+                        for (Blank b : blanksTable.getSelectionModel().getSelectedItems())
+                        {
+                            assignBlanks(travelAdvisorTable.getSelectionModel().getSelectedItem().getName(), b.getId(), currentDate);
+                        }
+                        endAssign();
+                        refreshBlankTable();
+                        window.setScene(main_scene);
                     }
-                    endAssign();
-                    refreshBlankTable();
-                    window.setScene(main_scene);
+                    else
+                    {
+                        SelectAdvisorAlert.display();
+                    }
                 }
                 else
                 {

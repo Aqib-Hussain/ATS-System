@@ -167,6 +167,7 @@ public class ViewBlankStock_SA
                     else
                     {
                         removeBlank(selectedBlank.getId());
+                        refreshTable();
                         table.getSelectionModel().clearSelection();
                     }
                 }
