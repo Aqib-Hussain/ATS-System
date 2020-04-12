@@ -2,9 +2,9 @@
 .root
 {
     -fx-font-family: 'Roboto Light', sans-serif;
-    -fx-background-size: 900 600;
-    -fx-background-color:  lightblue;
+    -fx-background-size: 1000 600;
     -fx-background-position: center center;
+    -fx-background-image: url("197421.jpg");
 }
 
 /* Label design */
@@ -16,7 +16,8 @@
 /* Login label design */
 .label-login
 {
-    -fx-font-size: 3em;
+    -fx-font-size: 4em;
+    -fx-font-weight: bolder;
 }
 
 /* Title label design */

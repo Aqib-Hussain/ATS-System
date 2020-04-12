@@ -3,6 +3,7 @@ package OM_GUI;
 import Database.DBConnectivity;
 import TA_GUI.GenerateReport_TA;
 import TA_GUI.ViewReports_TA;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -16,6 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,8 +25,10 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class GenerateReport_OM
-{
+
+
+public class GenerateReport_OM {
+
     // Database
     static DBConnectivity dbConnectivity = new DBConnectivity();
     static Connection connection = dbConnectivity.getConnection();
@@ -47,73 +51,58 @@ public class GenerateReport_OM
     // Value
     static String value = "";
 
+
     public static void display(String title) {
 
-        datePicker1.setConverter(new StringConverter<LocalDate>()
-        {
+        datePicker1.setConverter(new StringConverter<LocalDate>() {
             String pattern = "yyyy-MM-dd";
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
             {
                 datePicker1.setPromptText(pattern.toLowerCase());
             }
 
             @Override
-            public String toString(LocalDate date)
-            {
-                if(date != null)
-                {
+            public String toString(LocalDate date) {
+                if (date != null) {
                     return dateFormatter.format(date);
-                }
-                else
-                {
+                } else {
                     return "";
                 }
             }
 
             @Override
-            public LocalDate fromString(String string)
-            {
-                if(string != null && !string.isEmpty())
-                {
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
                     return LocalDate.parse(string, dateFormatter);
-                }
-                else
-                {
+                } else {
                     return null;
                 }
             }
         });
 
-        datePicker2.setConverter(new StringConverter<LocalDate>()
-        {
+        datePicker2.setConverter(new StringConverter<LocalDate>() {
             String pattern = "yyyy-MM-dd";
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
             {
                 datePicker2.setPromptText(pattern.toLowerCase());
             }
 
             @Override
-            public String toString(LocalDate date)
-            {
-                if(date != null)
-                {
+            public String toString(LocalDate date) {
+                if (date != null) {
                     return dateFormatter.format(date);
-                }
-                else
-                {
+                } else {
                     return "";
                 }
             }
 
             @Override
-            public LocalDate fromString(String string)
-            {
-                if(string != null && !string.isEmpty())
-                {
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
                     return LocalDate.parse(string, dateFormatter);
-                }
-                else
-                {
+                } else {
                     return null;
                 }
             }
@@ -145,21 +134,14 @@ public class GenerateReport_OM
         choiceBox.getItems().addAll("All", "Penelope", "Dennis");
         choiceBox.setValue("All");
         choiceBox.setMinWidth(70);
-        choiceBox.setOnAction(new EventHandler<ActionEvent>()
-        {
+        choiceBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event)
-            {
-                if(choiceBox.getSelectionModel().getSelectedItem().equals("All"))
-                {
+            public void handle(ActionEvent event) {
+                if (choiceBox.getSelectionModel().getSelectedItem().equals("All")) {
                     value = "All";
-                }
-                else if(choiceBox.getSelectionModel().getSelectedItem().equals("Penelope"))
-                {
+                } else if (choiceBox.getSelectionModel().getSelectedItem().equals("Penelope")) {
                     value = "Penelope";
-                }
-                else
-                {
+                } else {
                     value = "Dennis";
                 }
             }
@@ -176,26 +158,26 @@ public class GenerateReport_OM
             }
         });
 
+
+
         Button generate = new Button("Generate");
         generate.getStyleClass().add("button-login");
         generate.setMinSize(75, 25);
         generate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent)
-            {
-                if(datePicker1.getValue() != null && datePicker2.getValue() != null)
-                {
+            public void handle(ActionEvent actionEvent) {
+                if (datePicker1.getValue() != null && datePicker2.getValue() != null) {
                     String ticketType = "";
-                    if(domestic_radioButton.isSelected())
-                    {
+                    if (domestic_radioButton.isSelected()) {
                         ticketType = "Domestic";
-                    }
-                    else
-                    {
+                    } else {
                         ticketType = "Interline";
                     }
                     GenerateReport_OM.calculateReport(datePicker1.getValue(), datePicker2.getValue(), ticketType);
                     ViewReports_OM.display(title);
+                    //put print here
+
+
                 }
             }
         });
@@ -206,7 +188,7 @@ public class GenerateReport_OM
         radio_layout.getChildren().addAll(domestic_radioButton, interline_radioButton);
 
         HBox choiceBox_layout = new HBox();
-        choiceBox_layout.setPadding(new Insets(10,0,0,0));
+        choiceBox_layout.setPadding(new Insets(10, 0, 0, 0));
         choiceBox_layout.setAlignment(Pos.CENTER);
         choiceBox_layout.getChildren().add(choiceBox);
 
@@ -241,44 +223,32 @@ public class GenerateReport_OM
         window.showAndWait();
     }
 
-    public static String getToggle()
-    {
-        if(domestic_radioButton.isSelected())
-        {
+    public static String getToggle() {
+        if (domestic_radioButton.isSelected()) {
             return "Domestic";
-        }
-        else if(interline_radioButton.isSelected())
-        {
+        } else if (interline_radioButton.isSelected()) {
             return "Interline";
         }
         return null;
     }
 
-    public static LocalDate getDate1()
-    {
+    public static LocalDate getDate1() {
         return datePicker1.getValue();
     }
 
-    public static LocalDate getDate2()
-    {
+    public static LocalDate getDate2() {
         return datePicker2.getValue();
     }
 
     // Calculate Report values
-    public static void calculateReport(LocalDate date1, LocalDate date2, String ticketType)
-    {
+    public static void calculateReport(LocalDate date1, LocalDate date2, String ticketType) {
         String query = "";
-        if(choiceBox.getSelectionModel().getSelectedItem().equals("All"))
-        {
-            query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '"+ticketType+"' AND state = 'Valid'";
-        }
-        else if(choiceBox.getSelectionModel().getSelectedItem().equals("Penelope"))
-        {
-            query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '"+ticketType+"' AND state = 'Valid' AND soldBy = 'Penelope Pitstop'";
-        }
-        else if(choiceBox.getSelectionModel().getSelectedItem().equals("Dennis"))
-        {
-            query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '"+ticketType+"' AND state = 'Valid' AND soldBy = 'Dennis Menace'";
+        if (choiceBox.getSelectionModel().getSelectedItem().equals("All")) {
+            query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('" + date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '" + ticketType + "' AND state = 'Valid'";
+        } else if (choiceBox.getSelectionModel().getSelectedItem().equals("Penelope")) {
+            query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('" + date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '" + ticketType + "' AND state = 'Valid' AND soldBy = 'Penelope Pitstop'";
+        } else if (choiceBox.getSelectionModel().getSelectedItem().equals("Dennis")) {
+            query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('" + date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '" + ticketType + "' AND state = 'Valid' AND soldBy = 'Dennis Menace'";
         }
         try {
             // Connect to the Database

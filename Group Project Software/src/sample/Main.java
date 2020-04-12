@@ -108,7 +108,7 @@ public class Main extends Application {
 
         //--------------------------Log-in Menu------------------------------\\
         // Labels
-        Label login_label = new Label("ATS-System Login");
+        Label login_label = new Label("ATS-System");
         login_label.getStyleClass().add("label-login");
         login_label.setPadding(new Insets(30, 0, 0, 0));
 

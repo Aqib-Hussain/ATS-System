@@ -12,5 +12,7 @@
     <orderEntry type="library" name="mysql-connector-java-8.0.19-bin" level="project" />
     <orderEntry type="library" name="joda-time-2.10.5" level="application" />
     <orderEntry type="library" name="joda-time-2.10.5" level="project" />
+    <orderEntry type="library" name="iText7-Core-7.1" level="project" />
+    <orderEntry type="library" name="Jasper" level="project" />
   </component>
 </module>
