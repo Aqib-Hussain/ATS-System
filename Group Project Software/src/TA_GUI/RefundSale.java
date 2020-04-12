@@ -116,7 +116,7 @@ public class RefundSale {
             public void handle(ActionEvent event) {
                 if (!(table.getSelectionModel().isEmpty())) {
                     getCurrentDate();
-                    refundSale(table.getSelectionModel().getSelectedItem().getBlankID(), refundDate, table.getSelectionModel().getSelectedItem().getAmount());
+                    refundSale(table.getSelectionModel().getSelectedItem().getBlankID(), refundDate, Math.round((table.getSelectionModel().getSelectedItem().getAmount()) * 100.0)/100.0);
                     endRefund();
                     refreshTable();
 
@@ -238,7 +238,6 @@ public class RefundSale {
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
-
             // SQL query to update the sale to refunded
             String query = "UPDATE sales SET state = 'Refunded', refundDate = '" + date + "', refundAmount = '" + amount + "' WHERE BlankID = '" + saleID + "'";
             statement.executeUpdate(query);
