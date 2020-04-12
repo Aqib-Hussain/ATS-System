@@ -142,6 +142,7 @@ public class ReAssignBlanks
             {
                 close();
                 clearTables();
+                ViewBlankStock_OM.refreshBlankTable();
             }
         });
 

@@ -426,7 +426,7 @@ public class ViewBlankStock_OM
         currentDate = dtf.format(now);
     }
 
-    private static void refreshBlankTable()
+    public static void refreshBlankTable()
     {
         blanks.clear();
         getBlanks();
