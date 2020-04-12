@@ -135,6 +135,7 @@ public class ViewReports_SA {
         window.showAndWait();
     }
 
+    // Gets the necessary details for blanks from the database
     private static ObservableList<Blank> getBlanks()
     {
         ResultSet resultSet = GenerateStockTurnoverReport.getCalculateReportResultSet();
