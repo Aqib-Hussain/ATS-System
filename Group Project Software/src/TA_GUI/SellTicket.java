@@ -714,7 +714,6 @@ public class SellTicket
                         increaseDueAmount(customer.getName(), getCustomerDueBalance(customer.getName()),amount);
                     }
                 }
-
                 createSale(amount, currency,paymentMethod, tax, otherTax,creditCard, ticketType, origin, destination, commRate, customer.getName(), payByDate,selectedBlank.getId(), getTAname(),saleDate, isPaid);
                 setBlankState(selectedBlank.getId());
                 endPayment();
@@ -1014,6 +1013,14 @@ public class SellTicket
         else if (payment_interline_radioButton.isSelected())
         {
             payment_interline_radioButton.setSelected(false);
+        }
+        if(!(payment_creditCard_textField.isDisabled()))
+        {
+            payment_creditCard_textField.clear();
+        }
+        if(!(payment_otherTax_textField.isDisabled()))
+        {
+            payment_otherTax_textField.clear();
         }
     }
 
