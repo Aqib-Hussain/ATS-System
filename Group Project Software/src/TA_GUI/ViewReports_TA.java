@@ -73,23 +73,24 @@ public class ViewReports_TA
         otherTax_column.setCellValueFactory(new PropertyValueFactory<>("otherTax"));
         otherTax_column.setPrefWidth(100);
 
+        TableColumn<Sale, String> payMethod_column = new TableColumn<>("Pay method");
+        payMethod_column.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
+        payMethod_column.setPrefWidth(100);
+
         TableColumn<Sale, Double> commissionRate_column = new TableColumn<>("Comm. Rate");
         commissionRate_column.setCellValueFactory(new PropertyValueFactory<>("commissionRate"));
         commissionRate_column.setPrefWidth(100);
 
-        TableColumn<Sale, String> ticketType_column = new TableColumn<>("Ticket Type");
-        ticketType_column.setCellValueFactory(new PropertyValueFactory<>("ticketType"));
-        ticketType_column.setPrefWidth(100);
-
         TableColumn<Sale, String> customer_column = new TableColumn<>("Customer");
         customer_column.setCellValueFactory(new PropertyValueFactory<>("customer"));
+        customer_column.setPrefWidth(100);
 
         TableColumn<Sale, String> saleDate_column = new TableColumn<>("Date");
         saleDate_column.setCellValueFactory(new PropertyValueFactory<>("saleDate"));
 
         table = new TableView<>();
         table.setItems(getSales());
-        table.getColumns().addAll(id_column, blankID_column, amount_column, currency_column, localTax_column, otherTax_column, commissionRate_column, ticketType_column, customer_column, saleDate_column);
+        table.getColumns().addAll(id_column, blankID_column, amount_column, currency_column, localTax_column, otherTax_column, payMethod_column,commissionRate_column, customer_column, saleDate_column);
 
         // Labels
         Label page_info = new Label("Your Sales");
@@ -168,14 +169,11 @@ public class ViewReports_TA
                         resultSet.getString("currency"),
                         resultSet.getDouble("localTax"),
                         resultSet.getDouble("otherTax"),
+                        resultSet.getString("paymentMethod"),
                         resultSet.getDouble("commissionRate"),
-                        resultSet.getString("ticketType"),
                         resultSet.getString("customer"),
                         resultSet.getString("saleDate")));
 
-                System.out.println(resultSet.getDouble("amount"));
-                System.out.println(resultSet.getDouble("localTax"));
-                System.out.println(resultSet.getDouble("otherTax"));
                 totalAmount = totalAmount + resultSet.getDouble("amount");
                 totalLocalTax = totalLocalTax + resultSet.getDouble("localTax");
                 totalOtherTax = totalOtherTax + resultSet.getDouble("otherTax");
