@@ -20,7 +20,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.Blank;
-import sample.Refund;
 import sample.Staff.TravelAdvisor;
 
 import java.sql.Connection;

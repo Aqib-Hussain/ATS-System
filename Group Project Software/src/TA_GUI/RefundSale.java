@@ -1,6 +1,8 @@
 package TA_GUI;
 
 import Database.DBConnectivity;
+import OM_GUI.RefundLog;
+import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,18 +20,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.w3c.dom.ls.LSOutput;
 import sample.Blank;
 import sample.Sale;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.*;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
-public class RefundSale
-{
+public class RefundSale {
     // Database
     static DBConnectivity dbConnectivity = new DBConnectivity();
     static Connection connection = dbConnectivity.getConnection();
@@ -41,8 +43,8 @@ public class RefundSale
     // Date
     static private String refundDate = "";
 
-    public static void display()
-    {
+
+    public static void display() {
         // Creating a new window
         Stage window = new Stage();
 
@@ -107,20 +109,46 @@ public class RefundSale
         Button refund = new Button("Refund");
         refund.getStyleClass().add("button-login");
         refund.setMinWidth(100);
-        refund.setOnAction(new EventHandler<ActionEvent>()
-        {
+        RefundLog refundLog = new RefundLog();
+
+        refund.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event)
-            {
-                if(!(table.getSelectionModel().isEmpty()))
-                {
+            public void handle(ActionEvent event) {
+                if (!(table.getSelectionModel().isEmpty())) {
                     getCurrentDate();
                     refundSale(table.getSelectionModel().getSelectedItem().getBlankID(), refundDate, table.getSelectionModel().getSelectedItem().getAmount());
                     endRefund();
                     refreshTable();
-                }
-                else
-                {
+
+                    try {
+                        // Connect to the Database
+                        Statement statement = connection.createStatement();
+
+                        // SQL query to find matching email and password
+                        String query = "SELECT refundDate, BlankID, refundAmount FROM sales WHERE state = 'Refunded'";
+                        ResultSet resultSet1 = statement.executeQuery(query);
+
+                        ResultSetMetaData rsmd = resultSet1.getMetaData();
+                        int columnsNumber = rsmd.getColumnCount();
+                        while (resultSet1.next()) {
+                            for (int i = 1; i <= columnsNumber; i++) {
+                                String columnValue = resultSet1.getString(i);
+                                try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Refunds.txt", true), "utf-8"))) {
+                                    writer.write(rsmd.getColumnName(i) + " : " + columnValue + " | ");
+                                }
+                            }
+                            try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Refunds.txt", true), "utf-8"))) {
+                                writer.write("\n");
+
+                            }
+
+
+                        }
+                    } catch (SQLException | IOException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
                     SelectASaleAlert.display();
                 }
             }
@@ -128,12 +156,10 @@ public class RefundSale
 
         Button close = new Button("Close");
         close.getStyleClass().add("button-exit");
-        close.setMinSize(75,25);
-        close.setOnAction(new EventHandler<ActionEvent>()
-        {
+        close.setMinSize(75, 25);
+        close.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent)
-            {
+            public void handle(ActionEvent actionEvent) {
                 window.close();
                 endRefund();
                 sales.clear();
@@ -179,8 +205,7 @@ public class RefundSale
         window.showAndWait();
     }
 
-    public static ObservableList<Sale> getSales()
-    {
+    public static ObservableList<Sale> getSales() {
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
@@ -189,8 +214,7 @@ public class RefundSale
             String query = "SELECT * FROM sales WHERE state = 'Valid'";
             ResultSet resultSet = statement.executeQuery(query);
 
-            while (resultSet.next())
-            {
+            while (resultSet.next()) {
                 sales.add(new Sale(resultSet.getString("BlankID"),
                         resultSet.getDouble("amount"),
                         resultSet.getString("currency"),
@@ -203,47 +227,38 @@ public class RefundSale
                         resultSet.getString("soldBy"),
                         resultSet.getString("state")));
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return sales;
     }
 
-    public static void refundSale(String saleID, String date, double amount)
-    {
-        try
-        {
+    public static void refundSale(String saleID, String date, double amount) {
+        try {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
             // SQL query to update the sale to refunded
-            String query = "UPDATE sales SET state = 'Refunded', refundDate = '"+date+"', refundAmount = '"+amount+"' WHERE BlankID = '"+saleID+"'";
+            String query = "UPDATE sales SET state = 'Refunded', refundDate = '" + date + "', refundAmount = '" + amount + "' WHERE BlankID = '" + saleID + "'";
             statement.executeUpdate(query);
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private static void getCurrentDate()
-    {
+    private static void getCurrentDate() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
 
         refundDate = dtf.format(now);
     }
 
-    public static void refreshTable()
-    {
+    public static void refreshTable() {
         sales.clear();
         getSales();
     }
 
-    public static  void endRefund()
-    {
+    public static void endRefund() {
         table.getSelectionModel().clearSelection();
     }
 }

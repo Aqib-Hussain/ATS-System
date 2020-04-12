@@ -13,11 +13,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import sample.Customer;
-import sample.Refund;
+
 import sample.Sale;
 
 import java.sql.Connection;
@@ -112,8 +110,7 @@ public class RefundLog
         window.showAndWait();
     }
 
-    public static ObservableList<Sale> getRefunds()
-    {
+    public static ObservableList<Sale> getRefunds() {
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
@@ -135,4 +132,5 @@ public class RefundLog
         }
         return refunds;
     }
+
 }
