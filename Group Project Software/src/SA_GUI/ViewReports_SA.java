@@ -147,7 +147,6 @@ public class ViewReports_SA {
                         resultSet.getString("receivedDate"),
                         resultSet.getString("assignedDate"),
                         resultSet.getString("state")));
-
             }
 
         }

@@ -25,6 +25,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 
 public class ViewReports_OM
 {
@@ -98,11 +99,20 @@ public class ViewReports_OM
         soldBy_column.setCellValueFactory(new PropertyValueFactory<>("soldBy"));
 
         table = new TableView<>();
-        table.setItems(getSales());
+        if(GenerateReport_OM.getToggle().equals("Interline"))
+        {
+            System.out.println("Interline");
+            table.setItems(getInterlineSales());
+        }
+        else
+        {
+            System.out.println("Domestic");
+            table.setItems(getDomesticSales());
+        }
         table.getColumns().addAll(id_column, blankID_column, amount_column, currency_column, localTax_column, otherTax_column, payMethod_column,commissionRate_column, customer_column, saleDate_column, soldBy_column);
 
         // Labels
-        Label page_info = new Label("Your Sales from period "+GenerateReport_OM.getDate1()+" to"+GenerateReport_OM.getDate2()+"");
+        Label page_info = new Label("Your Sales from period "+GenerateReport_OM.getDate1()+" to "+GenerateReport_OM.getDate2()+"");
         page_info.getStyleClass().add("label-title");
 
         Label totalAmount_label = new Label("Total Amount: "+totalAmount+"");
@@ -110,7 +120,6 @@ public class ViewReports_OM
         Label totalOtherTax_label = new Label("Total other Tax: "+totalOtherTax+"");
         Label overallAmount_label = new Label("Overall Amount: "+overallAmount+"");
         overallAmount_label.getStyleClass().add("label-title");
-
 
         // Buttons
         Button close = new Button("Close");
@@ -165,7 +174,7 @@ public class ViewReports_OM
         window.showAndWait();
     }
 
-    private static ObservableList<Sale> getSales()
+    private static ObservableList<Sale> getInterlineSales()
     {
         double usdAmount;
         ResultSet resultSet = GenerateReport_OM.getCalculateReportResultSet();
@@ -173,7 +182,7 @@ public class ViewReports_OM
         {
             while (resultSet.next())
             {
-                usdAmount = resultSet.getDouble("amount") * exchangeRate;
+                usdAmount = Math.round((resultSet.getDouble("amount") * exchangeRate) * 100.0) / 100.0;
                 reportSales.add(new Sale(resultSet.getInt("ID"),
                         resultSet.getString("BlankID"), usdAmount, "USD",
                         resultSet.getDouble("localTax"),
@@ -185,6 +194,38 @@ public class ViewReports_OM
                         resultSet.getString("soldBy")));
 
                 totalAmount = totalAmount + usdAmount;
+                totalLocalTax = totalLocalTax + resultSet.getDouble("localTax");
+                totalOtherTax = totalOtherTax + resultSet.getDouble("otherTax");
+            }
+            overallAmount = totalAmount + (totalLocalTax + totalOtherTax);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return reportSales;
+    }
+
+    private static ObservableList<Sale> getDomesticSales()
+    {
+        ResultSet resultSet = GenerateReport_OM.getCalculateReportResultSet();
+        try
+        {
+            while (resultSet.next())
+            {
+                reportSales.add(new Sale(resultSet.getInt("ID"),
+                        resultSet.getString("BlankID"),
+                        resultSet.getDouble("amount"), "GBP",
+                        resultSet.getDouble("localTax"),
+                        resultSet.getDouble("otherTax"),
+                        resultSet.getString("paymentMethod"),
+                        resultSet.getDouble("commissionRate"),
+                        resultSet.getString("customer"),
+                        resultSet.getString("saleDate"),
+                        resultSet.getString("soldBy")));
+
+                totalAmount = totalAmount + resultSet.getDouble("amount");
                 totalLocalTax = totalLocalTax + resultSet.getDouble("localTax");
                 totalOtherTax = totalOtherTax + resultSet.getDouble("otherTax");
             }

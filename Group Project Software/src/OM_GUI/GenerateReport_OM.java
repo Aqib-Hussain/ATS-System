@@ -40,6 +40,13 @@ public class GenerateReport_OM
     static DatePicker datePicker1 = new DatePicker();
     static DatePicker datePicker2 = new DatePicker();
 
+    // ChoiceBox
+    static ChoiceBox<String> choiceBox = new ChoiceBox<>();
+    static ToggleGroup toggleGroup = new ToggleGroup();
+
+    // Value
+    static String value = "";
+
     public static void display(String title) {
 
         datePicker1.setConverter(new StringConverter<LocalDate>()
@@ -131,9 +138,32 @@ public class GenerateReport_OM
         Label ticketType_label = new Label("Ticket Type");
 
         // Radio buttons
-        ToggleGroup toggleGroup = new ToggleGroup();
         interline_radioButton.setToggleGroup(toggleGroup);
         domestic_radioButton.setToggleGroup(toggleGroup);
+
+        // ChoiceBox
+        choiceBox.getItems().addAll("All", "Penelope", "Dennis");
+        choiceBox.setValue("All");
+        choiceBox.setMinWidth(70);
+        choiceBox.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                if(choiceBox.getSelectionModel().getSelectedItem().equals("All"))
+                {
+                    value = "All";
+                }
+                else if(choiceBox.getSelectionModel().getSelectedItem().equals("Penelope"))
+                {
+                    value = "Penelope";
+                }
+                else
+                {
+                    value = "Dennis";
+                }
+            }
+        });
 
         // Buttons
         Button close = new Button("Close");
@@ -175,12 +205,18 @@ public class GenerateReport_OM
         radio_layout.setAlignment(Pos.CENTER);
         radio_layout.getChildren().addAll(domestic_radioButton, interline_radioButton);
 
-        VBox top_layout = new VBox();
-        top_layout.setAlignment(Pos.CENTER);
-        top_layout.setPadding(new Insets(0, 0, 10, 0));
-        top_layout.getChildren().addAll(selectTimeFrame, radio_layout);
+        HBox choiceBox_layout = new HBox();
+        choiceBox_layout.setPadding(new Insets(10,0,0,0));
+        choiceBox_layout.setAlignment(Pos.CENTER);
+        choiceBox_layout.getChildren().add(choiceBox);
 
-        VBox center_layout = new VBox(15);
+        BorderPane top_layout = new BorderPane();
+        top_layout.setPadding(new Insets(0, 0, 10, 0));
+        top_layout.setTop(selectTimeFrame);
+        top_layout.setCenter(radio_layout);
+        top_layout.setBottom(choiceBox_layout);
+
+        VBox center_layout = new VBox(10);
         center_layout.setAlignment(Pos.CENTER);
         center_layout.getChildren().addAll(datePicker1, to, datePicker2);
 
@@ -205,6 +241,19 @@ public class GenerateReport_OM
         window.showAndWait();
     }
 
+    public static String getToggle()
+    {
+        if(domestic_radioButton.isSelected())
+        {
+            return "Domestic";
+        }
+        else if(interline_radioButton.isSelected())
+        {
+            return "Interline";
+        }
+        return null;
+    }
+
     public static LocalDate getDate1()
     {
         return datePicker1.getValue();
@@ -218,12 +267,23 @@ public class GenerateReport_OM
     // Calculate Report values
     public static void calculateReport(LocalDate date1, LocalDate date2, String ticketType)
     {
+        String query = "";
+        if(choiceBox.getSelectionModel().getSelectedItem().equals("All"))
+        {
+            query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '"+ticketType+"' AND state = 'Valid'";
+        }
+        else if(choiceBox.getSelectionModel().getSelectedItem().equals("Penelope"))
+        {
+            query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '"+ticketType+"' AND state = 'Valid' AND soldBy = 'Penelope Pitstop'";
+        }
+        else if(choiceBox.getSelectionModel().getSelectedItem().equals("Dennis"))
+        {
+            query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '"+ticketType+"' AND state = 'Valid' AND soldBy = 'Dennis Menace'";
+        }
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
-            // SQL query
-            String query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND ticketType = '"+ticketType+"' AND state = 'Valid'";
             ResultSet resultSet = statement.executeQuery(query);
             calculateReportResultSet = resultSet;
 
@@ -231,6 +291,7 @@ public class GenerateReport_OM
             e.printStackTrace();
         }
     }
+
 
     public static ResultSet getCalculateReportResultSet() {
         return calculateReportResultSet;
