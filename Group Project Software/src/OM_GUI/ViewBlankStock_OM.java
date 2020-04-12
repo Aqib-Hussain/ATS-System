@@ -1,7 +1,6 @@
 package OM_GUI;
 
 import Database.DBConnectivity;
-import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -16,11 +15,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.Blank;
-import sample.Refund;
 import sample.Staff.TravelAdvisor;
 
 import java.sql.Connection;
@@ -39,11 +35,9 @@ public class ViewBlankStock_OM
     static BorderPane main_root_layout = new BorderPane();
     static BorderPane assign_root_layout = new BorderPane();
 
-
     // Scenes
     static Scene main_scene = new Scene(main_root_layout);
     static Scene assign_scene = new Scene(assign_root_layout);
-
 
     // Database
     static DBConnectivity dbConnectivity = new DBConnectivity();
