@@ -33,6 +33,7 @@ public class RefundLog
 
     // Table View
     static TableView<Sale> table;
+    static ObservableList<Sale> refunds = FXCollections.observableArrayList();
 
     public static void display(String title)
     {
@@ -113,8 +114,6 @@ public class RefundLog
 
     public static ObservableList<Sale> getRefunds()
     {
-        ObservableList<Sale> refunds = FXCollections.observableArrayList();
-
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
@@ -134,7 +133,6 @@ public class RefundLog
         {
             e.printStackTrace();
         }
-
         return refunds;
     }
 }
