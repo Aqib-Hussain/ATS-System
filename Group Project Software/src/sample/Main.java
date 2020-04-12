@@ -1,6 +1,7 @@
 package sample;
 
 import Database.DBConnectivity;
+import SA_GUI.GenerateStockTurnoverReport;
 import TA_GUI.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -340,6 +341,12 @@ public class Main extends Application {
         // Buttons
         Button generateStockReport = new Button("Generate Stock Over Report");
         generateStockReport.setMinWidth(250);
+        generateStockReport.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                GenerateStockTurnoverReport.display("Generate Stock Turnover Report");
+            }
+        });
 
         Button backUp = new Button("Back-Up System");
         backUp.setMinWidth(250);
