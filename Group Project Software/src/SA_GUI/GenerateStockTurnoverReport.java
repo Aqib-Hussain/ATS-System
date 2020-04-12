@@ -1,4 +1,4 @@
-package TA_GUI;
+package SA_GUI;
 
 import Database.DBConnectivity;
 import javafx.event.ActionEvent;
@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import sample.Blank;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -22,92 +21,77 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class GenerateReport_TA {
+public class GenerateStockTurnoverReport {
     // Database
     static DBConnectivity dbConnectivity = new DBConnectivity();
     static Connection connection = dbConnectivity.getConnection();
 
     // ResultSet
-    static ResultSet calculateReportResultSet;
+    static ResultSet generateStockTurnoverResultSet;
 
-    // Radio buttons
-    static private RadioButton interline_radioButton = new RadioButton("Interline");
-    static private RadioButton domestic_radioButton = new RadioButton("Domestic");
+    static DatePicker datePicker1 = new DatePicker();
+    static DatePicker datePicker2 = new DatePicker();
 
     public static void display(String title) {
 
 
-        DatePicker datePicker1 = new DatePicker();
-        datePicker1.setConverter(new StringConverter<LocalDate>()
-        {
+
+        datePicker1.setConverter(new StringConverter<LocalDate>() {
             String pattern = "yyyy-MM-dd";
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
             {
                 datePicker1.setPromptText(pattern.toLowerCase());
             }
 
             @Override
-            public String toString(LocalDate date)
-            {
-                if(date != null)
-                {
+            public String toString(LocalDate date) {
+                if (date != null) {
                     return dateFormatter.format(date);
-                }
-                else
-                {
+                } else {
                     return "";
                 }
             }
 
             @Override
-            public LocalDate fromString(String string)
-            {
-                if(string != null && !string.isEmpty())
-                {
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
                     return LocalDate.parse(string, dateFormatter);
-                }
-                else
-                {
+                } else {
                     return null;
                 }
             }
         });
 
-        DatePicker datePicker2 = new DatePicker();
-        datePicker2.setConverter(new StringConverter<LocalDate>()
-        {
+
+        datePicker2.setConverter(new StringConverter<LocalDate>() {
             String pattern = "yyyy-MM-dd";
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
             {
                 datePicker2.setPromptText(pattern.toLowerCase());
             }
 
             @Override
-            public String toString(LocalDate date)
-            {
-                if(date != null)
-                {
+            public String toString(LocalDate date) {
+                if (date != null) {
                     return dateFormatter.format(date);
-                }
-                else
-                {
+                } else {
                     return "";
                 }
             }
 
             @Override
-            public LocalDate fromString(String string)
-            {
-                if(string != null && !string.isEmpty())
-                {
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
                     return LocalDate.parse(string, dateFormatter);
-                }
-                else
-                {
+                } else {
                     return null;
                 }
             }
         });
+
+
 
         // Creating a new window
         Stage window = new Stage();
@@ -127,10 +111,6 @@ public class GenerateReport_TA {
 
         Label ticketType_label = new Label("Ticket Type");
 
-        // Radio buttons
-        ToggleGroup toggleGroup = new ToggleGroup();
-        interline_radioButton.setToggleGroup(toggleGroup);
-        domestic_radioButton.setToggleGroup(toggleGroup);
 
         // Buttons
         Button close = new Button("Close");
@@ -148,35 +128,17 @@ public class GenerateReport_TA {
         generate.setMinSize(75, 25);
         generate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent)
-            {
-                if(datePicker1.getValue() != null && datePicker2.getValue() != null)
-                {
+            public void handle(ActionEvent actionEvent) {
+                if (datePicker1.getValue() != null && datePicker2.getValue() != null) {
                     String ticketType = "";
-                    if(domestic_radioButton.isSelected())
-                    {
-                        ticketType = "Domestic";
-                    }
-                    else
-                    {
-                        ticketType = "Interline";
-                    }
-                    GenerateReport_TA.calculateReport(datePicker1.getValue(), datePicker2.getValue(), getCurrentTA(), ticketType);
-                    ViewReports_TA.display(title);
+                    GenerateStockTurnoverReport.calculateStockReport(datePicker1.getValue(), datePicker2.getValue());
+                    ViewReports_SA.display(title);
 
                 }
             }
         });
 
         // Layout
-        HBox radio_layout = new HBox(10);
-        radio_layout.setAlignment(Pos.CENTER);
-        radio_layout.getChildren().addAll(domestic_radioButton, interline_radioButton);
-
-        VBox top_layout = new VBox();
-        top_layout.setAlignment(Pos.CENTER);
-        top_layout.setPadding(new Insets(0, 0, 10, 0));
-        top_layout.getChildren().addAll(selectTimeFrame, radio_layout);
 
         VBox center_layout = new VBox(15);
         center_layout.setAlignment(Pos.CENTER);
@@ -192,7 +154,6 @@ public class GenerateReport_TA {
         root_layout.setPadding(new Insets(10, 10, 10, 10));
         root_layout.setCenter(center_layout);
         root_layout.setBottom(bottom_layout);
-        root_layout.setTop(top_layout);
 
         // Scene
         Scene scene = new Scene(root_layout);
@@ -202,19 +163,23 @@ public class GenerateReport_TA {
         // Start window
         window.showAndWait();
     }
+    public static LocalDate getDatePicker1(){
+        return datePicker1.getValue();
+    }
+    public static LocalDate getDatePicker2(){
+        return datePicker2.getValue();
+    }
 
-    private static String getCurrentTA()
-    {
+    private static String getCurrentTA() {
         String name = "";
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
             // SQL query to get the current TA
-            String query = "SELECT name FROM staff WHERE StaffType = 'Travel Advisor' AND status = 'loggedIn'";
+            String query = "SELECT assignedTo FROM blank WHERE StaffType = 'Travel Advisor' AND status = 'loggedIn'";
             ResultSet resultSet = statement.executeQuery(query);
-            if(resultSet.next())
-            {
+            if (resultSet.next()) {
                 name = resultSet.getString(1);
             }
 
@@ -225,16 +190,15 @@ public class GenerateReport_TA {
     }
 
     // Calculate Report values
-    public static void calculateReport(LocalDate date1, LocalDate date2, String name, String ticketType)
-    {
+    public static void calculateStockReport(LocalDate date1, LocalDate date2) {
         try {
             // Connect to the Database
             Statement statement = connection.createStatement();
 
             // SQL query
-            String query = "SELECT * FROM sales WHERE saleDate BETWEEN CAST('"+ date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE) AND soldBy = '"+name+"' AND ticketType = '"+ticketType+"' AND state = 'Valid'";
+            String query = "SELECT * FROM blank WHERE receivedDate BETWEEN CAST('" + date1 + "' AS DATE) AND CAST('" + date2 + "' AS DATE)";
             ResultSet resultSet = statement.executeQuery(query);
-            calculateReportResultSet = resultSet;
+            generateStockTurnoverResultSet = resultSet;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -243,6 +207,6 @@ public class GenerateReport_TA {
     }
 
     public static ResultSet getCalculateReportResultSet() {
-        return calculateReportResultSet;
+        return generateStockTurnoverResultSet;
     }
 }
