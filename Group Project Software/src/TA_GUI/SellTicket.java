@@ -896,7 +896,7 @@ public class SellTicket
             Statement statement = connection.createStatement();
 
             // SQL query to find matching travel advisors
-            String query = "INSERT INTO sales (BlankID, amount, currency,paymentMethod, localTax, otherTax, creditcard, ticketType, origin, destination, commissionRate, customer, payBy, isPaid, soldBy,saleDate, state, refundDate, refundAmount) VALUES ('"+blankID+"', '"+amount+"', '"+currency+"','"+paymentMeth+"', '"+tax+"', '"+otherTax+"','"+creditCard+"', '"+ticketType+"','"+origin+"', '"+destination+"', '"+commRate+"', '"+custName+"', '"+payBy+"','"+isPaid+"','"+soldBy+"', '"+saleDate+"','Valid', '', '')";
+            String query = "INSERT INTO sales (BlankID, amount, currency,paymentMethod, localTax, otherTax, creditcard, ticketType, origin, destination, commissionRate, customer, payBy, isPaid, soldBy,saleDate, state, refundDate, refundAmount) VALUES ('"+blankID+"', '"+amount+"', '"+currency+"','"+paymentMeth+"', '"+tax+"', '"+otherTax+"','"+creditCard+"', '"+ticketType+"','"+origin+"', '"+destination+"', '"+commRate+"', '"+custName+"', '"+payBy+"','"+isPaid+"','"+soldBy+"', '"+saleDate+"','Valid', '0', '0')";
             statement.executeUpdate(query);
         }
         catch (SQLException e)
