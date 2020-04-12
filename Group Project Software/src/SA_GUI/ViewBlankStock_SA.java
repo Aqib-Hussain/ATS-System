@@ -57,7 +57,6 @@ public class ViewBlankStock_SA
     public static void display()
     {
         // Window takes priority until taken care of
-        window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Blank Stock");
         window.setHeight(500);
         window.setWidth(775);
@@ -294,6 +293,7 @@ public class ViewBlankStock_SA
                         String id = Long.toString(i);
                         addBlanks(id, type, saleDate);
                     }
+                    refreshTable();
                 }
                 else
                 {
@@ -356,7 +356,7 @@ public class ViewBlankStock_SA
         window.sizeToScene();
         window.setResizable(false);
 
-        window.showAndWait();
+        window.show();
     }
 
     private static ObservableList<Blank> getBlanks()
