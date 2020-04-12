@@ -111,6 +111,7 @@ public class SellTicket
     public static void display(String title)
     {
         // **************Selection Window***************** \\
+        window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setHeight(700);
         window.setWidth(750);
@@ -805,7 +806,7 @@ public class SellTicket
 
         // Start window
         window.setScene(scene);
-        window.show();
+        window.showAndWait();
     }
 
     private static ObservableList<Customer> getCustomers()
@@ -1021,7 +1022,6 @@ public class SellTicket
         {
             payment_otherTax_textField.clear();
         }
-        commissionRates.clear();
     }
 
     private static String getTAname()

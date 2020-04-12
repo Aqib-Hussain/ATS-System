@@ -1,0 +1,6 @@
+refundDate : 2020-02-10 | BlankID : 44400000002 | refundAmount : 230.0 | 
+refundDate : 2020-02-10 | BlankID : 20100000011 | refundAmount : 75.0 | 
+refundDate : 2020-04-12 | BlankID : 44400000026 | refundAmount : 183.60000000000002 | 
+refundDate : 2020-02-10 | BlankID : 44400000002 | refundAmount : 230.0 | 
+refundDate : 2020-02-10 | BlankID : 20100000011 | refundAmount : 75.0 | 
+refundDate : 2020-04-12 | BlankID : 20100000013 | refundAmount : 360.0 | 

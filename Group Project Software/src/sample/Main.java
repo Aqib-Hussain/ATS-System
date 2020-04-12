@@ -120,17 +120,7 @@ public class Main extends Application {
         passwordLabel.setFont(Font.font(18));
         passwordLabel.setPadding(new Insets(0, 0, -5, 0));
 
-        Label OM_login = new Label("Office Manager \nName: Minnie Minx \nPassword: NotiGirl");
-        OM_login.setFont(Font.font(16));
 
-        Label SA_login = new Label("System Admin \nName: Arthur Daley \nPassword: LiessaLot");
-        SA_login.setFont(Font.font(16));
-
-        Label TA1_login = new Label("Travel Advisor 1 \nName: Penelope Pitstop \nPassword: PinkMobile");
-        TA1_login.setFont(Font.font(16));
-
-        Label TA2_login = new Label("Travel Advisor 2 \nName: Dennis Menace \nPassword: Gnasher");
-        TA2_login.setFont(Font.font(16));
 
         // TextBoxes
         TextField nameText = new TextField();
@@ -218,7 +208,7 @@ public class Main extends Application {
 
         HBox bottom_layout = new HBox(20);
         bottom_layout.setAlignment(Pos.CENTER);
-        bottom_layout.getChildren().addAll(OM_login, SA_login, TA1_login, TA2_login);
+
 
         VBox center_layout = new VBox(15);
         center_layout.setPadding(new Insets(-100, 0, 0, 0));
