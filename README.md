@@ -1,4 +1,4 @@
 # ATS-System
 
-An airline ticketing system creating in Java.
+An airline ticketing system created in Java.
 
