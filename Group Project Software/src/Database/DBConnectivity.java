@@ -11,8 +11,8 @@ public  Connection connection;
     public Connection getConnection(){
 
         String dbName="ats";
-        String userName="root";
-        String password="password";
+        String userName="ENTER DATABASE USERNAME";
+        String password="ENTER YOUR MYSQL PASSWORD";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
